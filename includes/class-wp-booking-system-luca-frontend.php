@@ -159,6 +159,9 @@ class WP_Booking_System_Luca_Frontend {
 		$default_kids   = absint( get_option( 'wpbsl_default_kids', 0 ) );
 		$require_phone  = (int) get_option( 'wpbsl_require_phone', 0 );
 		$show_notes     = (int) get_option( 'wpbsl_show_notes', 1 );
+		$show_visitors  = (int) get_option( 'wpbsl_show_visitors', 1 );
+		$owners         = WP_Booking_System_Luca_Helpers::parse_owners( get_option( 'wpbsl_owners', '' ) );
+		$show_owner     = (int) get_option( 'wpbsl_show_owner', 1 ) && ! empty( $owners );
 
 		ob_start();
 		?>
@@ -214,6 +217,32 @@ class WP_Booking_System_Luca_Frontend {
 						<input type="tel" id="wpbs-phone" name="phone" <?php echo $require_phone ? 'required' : ''; ?> />
 					</div>
 				</div>
+
+				<?php if ( $show_owner ) : ?>
+				<div class="wpbs-form-row">
+					<div class="wpbs-form-group wpbs-form-group-full">
+						<label for="wpbs-owner"><?php esc_html_e( 'Owner', 'wp-booking-system-luca' ); ?></label>
+						<select id="wpbs-owner" name="owner">
+							<option value="">&mdash;</option>
+							<?php foreach ( $owners as $owner_name ) : ?>
+								<option value="<?php echo esc_attr( $owner_name ); ?>"><?php echo esc_html( $owner_name ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+				<?php endif; ?>
+
+				<?php if ( $show_visitors ) : ?>
+				<div class="wpbs-form-row">
+					<div class="wpbs-form-group wpbs-form-group-full">
+						<label for="wpbs-visitors-welcome"><?php esc_html_e( 'Visitors welcome?', 'wp-booking-system-luca' ); ?></label>
+						<select id="wpbs-visitors-welcome" name="visitors_welcome">
+							<option value="0"><?php esc_html_e( 'No', 'wp-booking-system-luca' ); ?></option>
+							<option value="1"><?php esc_html_e( 'Yes', 'wp-booking-system-luca' ); ?></option>
+						</select>
+					</div>
+				</div>
+				<?php endif; ?>
 
 				<?php if ( $show_notes ) : ?>
 				<div class="wpbs-form-row">

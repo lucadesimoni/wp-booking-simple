@@ -49,6 +49,8 @@ class WP_Booking_System_Luca_Database {
 			check_out date NOT NULL,
 			adults int(11) NOT NULL DEFAULT 1,
 			kids int(11) NOT NULL DEFAULT 0,
+			owner varchar(100) DEFAULT NULL,
+			visitors_welcome tinyint(1) NOT NULL DEFAULT 0,
 			total_price decimal(10,2) NOT NULL,
 			status varchar(20) NOT NULL DEFAULT 'pending',
 			notes text DEFAULT NULL,
@@ -63,6 +65,35 @@ class WP_Booking_System_Luca_Database {
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+
+		$this->ensure_columns();
+	}
+
+	/**
+	 * Add columns introduced after the initial schema if they are missing.
+	 *
+	 * dbDelta does not reliably alter existing tables on every database
+	 * backend (notably SQLite), so we add the newer columns explicitly.
+	 */
+	private function ensure_columns() {
+		global $wpdb;
+
+		$existing = $wpdb->get_col( "DESCRIBE {$this->table_name}", 0 ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+
+		if ( empty( $existing ) ) {
+			return;
+		}
+
+		$columns = array(
+			'owner'            => 'varchar(100) DEFAULT NULL',
+			'visitors_welcome' => "tinyint(1) NOT NULL DEFAULT 0",
+		);
+
+		foreach ( $columns as $name => $definition ) {
+			if ( ! in_array( $name, $existing, true ) ) {
+				$wpdb->query( "ALTER TABLE {$this->table_name} ADD COLUMN {$name} {$definition}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+			}
+		}
 	}
 
 	/**
@@ -93,6 +124,8 @@ class WP_Booking_System_Luca_Database {
 			'check_out'      => '',
 			'adults'         => 1,
 			'kids'           => 0,
+			'owner'          => '',
+			'visitors_welcome' => 0,
 			'total_price'    => 0,
 			'status'         => 'pending',
 			'notes'          => '',
@@ -100,10 +133,28 @@ class WP_Booking_System_Luca_Database {
 
 		$data = wp_parse_args( $data, $defaults );
 
+		// Keep the value order aligned with the format specifiers below.
+		$data = array(
+			'booking_token'    => $data['booking_token'],
+			'first_name'       => $data['first_name'],
+			'last_name'        => $data['last_name'],
+			'email'            => $data['email'],
+			'phone'            => $data['phone'],
+			'check_in'         => $data['check_in'],
+			'check_out'        => $data['check_out'],
+			'adults'           => $data['adults'],
+			'kids'             => $data['kids'],
+			'owner'            => $data['owner'],
+			'visitors_welcome' => $data['visitors_welcome'],
+			'total_price'      => $data['total_price'],
+			'status'           => $data['status'],
+			'notes'            => $data['notes'],
+		);
+
 		$result = $wpdb->insert(
 			$this->table_name,
 			$data,
-			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%f', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%f', '%s', '%s' )
 		);
 
 		if ( $result ) {

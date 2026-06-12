@@ -98,6 +98,9 @@ class WP_Booking_System_Luca {
 		// Initialize database.
 		$this->database = new WP_Booking_System_Luca_Database();
 
+		// Apply any schema changes for existing installs.
+		add_action( 'plugins_loaded', array( $this, 'maybe_upgrade_database' ) );
+
 		// Initialize admin.
 		if ( is_admin() ) {
 			$this->admin = new WP_Booking_System_Luca_Admin();
@@ -169,6 +172,10 @@ class WP_Booking_System_Luca {
 			'wpbsl_require_phone'            => 0,
 			'wpbsl_show_notes'               => 1,
 			'wpbsl_auto_confirm'             => 0,
+			// Extra booking-form fields.
+			'wpbsl_show_owner'               => 1,
+			'wpbsl_owners'                   => '',
+			'wpbsl_show_visitors'            => 1,
 			// Email delivery (SMTP).
 			'wpbsl_smtp_enabled'             => 0,
 			'wpbsl_smtp_host'                => '',
@@ -225,6 +232,23 @@ class WP_Booking_System_Luca {
 				update_option( $option_key, (int) $page_id );
 			}
 		}
+	}
+
+	/**
+	 * Run schema upgrades when the plugin version changes.
+	 *
+	 * dbDelta adds any new columns (e.g. owner, visitors_welcome) to existing
+	 * booking tables without touching data.
+	 */
+	public function maybe_upgrade_database() {
+		$installed = get_option( 'wpbsl_db_version', '' );
+
+		if ( $installed === $this->version ) {
+			return;
+		}
+
+		$this->database->create_tables();
+		update_option( 'wpbsl_db_version', $this->version );
 	}
 
 	/**

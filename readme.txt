@@ -3,7 +3,7 @@ Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.5.0
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,8 @@ WP booking Luca is a clean and modern booking solution for WordPress. It provide
 * Email notifications for booking confirmations and cancellations
 * Built-in SMTP delivery (e.g. Gmail / Google Workspace) with a test-email button for reliable sending
 * Customizable email templates (subject and body) with merge tags
+* Drag-and-drop email builder: arrange content blocks (text, heading, booking details, button, image, divider)
+* Configurable booking-form fields, including an Owner dropdown and a "Visitors welcome?" field
 * Calendar (.ics) invite attached to confirmation emails so guests can add the stay to their calendar
 * Unique links for guests to manage or cancel their bookings
 * Configurable booking rules: minimum/maximum stay, advance notice, booking window, default guests, required fields, and auto-confirm
@@ -72,9 +74,19 @@ Yes. The booking confirmation (and the admin notification) include an .ics calen
 
 = Can I customize the email templates? =
 
-Yes. Under WP booking Luca > Settings > Email Templates you can edit the subject and body of the guest confirmation, guest cancellation, and admin notification emails. Use merge tags such as {guest_name}, {check_in}, {check_out}, {guests}, {total_price}, {booking_details} and {manage_link}, which are replaced with each booking's details. Clear a field and save to restore its default wording.
+Yes. Under WP booking Luca > Settings > Email Templates you can either edit the plain-text subject and body, or use the drag-and-drop builder to arrange content blocks (Text, Heading, Booking details, Button, Image, Divider). Drag a block by its handle to reorder it. Use merge tags such as {guest_name}, {check_in}, {check_out}, {guests}, {total_price}, {owner}, {visitors_welcome}, {booking_details} and {manage_link}, which are replaced with each booking's details. When a template has blocks, they are used; otherwise the plain-text body applies (clear it to restore the default).
+
+= Can I add an Owner or other custom fields to the booking form? =
+
+Yes. Under WP booking Luca > Settings > Booking Form you can show an "Owner" dropdown (populated from a list of names you enter) and a "Visitors welcome?" yes/no field. Both are saved with the booking and available in emails as {owner} and {visitors_welcome}.
 
 == Changelog ==
+
+= 1.6.0 =
+* 2026-06-12
+* Drag-and-drop email template builder: arrange Text, Heading, Booking details, Button, Image and Divider blocks per email
+* Configurable booking-form fields: new Owner dropdown (from a list you define) and a "Visitors welcome?" yes/no field, with {owner} and {visitors_welcome} merge tags
+* Booking table gains owner and visitors_welcome columns (added automatically on upgrade)
 
 = 1.5.0 =
 * 2026-06-12

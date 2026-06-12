@@ -1,5 +1,11 @@
 *** WP booking Luca Changelog ***
 
+2026.06.12 - version 1.6.0
+ * New - Drag-and-drop email template builder: arrange Text, Heading, Booking-details, Button, Image and Divider blocks for each email, reorder them by dragging, and insert merge tags from a dropdown. Blocks take precedence over the plain-text body, which remains as a fallback.
+ * New - Configurable booking-form fields: an "Owner" dropdown populated from a list of names you define in Settings, and a "Visitors welcome?" yes/no field. Both are stored with the booking and exposed as the {owner} and {visitors_welcome} merge tags.
+ * Tweak - The bookings table now stores owner and visitors_welcome; the columns are added automatically on upgrade.
+ * Fix - Admin styles/scripts now load on the Settings and All Bookings screens (the hook match was too narrow).
+
 2026.06.12 - version 1.5.0
  * New - Booking confirmation and admin notification emails now include an iCalendar (.ics) attachment named booking-{id}.ics, so guests and owners can add the stay to their calendar in one tap. The all-day event spans check-in to check-out.
  * Tweak - Email markup hardened for dark-mode clients (Outlook/Gmail): forced light color-scheme via meta tags and explicit inline colors on the header, content, details box and buttons.

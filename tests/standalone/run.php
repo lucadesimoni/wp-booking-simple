@@ -104,6 +104,12 @@ function shortcode_atts( $defaults, $atts ) { return array_merge( $defaults, (ar
 function home_url( $p = '' ) { return 'http://example.test' . $p; }
 function wp_parse_url( $url, $component = -1 ) { return parse_url( $url, $component ); }
 function get_locale() { return 'en_US'; }
+function esc_html( $s ) { return htmlspecialchars( (string) $s, ENT_QUOTES ); }
+function absint( $n ) { return abs( (int) $n ); }
+function wpautop( $s ) { return '<p>' . str_replace( "\n\n", '</p><p>', (string) $s ) . '</p>'; }
+function date_i18n( $f, $ts ) { return gmdate( $f, $ts ); }
+function add_query_arg( $k, $v, $url ) { return $url . ( strpos( $url, '?' ) === false ? '?' : '&' ) . $k . '=' . $v; }
+function get_post_status( $id ) { return false; }
 
 class WP_Widget {
 	public $id_base;
@@ -322,6 +328,47 @@ check( false !== strpos( $ics, 'UID:wpbsl-213@example.test' ), 'ICS UID embeds b
 check( false !== strpos( $ics, '#213' ), 'ICS summary includes the booking number' );
 check( false !== strpos( $ics, 'END:VCALENDAR' ), 'ICS terminates with VCALENDAR' );
 check( substr_count( $ics, "\r\n" ) >= 14, 'ICS uses CRLF line endings throughout' );
+
+echo "\nHelpers: owner list parsing\n";
+$owners = WP_Booking_System_Luca_Helpers::parse_owners( "Alberto\nLuca, Anna\n\nLuca" );
+check_equals( array( 'Alberto', 'Luca', 'Anna' ), $owners, 'owners split on newlines/commas, trimmed and de-duplicated' );
+check_equals( array(), WP_Booking_System_Luca_Helpers::parse_owners( '   ' ), 'blank owners list yields empty array' );
+
+echo "\nEmail: visual block builder rendering\n";
+$block_booking = (object) array(
+	'id'         => 5,
+	'first_name' => 'Anna',
+	'last_name'  => 'Rossi',
+	'email'      => 'anna@example.com',
+	'phone'      => '',
+	'check_in'   => '2026-08-03',
+	'check_out'  => '2026-08-08',
+	'adults'     => 4,
+	'kids'       => 0,
+	'total_price'=> 375.0,
+	'status'     => 'confirmed',
+	'owner'      => 'Alberto',
+	'visitors_welcome' => 1,
+	'notes'      => '',
+	'booking_token' => str_repeat( 'a', 64 ),
+);
+$render = new ReflectionMethod( 'WP_Booking_System_Luca_Email', 'render_blocks' );
+$render->setAccessible( true );
+$blocks = array(
+	array( 'type' => 'heading', 'text' => 'Hallo {first_name}' ),
+	array( 'type' => 'text', 'text' => 'Owner is {owner}.' ),
+	array( 'type' => 'details' ),
+	array( 'type' => 'button', 'label' => 'Manage', 'url' => '{manage_url}' ),
+	array( 'type' => 'divider' ),
+	array( 'type' => 'image', 'src' => 'https://example.test/qr.png', 'alt' => 'QR', 'width' => 200 ),
+);
+$out = $render->invoke( $email_obj, $blocks, $block_booking );
+check( false !== strpos( $out, '<h2' ) && false !== strpos( $out, 'Hallo Anna' ), 'heading block renders with merged {first_name}' );
+check( false !== strpos( $out, 'Owner is Alberto.' ), 'text block renders with merged {owner}' );
+check( false !== strpos( $out, 'booking-details' ), 'details block injects the booking-details box' );
+check( false !== strpos( $out, '<a href="http' ) && false !== strpos( $out, '>Manage<' ), 'button block renders an anchor with {manage_url}' );
+check( false !== strpos( $out, '<hr' ), 'divider block renders an <hr>' );
+check( false !== strpos( $out, '<img src="https://example.test/qr.png"' ) && false !== strpos( $out, 'width="200"' ), 'image block renders an <img> with width' );
 
 /* --------------------------------------------------------------------------
  * Summary.

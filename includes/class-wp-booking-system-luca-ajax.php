@@ -135,6 +135,12 @@ class WP_Booking_System_Luca_Ajax {
 			'notes'      => isset( $_POST['notes'] ) ? sanitize_textarea_field( wp_unslash( $_POST['notes'] ) ) : '',
 		);
 
+		// Optional extra fields. Owner must be one of the configured names.
+		$owner          = isset( $_POST['owner'] ) ? sanitize_text_field( wp_unslash( $_POST['owner'] ) ) : '';
+		$allowed_owners = WP_Booking_System_Luca_Helpers::parse_owners( get_option( 'wpbsl_owners', '' ) );
+		$data['owner']  = in_array( $owner, $allowed_owners, true ) ? $owner : '';
+		$data['visitors_welcome'] = ( isset( $_POST['visitors_welcome'] ) && '1' === (string) $_POST['visitors_welcome'] ) ? 1 : 0;
+
 		// Validate required fields.
 		if ( empty( $data['first_name'] ) || empty( $data['last_name'] ) || empty( $data['email'] ) || empty( $data['check_in'] ) || empty( $data['check_out'] ) ) {
 			wp_send_json_error( array( 'message' => __( 'Please fill in all required fields.', 'wp-booking-system-luca' ) ) );

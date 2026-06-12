@@ -180,6 +180,27 @@ class WP_Booking_System_Luca_Helpers {
 	}
 
 	/**
+	 * Parse a configured owners list (newline or comma separated) into a
+	 * clean, de-duplicated array of names.
+	 *
+	 * @param string $raw Raw option value.
+	 * @return string[]
+	 */
+	public static function parse_owners( $raw ) {
+		$parts = preg_split( '/[\r\n,]+/', (string) $raw );
+		$names = array();
+
+		foreach ( (array) $parts as $part ) {
+			$part = trim( $part );
+			if ( '' !== $part && ! in_array( $part, $names, true ) ) {
+				$names[] = $part;
+			}
+		}
+
+		return $names;
+	}
+
+	/**
 	 * Allowed booking statuses.
 	 *
 	 * @return string[]

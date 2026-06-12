@@ -177,7 +177,7 @@ class WP_Booking_System_Luca_Email {
 	public function send_booking_confirmation( $booking ) {
 		$to      = $booking->email;
 		$subject = $this->render_subject( 'wpbsl_email_confirmation_subject', $this->default_confirmation_subject(), $booking );
-		$body    = $this->get_template_body( 'wpbsl_email_confirmation_body', $this->default_confirmation_body(), $booking );
+		$body    = $this->compose_body( 'confirmation', $this->default_confirmation_body(), $booking );
 		$message = $this->wrap_email( __( 'Booking Confirmation', 'wp-booking-system-luca' ), $body );
 
 		$attachments = $this->build_ics_attachment( $booking );
@@ -205,7 +205,7 @@ class WP_Booking_System_Luca_Email {
 
 		$to      = $admin_email;
 		$subject = $this->render_subject( 'wpbsl_email_admin_subject', $this->default_admin_subject(), $booking );
-		$body    = $this->get_template_body( 'wpbsl_email_admin_body', $this->default_admin_body(), $booking );
+		$body    = $this->compose_body( 'admin', $this->default_admin_body(), $booking );
 		$message = $this->wrap_email( __( 'New Booking Received', 'wp-booking-system-luca' ), $body );
 
 		$attachments = $this->build_ics_attachment( $booking );
@@ -287,6 +287,8 @@ class WP_Booking_System_Luca_Email {
 			'{guests}'          => esc_html( $guests ),
 			'{total_price}'     => esc_html( number_format( (float) $booking->total_price, 2 ) . ' ' . $currency ),
 			'{status}'          => esc_html( ucfirst( (string) $booking->status ) ),
+			'{owner}'           => esc_html( isset( $booking->owner ) ? (string) $booking->owner : '' ),
+			'{visitors_welcome}' => esc_html( ( isset( $booking->visitors_welcome ) && (int) $booking->visitors_welcome ) ? __( 'Yes', 'wp-booking-system-luca' ) : __( 'No', 'wp-booking-system-luca' ) ),
 			'{notes}'           => esc_html( (string) $booking->notes ),
 			'{manage_url}'      => esc_url( $manage_url ),
 			'{manage_link}'     => '<a href="' . esc_url( $manage_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'Manage Booking', 'wp-booking-system-luca' ) . '</a>',
@@ -347,6 +349,81 @@ class WP_Booking_System_Luca_Email {
 		$raw = $this->get_template_part( $option_key, $default );
 
 		return wpautop( self::replace_merge_tags( $raw, $this->get_merge_vars( $booking ) ) );
+	}
+
+	/**
+	 * Build an email body, preferring the visual block builder when one has
+	 * been configured for this template, otherwise the plain-text template.
+	 *
+	 * @param string $slug         Template slug: confirmation|cancellation|admin.
+	 * @param string $default_body Default plain-text body.
+	 * @param object $booking      Booking object.
+	 * @return string
+	 */
+	private function compose_body( $slug, $default_body, $booking ) {
+		$blocks = json_decode( (string) get_option( 'wpbsl_email_' . $slug . '_blocks', '' ), true );
+
+		if ( is_array( $blocks ) && ! empty( $blocks ) ) {
+			return $this->render_blocks( $blocks, $booking );
+		}
+
+		return $this->get_template_body( 'wpbsl_email_' . $slug . '_body', $default_body, $booking );
+	}
+
+	/**
+	 * Render an ordered list of content blocks (from the drag-and-drop
+	 * builder) into email HTML, resolving merge tags per block.
+	 *
+	 * @param array  $blocks  Block definitions.
+	 * @param object $booking Booking object.
+	 * @return string
+	 */
+	private function render_blocks( $blocks, $booking ) {
+		$vars   = $this->get_merge_vars( $booking );
+		$button = 'display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;';
+		$html   = '';
+
+		foreach ( $blocks as $block ) {
+			$type = isset( $block['type'] ) ? $block['type'] : '';
+
+			switch ( $type ) {
+				case 'heading':
+					$text  = self::replace_merge_tags( esc_html( isset( $block['text'] ) ? $block['text'] : '' ), $vars );
+					$html .= '<h2 style="color:#333333; margin:0 0 12px;">' . $text . '</h2>';
+					break;
+
+				case 'text':
+					$text  = self::replace_merge_tags( wpautop( esc_html( isset( $block['text'] ) ? $block['text'] : '' ) ), $vars );
+					$html .= $text;
+					break;
+
+				case 'details':
+					$html .= $vars['{booking_details}'];
+					break;
+
+				case 'button':
+					$label = self::replace_merge_tags( esc_html( isset( $block['label'] ) ? $block['label'] : '' ), $vars );
+					$url   = esc_url( self::replace_merge_tags( isset( $block['url'] ) ? $block['url'] : '', $vars ) );
+					$html .= '<p><a href="' . $url . '" style="' . esc_attr( $button ) . '">' . $label . '</a></p>';
+					break;
+
+				case 'image':
+					$src = esc_url( isset( $block['src'] ) ? $block['src'] : '' );
+					if ( $src ) {
+						$alt   = esc_attr( isset( $block['alt'] ) ? $block['alt'] : '' );
+						$width = isset( $block['width'] ) ? absint( $block['width'] ) : 0;
+						$wattr = $width ? ' width="' . $width . '" style="max-width:100%;height:auto;"' : ' style="max-width:100%;height:auto;"';
+						$html .= '<p><img src="' . $src . '" alt="' . $alt . '"' . $wattr . ' /></p>';
+					}
+					break;
+
+				case 'divider':
+					$html .= '<hr style="border:none;border-top:1px solid #dddddd;margin:20px 0;" />';
+					break;
+			}
+		}
+
+		return $html;
 	}
 
 	/**
@@ -455,7 +532,7 @@ class WP_Booking_System_Luca_Email {
 	 */
 	public function default_admin_body() {
 		return __(
-			"A new booking has been submitted.\n\nGuest: {guest_name}\nEmail: {guest_email}\nPhone: {guest_phone}\nStatus: {status}\n\n{booking_details}\n\n{admin_link}",
+			"A new booking has been submitted.\n\nGuest: {guest_name}\nEmail: {guest_email}\nPhone: {guest_phone}\nOwner: {owner}\nVisitors welcome: {visitors_welcome}\nStatus: {status}\n\n{booking_details}\n\n{admin_link}",
 			'wp-booking-system-luca'
 		);
 	}
@@ -569,7 +646,7 @@ class WP_Booking_System_Luca_Email {
 	public function send_booking_cancellation( $booking ) {
 		$to      = $booking->email;
 		$subject = $this->render_subject( 'wpbsl_email_cancellation_subject', $this->default_cancellation_subject(), $booking );
-		$body    = $this->get_template_body( 'wpbsl_email_cancellation_body', $this->default_cancellation_body(), $booking );
+		$body    = $this->compose_body( 'cancellation', $this->default_cancellation_body(), $booking );
 		$message = $this->wrap_email( __( 'Booking Cancelled', 'wp-booking-system-luca' ), $body );
 
 		return wp_mail( $to, $subject, $message, $this->mail_headers() );

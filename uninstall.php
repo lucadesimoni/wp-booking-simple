@@ -59,6 +59,13 @@ delete_option( 'wpbsl_email_cancellation_subject' );
 delete_option( 'wpbsl_email_cancellation_body' );
 delete_option( 'wpbsl_email_admin_subject' );
 delete_option( 'wpbsl_email_admin_body' );
+delete_option( 'wpbsl_email_confirmation_blocks' );
+delete_option( 'wpbsl_email_cancellation_blocks' );
+delete_option( 'wpbsl_email_admin_blocks' );
+delete_option( 'wpbsl_show_owner' );
+delete_option( 'wpbsl_owners' );
+delete_option( 'wpbsl_show_visitors' );
+delete_option( 'wpbsl_db_version' );
 
 // Clear any cached data.
 wp_cache_flush();
