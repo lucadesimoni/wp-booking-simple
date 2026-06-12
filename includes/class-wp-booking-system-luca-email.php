@@ -180,7 +180,9 @@ class WP_Booking_System_Luca_Email {
 		$body    = $this->get_template_body( 'wpbsl_email_confirmation_body', $this->default_confirmation_body(), $booking );
 		$message = $this->wrap_email( __( 'Booking Confirmation', 'wp-booking-system-luca' ), $body );
 
-		$result = wp_mail( $to, $subject, $message, $this->mail_headers() );
+		$attachments = $this->build_ics_attachment( $booking );
+		$result      = wp_mail( $to, $subject, $message, $this->mail_headers(), $attachments );
+		$this->cleanup_attachments( $attachments );
 
 		// Send admin notification.
 		$this->send_admin_notification( $booking );
@@ -206,7 +208,11 @@ class WP_Booking_System_Luca_Email {
 		$body    = $this->get_template_body( 'wpbsl_email_admin_body', $this->default_admin_body(), $booking );
 		$message = $this->wrap_email( __( 'New Booking Received', 'wp-booking-system-luca' ), $body );
 
-		return wp_mail( $to, $subject, $message, $this->mail_headers() );
+		$attachments = $this->build_ics_attachment( $booking );
+		$result      = wp_mail( $to, $subject, $message, $this->mail_headers(), $attachments );
+		$this->cleanup_attachments( $attachments );
+
+		return $result;
 	}
 
 	/**
@@ -283,8 +289,8 @@ class WP_Booking_System_Luca_Email {
 			'{status}'          => esc_html( ucfirst( (string) $booking->status ) ),
 			'{notes}'           => esc_html( (string) $booking->notes ),
 			'{manage_url}'      => esc_url( $manage_url ),
-			'{manage_link}'     => '<a href="' . esc_url( $manage_url ) . '" class="button">' . esc_html__( 'Manage Booking', 'wp-booking-system-luca' ) . '</a>',
-			'{admin_link}'      => '<a href="' . esc_url( $admin_url ) . '" class="button">' . esc_html__( 'View Booking', 'wp-booking-system-luca' ) . '</a>',
+			'{manage_link}'     => '<a href="' . esc_url( $manage_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'Manage Booking', 'wp-booking-system-luca' ) . '</a>',
+			'{admin_link}'      => '<a href="' . esc_url( $admin_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'View Booking', 'wp-booking-system-luca' ) . '</a>',
 			'{booking_details}' => $this->render_booking_details( $booking ),
 		);
 	}
@@ -301,8 +307,8 @@ class WP_Booking_System_Luca_Email {
 
 		ob_start();
 		?>
-		<div class="booking-details">
-			<h3><?php esc_html_e( 'Booking Details', 'wp-booking-system-luca' ); ?></h3>
+		<div class="booking-details" style="background-color:#f7f7f7; color:#333333; padding:15px; margin:15px 0; border-left:4px solid #8B0000;">
+			<h3 style="color:#333333; margin-top:0;"><?php esc_html_e( 'Booking Details', 'wp-booking-system-luca' ); ?></h3>
 			<p><strong><?php esc_html_e( 'Check-in:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( date_i18n( $date_fmt, strtotime( $booking->check_in ) ) ); ?></p>
 			<p><strong><?php esc_html_e( 'Check-out:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( date_i18n( $date_fmt, strtotime( $booking->check_out ) ) ); ?></p>
 			<p><strong><?php esc_html_e( 'Guests:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( $booking->adults . ' ' . __( 'adults', 'wp-booking-system-luca' ) . ', ' . $booking->kids . ' ' . __( 'kids', 'wp-booking-system-luca' ) ); ?></p>
@@ -354,26 +360,31 @@ class WP_Booking_System_Luca_Email {
 		ob_start();
 		?>
 		<!DOCTYPE html>
-		<html>
+		<html lang="<?php echo esc_attr( str_replace( '_', '-', get_locale() ) ); ?>">
 		<head>
 			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			<meta name="color-scheme" content="light only">
+			<meta name="supported-color-schemes" content="light only">
 			<style>
-				body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+				:root { color-scheme: light only; supported-color-schemes: light only; }
+				body { font-family: Arial, sans-serif; line-height: 1.6; color: #333333; background-color: #eeeeee; margin: 0; padding: 0; }
 				.container { max-width: 600px; margin: 0 auto; padding: 20px; }
-				.header { background-color: #8B0000; color: white; padding: 20px; text-align: center; }
-				.content { background-color: #f9f9f9; padding: 20px; }
-				.booking-details { background-color: white; padding: 15px; margin: 15px 0; border-left: 4px solid #8B0000; }
+				.header { background-color: #8B0000; color: #ffffff; padding: 20px; text-align: center; }
+				.header h1 { color: #ffffff; margin: 0; }
+				.content { background-color: #ffffff; color: #333333; padding: 20px; }
+				.booking-details { background-color: #f7f7f7; color: #333333; padding: 15px; margin: 15px 0; border-left: 4px solid #8B0000; }
 				.booking-details p { margin: 8px 0; }
-				.button { display: inline-block; padding: 12px 24px; background-color: #8B0000; color: white; text-decoration: none; border-radius: 4px; margin-top: 15px; }
-				.footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+				.button { display: inline-block; padding: 12px 24px; background-color: #8B0000; color: #ffffff !important; text-decoration: none; border-radius: 4px; margin-top: 15px; }
+				.footer { text-align: center; padding: 20px; color: #666666; font-size: 12px; }
 			</style>
 		</head>
-		<body>
+		<body style="background-color:#eeeeee; color:#333333;">
 			<div class="container">
-				<div class="header">
-					<h1><?php echo esc_html( $heading ); ?></h1>
+				<div class="header" style="background-color:#8B0000;">
+					<h1 style="color:#ffffff; margin:0;"><?php echo esc_html( $heading ); ?></h1>
 				</div>
-				<div class="content">
+				<div class="content" style="background-color:#ffffff; color:#333333;">
 					<?php echo wp_kses_post( $body ); ?>
 				</div>
 				<div class="footer">
@@ -447,6 +458,106 @@ class WP_Booking_System_Luca_Email {
 			"A new booking has been submitted.\n\nGuest: {guest_name}\nEmail: {guest_email}\nPhone: {guest_phone}\nStatus: {status}\n\n{booking_details}\n\n{admin_link}",
 			'wp-booking-system-luca'
 		);
+	}
+
+	/**
+	 * Escape a value for inclusion in an iCalendar (.ics) text field.
+	 *
+	 * @param string $value Raw value.
+	 * @return string
+	 */
+	private static function ics_escape( $value ) {
+		$value = (string) $value;
+		$value = str_replace( array( "\\", ';', ',' ), array( '\\\\', '\\;', '\\,' ), $value );
+		$value = str_replace( array( "\r\n", "\n", "\r" ), '\\n', $value );
+
+		return $value;
+	}
+
+	/**
+	 * Build an iCalendar (.ics) document for a booking, as an all-day VEVENT
+	 * spanning check-in (inclusive) to check-out (exclusive).
+	 *
+	 * @param object $booking Booking object.
+	 * @return string
+	 */
+	public function generate_ics( $booking ) {
+		$host  = wp_parse_url( home_url(), PHP_URL_HOST );
+		$host  = $host ? $host : 'localhost';
+		$id    = isset( $booking->id ) ? (int) $booking->id : 0;
+		$site  = get_bloginfo( 'name' );
+		$start = gmdate( 'Ymd', strtotime( $booking->check_in ) );
+		$end   = gmdate( 'Ymd', strtotime( $booking->check_out ) );
+
+		$summary = sprintf(
+			/* translators: 1: site name, 2: booking id */
+			__( '%1$s - Booking #%2$d', 'wp-booking-system-luca' ),
+			$site,
+			$id
+		);
+
+		$description = sprintf(
+			/* translators: 1: guest name, 2: number of guests */
+			__( 'Booking for %1$s (%2$d guests).', 'wp-booking-system-luca' ),
+			trim( $booking->first_name . ' ' . $booking->last_name ),
+			(int) $booking->adults + (int) $booking->kids
+		);
+
+		$lines = array(
+			'BEGIN:VCALENDAR',
+			'VERSION:2.0',
+			'PRODID:-//WP booking Luca//EN',
+			'CALSCALE:GREGORIAN',
+			'METHOD:PUBLISH',
+			'BEGIN:VEVENT',
+			'UID:wpbsl-' . $id . '@' . $host,
+			'DTSTAMP:' . gmdate( 'Ymd\THis\Z' ),
+			'DTSTART;VALUE=DATE:' . $start,
+			'DTEND;VALUE=DATE:' . $end,
+			'SUMMARY:' . self::ics_escape( $summary ),
+			'DESCRIPTION:' . self::ics_escape( $description ),
+			'STATUS:CONFIRMED',
+			'END:VEVENT',
+			'END:VCALENDAR',
+		);
+
+		return implode( "\r\n", $lines ) . "\r\n";
+	}
+
+	/**
+	 * Write the booking's .ics to a temp file and return it as a wp_mail
+	 * attachments array. The file is named booking-{id}.ics.
+	 *
+	 * @param object $booking Booking object.
+	 * @return string[] Attachment paths (empty on failure).
+	 */
+	private function build_ics_attachment( $booking ) {
+		if ( empty( $booking->check_in ) || empty( $booking->check_out ) ) {
+			return array();
+		}
+
+		$id   = isset( $booking->id ) ? (int) $booking->id : 0;
+		$path = trailingslashit( get_temp_dir() ) . 'booking-' . ( $id ? $id : 'new' ) . '.ics';
+
+		if ( false === file_put_contents( $path, $this->generate_ics( $booking ) ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			return array();
+		}
+
+		return array( $path );
+	}
+
+	/**
+	 * Remove temporary attachment files after sending.
+	 *
+	 * @param string[] $attachments Attachment paths.
+	 * @return void
+	 */
+	private function cleanup_attachments( $attachments ) {
+		foreach ( (array) $attachments as $path ) {
+			if ( $path && file_exists( $path ) ) {
+				wp_delete_file( $path );
+			}
+		}
 	}
 
 	/**

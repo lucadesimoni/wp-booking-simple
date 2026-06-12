@@ -1,5 +1,9 @@
 *** WP booking Luca Changelog ***
 
+2026.06.12 - version 1.5.0
+ * New - Booking confirmation and admin notification emails now include an iCalendar (.ics) attachment named booking-{id}.ics, so guests and owners can add the stay to their calendar in one tap. The all-day event spans check-in to check-out.
+ * Tweak - Email markup hardened for dark-mode clients (Outlook/Gmail): forced light color-scheme via meta tags and explicit inline colors on the header, content, details box and buttons.
+
 2026.06.12 - version 1.4.0
  * New - Customizable email templates: edit the subject and body of the guest confirmation, guest cancellation and admin notification emails from Settings > Email Templates.
  * New - Merge tags ({guest_name}, {check_in}, {check_out}, {guests}, {total_price}, {booking_details}, {manage_link}, {admin_link}, and more) are replaced with each booking's details; clearing a field restores the built-in default.

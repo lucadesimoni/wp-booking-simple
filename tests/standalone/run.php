@@ -101,6 +101,9 @@ function admin_url( $p = '' ) { return 'http://example.test/wp-admin/' . $p; }
 function get_bloginfo( $k = '' ) { return 'Test Site'; }
 function wp_json_encode( $d ) { return json_encode( $d ); }
 function shortcode_atts( $defaults, $atts ) { return array_merge( $defaults, (array) $atts ); }
+function home_url( $p = '' ) { return 'http://example.test' . $p; }
+function wp_parse_url( $url, $component = -1 ) { return parse_url( $url, $component ); }
+function get_locale() { return 'en_US'; }
 
 class WP_Widget {
 	public $id_base;
@@ -300,6 +303,25 @@ check( false !== strpos( $email_obj->default_confirmation_body(), '{manage_link}
 check( false !== strpos( $email_obj->default_confirmation_body(), '{booking_details}' ), 'confirmation default references {booking_details}' );
 check( false !== strpos( $email_obj->default_admin_body(), '{admin_link}' ), 'admin default references {admin_link}' );
 check( false !== strpos( $email_obj->default_confirmation_subject(), '{site_name}' ), 'confirmation subject default references {site_name}' );
+
+echo "\nEmail: ICS calendar attachment\n";
+$ics_booking = (object) array(
+	'id'         => 213,
+	'first_name' => 'Luca',
+	'last_name'  => 'De Simoni',
+	'check_in'   => '2026-08-03',
+	'check_out'  => '2026-08-08',
+	'adults'     => 4,
+	'kids'       => 0,
+);
+$ics = $email_obj->generate_ics( $ics_booking );
+check( 0 === strpos( $ics, "BEGIN:VCALENDAR\r\n" ), 'ICS starts with VCALENDAR + CRLF' );
+check( false !== strpos( $ics, 'DTSTART;VALUE=DATE:20260803' ), 'ICS DTSTART is the check-in date' );
+check( false !== strpos( $ics, 'DTEND;VALUE=DATE:20260808' ), 'ICS DTEND is the check-out date' );
+check( false !== strpos( $ics, 'UID:wpbsl-213@example.test' ), 'ICS UID embeds booking id and host' );
+check( false !== strpos( $ics, '#213' ), 'ICS summary includes the booking number' );
+check( false !== strpos( $ics, 'END:VCALENDAR' ), 'ICS terminates with VCALENDAR' );
+check( substr_count( $ics, "\r\n" ) >= 14, 'ICS uses CRLF line endings throughout' );
 
 /* --------------------------------------------------------------------------
  * Summary.
