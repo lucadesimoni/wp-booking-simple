@@ -19,6 +19,14 @@
 
 		// Handle status changes (confirm / cancel)
 		$('.wpbs-set-status').on('click', handleStatusChange);
+
+		// Booking edit modal
+		$(document).on('click', '.wpbs-modal-close, .wpbs-modal-backdrop', closeModal);
+		$(document).on('keydown', function(e) {
+			if (e.key === 'Escape') { closeModal(); }
+		});
+		$('#wpbs-recalc-price').on('click', recalcPrice);
+		$('#wpbs-edit-form').on('submit', saveBooking);
 	});
 
 	/**
@@ -137,36 +145,110 @@
 	}
 
 	/**
-	 * View booking details
+	 * Open the booking view/edit modal and populate it.
 	 */
 	function viewBookingDetails(bookingId) {
+		const $modal = $('#wpbs-modal');
+		if (!$modal.length) {
+			return;
+		}
+
 		$.ajax({
 			url: wpbslAdmin.ajaxUrl,
 			type: 'POST',
-			data: {
-				action: 'wpbsl_get_booking',
-				nonce: wpbslAdmin.nonce,
-				id: bookingId
+			data: { action: 'wpbsl_get_booking', nonce: wpbslAdmin.nonce, id: bookingId },
+			success: function(response) {
+				if (!response.success) {
+					alert((response.data && response.data.message) || wpbslAdmin.i18n.genericError);
+					return;
+				}
+				populateModal(response.data.booking);
+				renderHistory(response.data.history);
+				$('#wpbs-edit-msg').text('');
+				openModal();
 			},
+			error: function() { alert(wpbslAdmin.i18n.genericError); }
+		});
+	}
+
+	function setVal(field, value) {
+		$('#wpbs-f-' + field).val(typeof value === 'undefined' || value === null ? '' : value);
+	}
+
+	function populateModal(b) {
+		$('#wpbs-modal-id').text('#' + b.id);
+		['id','first_name','last_name','email','phone','check_in','check_out','adults','kids',
+		 'owner','total_price','status','payment_status','payment_method','amount_paid','notes'].forEach(function(f) {
+			setVal(f, b[f]);
+		});
+		setVal('visitors_welcome', (b.visitors_welcome == 1) ? '1' : '0');
+	}
+
+	function renderHistory(history) {
+		const $list = $('#wpbs-history-list');
+		$list.empty();
+		if (!history || !history.length) {
+			$list.append($('<p class="description"></p>').text(wpbslAdmin.i18n.noHistory));
+			return;
+		}
+		history.forEach(function(rev) {
+			const $rev = $('<div class="wpbs-history-rev"></div>');
+			$rev.append($('<div class="wpbs-history-meta"></div>')
+				.text(rev.changed_at + ' · ' + rev.changed_by));
+			const $ul = $('<ul></ul>');
+			rev.items.forEach(function(it) {
+				const $li = $('<li></li>');
+				$li.append($('<strong></strong>').text(it.label + ': '));
+				$li.append($('<span class="wpbs-h-from"></span>').text(it.from));
+				$li.append(document.createTextNode(' → '));
+				$li.append($('<span class="wpbs-h-to"></span>').text(it.to));
+				$ul.append($li);
+			});
+			$rev.append($ul);
+			$list.append($rev);
+		});
+	}
+
+	function openModal() {
+		$('#wpbs-modal').css('display', 'block').attr('aria-hidden', 'false');
+	}
+
+	function closeModal() {
+		$('#wpbs-modal').css('display', 'none').attr('aria-hidden', 'true');
+	}
+
+	function recalcPrice() {
+		const adults = parseInt($('#wpbs-f-adults').val(), 10) || 0;
+		const kids = parseInt($('#wpbs-f-kids').val(), 10) || 0;
+		const ci = $('#wpbs-f-check_in').val();
+		const co = $('#wpbs-f-check_out').val();
+		let nights = 1;
+		if (ci && co) {
+			const diff = (new Date(co) - new Date(ci)) / 86400000;
+			nights = Math.max(1, Math.round(diff));
+		}
+		const price = (adults * (wpbslAdmin.priceAdult || 0) + kids * (wpbslAdmin.priceKid || 0)) * nights;
+		$('#wpbs-f-total_price').val(price.toFixed(2));
+	}
+
+	function saveBooking(e) {
+		e.preventDefault();
+		const $msg = $('#wpbs-edit-msg');
+		$msg.css('color', '#666').text(wpbslAdmin.i18n.saving);
+		$.ajax({
+			url: wpbslAdmin.ajaxUrl,
+			type: 'POST',
+			data: $('#wpbs-edit-form').serialize() + '&action=wpbsl_update_booking&nonce=' + encodeURIComponent(wpbslAdmin.nonce),
 			success: function(response) {
 				if (response.success) {
-					const booking = response.data;
-					const message = `
-						<strong>Guest:</strong> ${booking.first_name} ${booking.last_name}<br>
-						<strong>Email:</strong> ${booking.email}<br>
-						<strong>Phone:</strong> ${booking.phone || 'N/A'}<br>
-						<strong>Check-in:</strong> ${booking.check_in}<br>
-						<strong>Check-out:</strong> ${booking.check_out}<br>
-						<strong>Guests:</strong> ${booking.adults} adults, ${booking.kids} kids<br>
-						${booking.owner ? '<strong>Owner:</strong> ' + booking.owner + '<br>' : ''}
-						<strong>Visitors welcome:</strong> ${(booking.visitors_welcome == 1) ? 'Yes' : 'No'}<br>
-						<strong>Price:</strong> ${booking.total_price} ${wpbslAdmin.currency || 'CHF'}<br>
-						<strong>Status:</strong> ${booking.status}<br>
-						${booking.notes ? '<strong>Notes:</strong> ' + booking.notes + '<br>' : ''}
-					`;
-					alert(message);
+					$msg.css('color', '#00a32a').text(response.data.message);
+					renderHistory(response.data.history);
+					setTimeout(function() { window.location.reload(); }, 700);
+				} else {
+					$msg.css('color', '#d63638').text((response.data && response.data.message) || wpbslAdmin.i18n.genericError);
 				}
-			}
+			},
+			error: function() { $msg.css('color', '#d63638').text(wpbslAdmin.i18n.genericError); }
 		});
 	}
 

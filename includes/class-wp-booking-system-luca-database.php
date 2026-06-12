@@ -23,11 +23,19 @@ class WP_Booking_System_Luca_Database {
 	private $table_name;
 
 	/**
+	 * Table name for the per-booking change history.
+	 *
+	 * @var string
+	 */
+	private $history_table;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->table_name = $wpdb->prefix . 'wpbsl_bookings';
+		$this->table_name    = $wpdb->prefix . 'wpbsl_bookings';
+		$this->history_table = $wpdb->prefix . 'wpbsl_booking_history';
 	}
 
 	/**
@@ -53,6 +61,9 @@ class WP_Booking_System_Luca_Database {
 			visitors_welcome tinyint(1) NOT NULL DEFAULT 0,
 			total_price decimal(10,2) NOT NULL,
 			status varchar(20) NOT NULL DEFAULT 'pending',
+			payment_status varchar(20) NOT NULL DEFAULT 'unpaid',
+			payment_method varchar(20) DEFAULT NULL,
+			amount_paid decimal(10,2) NOT NULL DEFAULT 0,
 			notes text DEFAULT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -63,8 +74,19 @@ class WP_Booking_System_Luca_Database {
 			KEY status (status)
 		) $charset_collate;";
 
+		$history_sql = "CREATE TABLE IF NOT EXISTS {$this->history_table} (
+			id bigint(20) NOT NULL AUTO_INCREMENT,
+			booking_id bigint(20) NOT NULL,
+			changed_at datetime DEFAULT CURRENT_TIMESTAMP,
+			changed_by varchar(150) DEFAULT NULL,
+			changes longtext NOT NULL,
+			PRIMARY KEY (id),
+			KEY booking_id (booking_id)
+		) $charset_collate;";
+
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
+		dbDelta( $history_sql );
 
 		$this->ensure_columns();
 	}
@@ -86,7 +108,10 @@ class WP_Booking_System_Luca_Database {
 
 		$columns = array(
 			'owner'            => 'varchar(100) DEFAULT NULL',
-			'visitors_welcome' => "tinyint(1) NOT NULL DEFAULT 0",
+			'visitors_welcome' => 'tinyint(1) NOT NULL DEFAULT 0',
+			'payment_status'   => "varchar(20) NOT NULL DEFAULT 'unpaid'",
+			'payment_method'   => 'varchar(20) DEFAULT NULL',
+			'amount_paid'      => 'decimal(10,2) NOT NULL DEFAULT 0',
 		);
 
 		foreach ( $columns as $name => $definition ) {
@@ -128,6 +153,9 @@ class WP_Booking_System_Luca_Database {
 			'visitors_welcome' => 0,
 			'total_price'    => 0,
 			'status'         => 'pending',
+			'payment_status' => 'unpaid',
+			'payment_method' => '',
+			'amount_paid'    => 0,
 			'notes'          => '',
 		);
 
@@ -148,13 +176,16 @@ class WP_Booking_System_Luca_Database {
 			'visitors_welcome' => $data['visitors_welcome'],
 			'total_price'      => $data['total_price'],
 			'status'           => $data['status'],
+			'payment_status'   => $data['payment_status'],
+			'payment_method'   => $data['payment_method'],
+			'amount_paid'      => $data['amount_paid'],
 			'notes'            => $data['notes'],
 		);
 
 		$result = $wpdb->insert(
 			$this->table_name,
 			$data,
-			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%f', '%s', '%s' )
+			array( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%d', '%f', '%s', '%s', '%s', '%f', '%s' )
 		);
 
 		if ( $result ) {
@@ -199,9 +230,9 @@ class WP_Booking_System_Luca_Database {
 		// Define format for each field.
 		$formats = array();
 		foreach ( $data as $key => $value ) {
-			if ( in_array( $key, array( 'adults', 'kids' ), true ) ) {
+			if ( in_array( $key, array( 'adults', 'kids', 'visitors_welcome' ), true ) ) {
 				$formats[ $key ] = '%d';
-			} elseif ( in_array( $key, array( 'total_price' ), true ) ) {
+			} elseif ( in_array( $key, array( 'total_price', 'amount_paid' ), true ) ) {
 				$formats[ $key ] = '%f';
 			} else {
 				$formats[ $key ] = '%s';
@@ -227,7 +258,48 @@ class WP_Booking_System_Luca_Database {
 	 */
 	public function delete_booking( $id ) {
 		global $wpdb;
+		$wpdb->delete( $this->history_table, array( 'booking_id' => $id ), array( '%d' ) );
 		return $wpdb->delete( $this->table_name, array( 'id' => $id ), array( '%d' ) ) !== false;
+	}
+
+	/**
+	 * Record a set of field changes for a booking.
+	 *
+	 * @param int    $booking_id Booking ID.
+	 * @param array  $changes    Map of field => array( 'from' => ..., 'to' => ... ).
+	 * @param string $changed_by Who made the change (display name or label).
+	 * @return int|false
+	 */
+	public function insert_history( $booking_id, $changes, $changed_by = '' ) {
+		global $wpdb;
+
+		if ( empty( $changes ) ) {
+			return false;
+		}
+
+		$result = $wpdb->insert(
+			$this->history_table,
+			array(
+				'booking_id' => $booking_id,
+				'changed_at' => current_time( 'mysql' ),
+				'changed_by' => $changed_by,
+				'changes'    => wp_json_encode( $changes ),
+			),
+			array( '%d', '%s', '%s', '%s' )
+		);
+
+		return $result ? $wpdb->insert_id : false;
+	}
+
+	/**
+	 * Get the change history for a booking, newest first.
+	 *
+	 * @param int $booking_id Booking ID.
+	 * @return array
+	 */
+	public function get_history( $booking_id ) {
+		global $wpdb;
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$this->history_table} WHERE booking_id = %d ORDER BY id DESC", $booking_id ) );
 	}
 
 	/**

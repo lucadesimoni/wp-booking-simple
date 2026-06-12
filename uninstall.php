@@ -19,6 +19,9 @@ global $wpdb;
 $table_name = $wpdb->prefix . 'wpbsl_bookings';
 $wpdb->query( "DROP TABLE IF EXISTS {$table_name}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
 
+$history_table = $wpdb->prefix . 'wpbsl_booking_history';
+$wpdb->query( "DROP TABLE IF EXISTS {$history_table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+
 // Remove the auto-created pages.
 foreach ( array( 'wpbsl_booking_page_id', 'wpbsl_manage_page_id' ) as $page_option ) {
 	$page_id = (int) get_option( $page_option, 0 );

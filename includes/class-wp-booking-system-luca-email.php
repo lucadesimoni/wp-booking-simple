@@ -260,6 +260,28 @@ class WP_Booking_System_Luca_Email {
 	 * @param object $booking Booking object.
 	 * @return array
 	 */
+	/**
+	 * Human label for a payment status key.
+	 *
+	 * @param string $key Status key.
+	 * @return string
+	 */
+	private function payment_status_label( $key ) {
+		$map = WP_Booking_System_Luca_Helpers::payment_statuses();
+		return isset( $map[ $key ] ) ? $map[ $key ] : ucfirst( (string) $key );
+	}
+
+	/**
+	 * Human label for a payment method key ('' = none).
+	 *
+	 * @param string $key Method key.
+	 * @return string
+	 */
+	private function payment_method_label( $key ) {
+		$map = WP_Booking_System_Luca_Helpers::payment_methods();
+		return isset( $map[ $key ] ) ? $map[ $key ] : '—';
+	}
+
 	private function get_merge_vars( $booking ) {
 		$currency   = get_option( 'wpbsl_currency', 'CHF' );
 		$date_fmt   = get_option( 'date_format' );
@@ -289,6 +311,9 @@ class WP_Booking_System_Luca_Email {
 			'{status}'          => esc_html( ucfirst( (string) $booking->status ) ),
 			'{owner}'           => esc_html( isset( $booking->owner ) ? (string) $booking->owner : '' ),
 			'{visitors_welcome}' => esc_html( ( isset( $booking->visitors_welcome ) && (int) $booking->visitors_welcome ) ? __( 'Yes', 'wp-booking-system-luca' ) : __( 'No', 'wp-booking-system-luca' ) ),
+			'{payment_status}'  => esc_html( $this->payment_status_label( isset( $booking->payment_status ) ? $booking->payment_status : 'unpaid' ) ),
+			'{payment_method}'  => esc_html( $this->payment_method_label( isset( $booking->payment_method ) ? $booking->payment_method : '' ) ),
+			'{amount_paid}'     => esc_html( number_format( isset( $booking->amount_paid ) ? (float) $booking->amount_paid : 0, 2 ) . ' ' . get_option( 'wpbsl_currency', 'CHF' ) ),
 			'{notes}'           => esc_html( (string) $booking->notes ),
 			'{manage_url}'      => esc_url( $manage_url ),
 			'{manage_link}'     => '<a href="' . esc_url( $manage_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'Manage Booking', 'wp-booking-system-luca' ) . '</a>',

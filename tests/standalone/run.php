@@ -138,6 +138,7 @@ $GLOBALS['wpdb'] = new wpdb_stub();
  * 1. Helper unit tests (pure logic — the heart of the booking system).
  * ------------------------------------------------------------------------ */
 require $plugin_dir . '/includes/class-wp-booking-system-luca-helpers.php';
+require $plugin_dir . '/includes/class-wp-booking-system-luca-stats.php';
 
 echo "\nHelpers: nights & pricing\n";
 check_equals( 1, WP_Booking_System_Luca_Helpers::calculate_nights( '2026-06-01', '2026-06-02' ), 'one night between consecutive days' );
@@ -369,6 +370,46 @@ check( false !== strpos( $out, 'booking-details' ), 'details block injects the b
 check( false !== strpos( $out, '<a href="http' ) && false !== strpos( $out, '>Manage<' ), 'button block renders an anchor with {manage_url}' );
 check( false !== strpos( $out, '<hr' ), 'divider block renders an <hr>' );
 check( false !== strpos( $out, '<img src="https://example.test/qr.png"' ) && false !== strpos( $out, 'width="200"' ), 'image block renders an <img> with width' );
+
+echo "\nHelpers: booking change diff\n";
+$old_booking = (object) array(
+	'first_name' => 'Anna', 'last_name' => 'Rossi', 'email' => 'a@x.com', 'phone' => '',
+	'check_in' => '2026-08-03', 'check_out' => '2026-08-08', 'adults' => 2, 'kids' => 0,
+	'owner' => 'Alberto', 'visitors_welcome' => 0, 'total_price' => 500.0, 'status' => 'pending',
+	'payment_status' => 'unpaid', 'payment_method' => '', 'amount_paid' => 0.0, 'notes' => '',
+);
+$new_vals = array(
+	'first_name' => 'Anna', 'last_name' => 'Rossi', 'email' => 'a@x.com', 'phone' => '',
+	'check_in' => '2026-08-03', 'check_out' => '2026-08-10', 'adults' => 2, 'kids' => 0,
+	'owner' => 'Luca', 'visitors_welcome' => 1, 'total_price' => 500.00, 'status' => 'confirmed',
+	'payment_status' => 'paid', 'payment_method' => 'twint', 'amount_paid' => 500.0, 'notes' => '',
+);
+$diff = WP_Booking_System_Luca_Helpers::compute_changes( $old_booking, $new_vals );
+check_equals( array( 'check_out', 'owner', 'visitors_welcome', 'status', 'payment_status', 'payment_method', 'amount_paid' ), array_keys( $diff ), 'compute_changes detects exactly the changed fields' );
+check_equals( array( 'from' => 'Alberto', 'to' => 'Luca' ), $diff['owner'], 'owner change captures from/to' );
+check( ! isset( $diff['total_price'] ), 'numeric 500.0 vs 500.00 is not a change' );
+check( ! isset( $diff['first_name'] ), 'unchanged fields are excluded' );
+
+echo "\nStats: dashboard aggregation\n";
+$sample = array(
+	(object) array( 'first_name' => 'Anna', 'last_name' => 'Rossi', 'email' => 'a@x.com', 'check_in' => '2026-08-03', 'check_out' => '2026-08-08', 'adults' => 2, 'kids' => 1, 'owner' => 'Alberto', 'visitors_welcome' => 1, 'total_price' => 600.0, 'amount_paid' => 600.0, 'payment_method' => 'bank', 'status' => 'confirmed' ),
+	(object) array( 'first_name' => 'Anna', 'last_name' => 'Rossi', 'email' => 'a@x.com', 'check_in' => '2026-09-01', 'check_out' => '2026-09-03', 'adults' => 2, 'kids' => 0, 'owner' => 'Luca', 'visitors_welcome' => 0, 'total_price' => 200.0, 'amount_paid' => 100.0, 'payment_method' => 'twint', 'status' => 'pending' ),
+	(object) array( 'first_name' => 'Bob', 'last_name' => 'Neri', 'email' => 'b@x.com', 'check_in' => '2026-09-10', 'check_out' => '2026-09-12', 'adults' => 4, 'kids' => 0, 'owner' => 'Alberto', 'visitors_welcome' => 0, 'total_price' => 400.0, 'amount_paid' => 0.0, 'payment_method' => '', 'status' => 'confirmed' ),
+	(object) array( 'first_name' => 'Cara', 'last_name' => 'X', 'email' => 'c@x.com', 'check_in' => '2026-09-20', 'check_out' => '2026-09-25', 'adults' => 1, 'kids' => 0, 'owner' => '', 'visitors_welcome' => 0, 'total_price' => 250.0, 'amount_paid' => 0.0, 'payment_method' => '', 'status' => 'cancelled' ),
+);
+$s = WP_Booking_System_Luca_Stats::summarize( $sample );
+check_equals( 3, $s['totals']['bookings'], 'cancelled bookings excluded from totals (3 of 4)' );
+check_equals( 1, $s['totals']['cancelled'], 'cancelled tally counts the cancelled booking' );
+check_equals( 9, $s['totals']['nights'], 'nights summed across non-cancelled (5+2+2)' );
+check_equals( 9, $s['totals']['guests'], 'guests summed (3+2+4)' );
+check_equals( 1200.0, $s['totals']['revenue'], 'revenue summed (600+200+400)' );
+check_equals( 700.0, $s['totals']['collected'], 'collected summed (600+100)' );
+check_equals( 500.0, $s['totals']['outstanding'], 'outstanding = revenue - collected' );
+check_equals( 'a@x.com', $s['by_guest'][0]['email'], 'top guest by bookings is the repeat guest' );
+check_equals( 2, $s['by_guest'][0]['bookings'], 'repeat guest has 2 bookings merged by email' );
+check_equals( 'Alberto', $s['by_owner'][0]['owner'], 'Alberto leads owner usage by nights (5+2=7)' );
+check_equals( 7, $s['by_owner'][0]['nights'], 'Alberto owner nights total' );
+check_equals( 1, $s['totals']['visitors'], 'one booking welcomes visitors' );
 
 /* --------------------------------------------------------------------------
  * Summary.

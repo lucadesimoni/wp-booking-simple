@@ -244,3 +244,55 @@
 	border-radius: 6px;
 	max-width: 1100px;
 }
+
+/* Payment badges */
+.wpbs-pay { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+.wpbs-pay-unpaid  { background:#fce8e6; color:#b32d2e; }
+.wpbs-pay-partial { background:#fff3e0; color:#b26a00; }
+.wpbs-pay-paid    { background:#e6f4ea; color:#1e7e34; }
+
+/* Booking edit modal */
+.wpbs-modal { position:fixed; inset:0; z-index:100000; }
+.wpbs-modal-backdrop { position:absolute; inset:0; background:rgba(0,0,0,.5); }
+.wpbs-modal-dialog {
+	position:relative; background:#fff; max-width:760px; width:calc(100% - 40px);
+	margin:40px auto; border-radius:8px; box-shadow:0 10px 40px rgba(0,0,0,.3);
+	max-height:calc(100vh - 80px); overflow:auto;
+}
+.wpbs-modal-head { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; border-bottom:1px solid #e0e0e0; }
+.wpbs-modal-head h2 { margin:0; font-size:18px; }
+.wpbs-modal-close { background:none; border:none; font-size:26px; line-height:1; cursor:pointer; color:#666; }
+.wpbs-modal-body { padding:20px; }
+.wpbs-edit-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px 18px; }
+.wpbs-edit-grid label, .wpbs-notes-field { display:flex; flex-direction:column; font-weight:600; font-size:12px; color:#333; }
+.wpbs-edit-grid input, .wpbs-edit-grid select, .wpbs-notes-field textarea { margin-top:4px; font-weight:400; }
+.wpbs-notes-field { margin-top:14px; }
+.wpbs-price-row { display:flex; gap:8px; }
+.wpbs-price-row input { flex:1; }
+.wpbs-pay-fieldset { margin-top:16px; border:1px solid #e0e0e0; border-radius:6px; padding:12px 16px; }
+.wpbs-pay-fieldset legend { font-weight:600; padding:0 6px; }
+.wpbs-modal-actions { margin-top:18px; display:flex; align-items:center; gap:12px; }
+.wpbs-edit-msg { font-weight:600; }
+.wpbs-history { margin-top:24px; border-top:1px solid #e0e0e0; padding-top:14px; }
+.wpbs-history h3 { margin:0 0 10px; }
+.wpbs-history-rev { border-left:3px solid #2271b1; padding:6px 0 6px 12px; margin-bottom:12px; }
+.wpbs-history-meta { color:#646970; font-size:12px; margin-bottom:4px; }
+.wpbs-history-rev ul { margin:0; }
+.wpbs-history-rev li { margin:2px 0; }
+.wpbs-h-from { color:#b32d2e; text-decoration:line-through; }
+.wpbs-h-to { color:#1e7e34; font-weight:600; }
+
+/* Dashboard */
+.wpbs-dash-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:18px; margin-top:18px; }
+.wpbs-dash-panel { background:#fff; border:1px solid #dcdcde; border-radius:6px; padding:16px 18px; overflow-x:auto; }
+.wpbs-dash-panel table { width:100%; }
+.wpbs-dash-panel td, .wpbs-dash-panel th { white-space:nowrap; }
+.wpbs-dash-panel h2 { margin-top:0; font-size:15px; }
+.wpbs-bar-row { display:flex; align-items:center; gap:10px; margin:6px 0; font-size:13px; }
+.wpbs-bar-label { width:90px; flex-shrink:0; }
+.wpbs-bar-track { flex:1; background:#f0f0f1; border-radius:4px; height:14px; overflow:hidden; }
+.wpbs-bar-fill { display:block; height:100%; background:#2271b1; }
+.wpbs-bar-value { width:140px; flex-shrink:0; text-align:right; color:#646970; }
+.wpbs-dash-list { margin:0; }
+.wpbs-dash-list li { margin:4px 0; }
+@media (max-width:600px){ .wpbs-edit-grid { grid-template-columns:1fr; } }

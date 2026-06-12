@@ -1,5 +1,13 @@
 *** WP booking Luca Changelog ***
 
+2026.06.12 - version 1.8.0
+ * New - Per-booking payment tracking: payment status (Unpaid / Partially paid / Paid), payment method (Bank, TWINT, Cash) and the amount effectively paid. A Payment column on the bookings list shows status and paid/total at a glance.
+ * New - Full booking editor in a modal: edit any field (guest details, dates, number of guests, owner, price, status, payment, notes). Availability is re-checked to prevent overlaps and a "Recalc" button recomputes the price from the dates and guests.
+ * New - Change history per booking: every later edit (and status change) is recorded with who made it, when, and the before/after of each field, shown as a timeline in the editor.
+ * New - Insights dashboard (WP booking Luca > Dashboard): KPIs for bookings, nights, guests, revenue, collected and outstanding amounts, plus bookings per guest, owner usage, payments by method and bookings per month.
+ * New - {payment_status}, {payment_method} and {amount_paid} email merge tags.
+ * Tweak - Adds the payment columns and a booking-history table automatically on upgrade.
+
 2026.06.12 - version 1.7.0
  * New - Admin calendar overview to see all bookings at a glance: month and list views, entries colour-coded by status (pending/confirmed/cancelled) with party size, summary cards (upcoming, pending, confirmed, total), a legend, "next check-in" note, and the calendar opens on the next upcoming booking.
  * New - "Owner" column on the All Bookings table; Owner and "Visitors welcome?" are also shown in the booking details popup.

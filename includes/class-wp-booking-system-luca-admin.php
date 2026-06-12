@@ -86,6 +86,15 @@ class WP_Booking_System_Luca_Admin {
 
 		add_submenu_page(
 			'wp-booking-system-luca',
+			__( 'Dashboard', 'wp-booking-system-luca' ),
+			__( 'Dashboard', 'wp-booking-system-luca' ),
+			'manage_options',
+			'wp-booking-system-dashboard',
+			array( $this, 'render_dashboard_page' )
+		);
+
+		add_submenu_page(
+			'wp-booking-system-luca',
 			__( 'Settings', 'wp-booking-system-luca' ),
 			__( 'Settings', 'wp-booking-system-luca' ),
 			'manage_options',
@@ -126,13 +135,17 @@ class WP_Booking_System_Luca_Admin {
 			'wp-booking-system-luca-admin',
 			'wpbslAdmin',
 			array(
-				'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
-				'nonce'    => wp_create_nonce( 'wp-booking-system-luca-admin' ),
-				'currency' => get_option( 'wpbsl_currency', 'CHF' ),
+				'ajaxUrl'    => admin_url( 'admin-ajax.php' ),
+				'nonce'      => wp_create_nonce( 'wp-booking-system-luca-admin' ),
+				'currency'   => get_option( 'wpbsl_currency', 'CHF' ),
+				'priceAdult' => floatval( get_option( 'wpbsl_price_adult', 50 ) ),
+				'priceKid'   => floatval( get_option( 'wpbsl_price_kid', 25 ) ),
 				'i18n'    => array(
 					'confirmDelete'  => __( 'Are you sure you want to delete this booking?', 'wp-booking-system-luca' ),
 					'confirmCancel'  => __( 'Cancel this booking and email the guest?', 'wp-booking-system-luca' ),
 					'genericError'   => __( 'An error occurred. Please try again.', 'wp-booking-system-luca' ),
+					'saving'         => __( 'Saving…', 'wp-booking-system-luca' ),
+					'noHistory'      => __( 'No changes recorded yet.', 'wp-booking-system-luca' ),
 				),
 			)
 		);
@@ -251,6 +264,7 @@ class WP_Booking_System_Luca_Admin {
 			<div id="wpbs-calendar" data-initial-date="<?php echo esc_attr( $next_in ? $next_in : $today ); ?>"></div>
 		</div>
 		<?php
+		$this->render_booking_modal();
 	}
 
 	/**
@@ -272,6 +286,7 @@ class WP_Booking_System_Luca_Admin {
 						<th><?php esc_html_e( 'Guests', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Owner', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Price', 'wp-booking-system-luca' ); ?></th>
+						<th><?php esc_html_e( 'Payment', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Status', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Actions', 'wp-booking-system-luca' ); ?></th>
 					</tr>
@@ -279,7 +294,7 @@ class WP_Booking_System_Luca_Admin {
 				<tbody>
 					<?php if ( empty( $bookings ) ) : ?>
 						<tr>
-							<td colspan="10"><?php esc_html_e( 'No bookings found.', 'wp-booking-system-luca' ); ?></td>
+							<td colspan="11"><?php esc_html_e( 'No bookings found.', 'wp-booking-system-luca' ); ?></td>
 						</tr>
 					<?php else : ?>
 						<?php foreach ( $bookings as $booking ) : ?>
@@ -292,6 +307,15 @@ class WP_Booking_System_Luca_Admin {
 								<td><?php echo esc_html( $booking->adults . ' ' . __( 'adults', 'wp-booking-system-luca' ) . ', ' . $booking->kids . ' ' . __( 'kids', 'wp-booking-system-luca' ) ); ?></td>
 								<td><?php echo esc_html( ! empty( $booking->owner ) ? $booking->owner : '—' ); ?></td>
 								<td><?php echo esc_html( number_format( $booking->total_price, 2 ) . ' ' . get_option( 'wpbsl_currency', 'CHF' ) ); ?></td>
+								<?php
+								$pay_key    = isset( $booking->payment_status ) ? $booking->payment_status : 'unpaid';
+								$pay_labels = WP_Booking_System_Luca_Helpers::payment_statuses();
+								$cur        = get_option( 'wpbsl_currency', 'CHF' );
+								?>
+								<td>
+									<span class="wpbs-pay wpbs-pay-<?php echo esc_attr( $pay_key ); ?>"><?php echo esc_html( isset( $pay_labels[ $pay_key ] ) ? $pay_labels[ $pay_key ] : ucfirst( $pay_key ) ); ?></span>
+									<br /><small><?php echo esc_html( number_format( (float) ( isset( $booking->amount_paid ) ? $booking->amount_paid : 0 ), 0 ) . ' / ' . number_format( (float) $booking->total_price, 0 ) . ' ' . $cur ); ?></small>
+								</td>
 								<td>
 									<span class="wpbs-status wpbs-status-<?php echo esc_attr( $booking->status ); ?>">
 										<?php echo esc_html( ucfirst( $booking->status ) ); ?>
@@ -299,7 +323,7 @@ class WP_Booking_System_Luca_Admin {
 								</td>
 								<td>
 									<a href="#" class="wpbs-view-booking" data-id="<?php echo esc_attr( $booking->id ); ?>">
-										<?php esc_html_e( 'View', 'wp-booking-system-luca' ); ?>
+										<?php esc_html_e( 'View / Edit', 'wp-booking-system-luca' ); ?>
 									</a> |
 									<?php if ( 'confirmed' !== $booking->status && 'cancelled' !== $booking->status ) : ?>
 										<a href="#" class="wpbs-set-status" data-id="<?php echo esc_attr( $booking->id ); ?>" data-status="confirmed">
@@ -320,6 +344,248 @@ class WP_Booking_System_Luca_Admin {
 					<?php endif; ?>
 				</tbody>
 			</table>
+		</div>
+		<?php
+		$this->render_booking_modal();
+	}
+
+	/**
+	 * Render the booking view/edit modal (shared by the list and calendar
+	 * screens). Fields are populated client-side via AJAX.
+	 */
+	public function render_booking_modal() {
+		$owners   = WP_Booking_System_Luca_Helpers::parse_owners( get_option( 'wpbsl_owners', '' ) );
+		$statuses = array(
+			'pending'   => __( 'Pending', 'wp-booking-system-luca' ),
+			'confirmed' => __( 'Confirmed', 'wp-booking-system-luca' ),
+			'cancelled' => __( 'Cancelled', 'wp-booking-system-luca' ),
+		);
+		$cur = get_option( 'wpbsl_currency', 'CHF' );
+		?>
+		<div id="wpbs-modal" class="wpbs-modal" style="display:none;" aria-hidden="true">
+			<div class="wpbs-modal-backdrop"></div>
+			<div class="wpbs-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="wpbs-modal-title">
+				<div class="wpbs-modal-head">
+					<h2 id="wpbs-modal-title"><?php esc_html_e( 'Booking', 'wp-booking-system-luca' ); ?> <span id="wpbs-modal-id"></span></h2>
+					<button type="button" class="wpbs-modal-close" aria-label="<?php esc_attr_e( 'Close', 'wp-booking-system-luca' ); ?>">&times;</button>
+				</div>
+				<div class="wpbs-modal-body">
+					<form id="wpbs-edit-form" class="wpbs-edit-form">
+						<input type="hidden" name="id" id="wpbs-f-id" value="" />
+
+						<div class="wpbs-edit-grid">
+							<label><?php esc_html_e( 'First name', 'wp-booking-system-luca' ); ?><input type="text" name="first_name" id="wpbs-f-first_name" /></label>
+							<label><?php esc_html_e( 'Last name', 'wp-booking-system-luca' ); ?><input type="text" name="last_name" id="wpbs-f-last_name" /></label>
+							<label><?php esc_html_e( 'Email', 'wp-booking-system-luca' ); ?><input type="email" name="email" id="wpbs-f-email" /></label>
+							<label><?php esc_html_e( 'Phone', 'wp-booking-system-luca' ); ?><input type="text" name="phone" id="wpbs-f-phone" /></label>
+							<label><?php esc_html_e( 'Check-in', 'wp-booking-system-luca' ); ?><input type="date" name="check_in" id="wpbs-f-check_in" /></label>
+							<label><?php esc_html_e( 'Check-out', 'wp-booking-system-luca' ); ?><input type="date" name="check_out" id="wpbs-f-check_out" /></label>
+							<label><?php esc_html_e( 'Adults', 'wp-booking-system-luca' ); ?><input type="number" min="1" name="adults" id="wpbs-f-adults" /></label>
+							<label><?php esc_html_e( 'Kids', 'wp-booking-system-luca' ); ?><input type="number" min="0" name="kids" id="wpbs-f-kids" /></label>
+							<label><?php esc_html_e( 'Owner', 'wp-booking-system-luca' ); ?>
+								<select name="owner" id="wpbs-f-owner">
+									<option value="">&mdash;</option>
+									<?php foreach ( $owners as $o ) : ?>
+										<option value="<?php echo esc_attr( $o ); ?>"><?php echo esc_html( $o ); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</label>
+							<label><?php esc_html_e( 'Visitors welcome', 'wp-booking-system-luca' ); ?>
+								<select name="visitors_welcome" id="wpbs-f-visitors_welcome">
+									<option value="0"><?php esc_html_e( 'No', 'wp-booking-system-luca' ); ?></option>
+									<option value="1"><?php esc_html_e( 'Yes', 'wp-booking-system-luca' ); ?></option>
+								</select>
+							</label>
+							<label><?php esc_html_e( 'Status', 'wp-booking-system-luca' ); ?>
+								<select name="status" id="wpbs-f-status">
+									<?php foreach ( $statuses as $k => $v ) : ?>
+										<option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</label>
+							<label class="wpbs-price-field"><?php echo esc_html( sprintf( /* translators: %s currency */ __( 'Total price (%s)', 'wp-booking-system-luca' ), $cur ) ); ?>
+								<span class="wpbs-price-row">
+									<input type="number" step="0.01" min="0" name="total_price" id="wpbs-f-total_price" />
+									<button type="button" class="button" id="wpbs-recalc-price"><?php esc_html_e( 'Recalc', 'wp-booking-system-luca' ); ?></button>
+								</span>
+							</label>
+						</div>
+
+						<fieldset class="wpbs-pay-fieldset">
+							<legend><?php esc_html_e( 'Payment', 'wp-booking-system-luca' ); ?></legend>
+							<div class="wpbs-edit-grid">
+								<label><?php esc_html_e( 'Payment status', 'wp-booking-system-luca' ); ?>
+									<select name="payment_status" id="wpbs-f-payment_status">
+										<?php foreach ( WP_Booking_System_Luca_Helpers::payment_statuses() as $k => $v ) : ?>
+											<option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
+										<?php endforeach; ?>
+									</select>
+								</label>
+								<label><?php esc_html_e( 'Payment method', 'wp-booking-system-luca' ); ?>
+									<select name="payment_method" id="wpbs-f-payment_method">
+										<option value="">&mdash;</option>
+										<?php foreach ( WP_Booking_System_Luca_Helpers::payment_methods() as $k => $v ) : ?>
+											<option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $v ); ?></option>
+										<?php endforeach; ?>
+									</select>
+								</label>
+								<label><?php echo esc_html( sprintf( /* translators: %s currency */ __( 'Amount paid (%s)', 'wp-booking-system-luca' ), $cur ) ); ?><input type="number" step="0.01" min="0" name="amount_paid" id="wpbs-f-amount_paid" /></label>
+							</div>
+						</fieldset>
+
+						<label class="wpbs-notes-field"><?php esc_html_e( 'Notes', 'wp-booking-system-luca' ); ?>
+							<textarea name="notes" id="wpbs-f-notes" rows="3"></textarea>
+						</label>
+
+						<div class="wpbs-modal-actions">
+							<button type="submit" class="button button-primary"><?php esc_html_e( 'Save changes', 'wp-booking-system-luca' ); ?></button>
+							<span id="wpbs-edit-msg" class="wpbs-edit-msg"></span>
+						</div>
+					</form>
+
+					<div class="wpbs-history">
+						<h3><?php esc_html_e( 'Change history', 'wp-booking-system-luca' ); ?></h3>
+						<div id="wpbs-history-list"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render the insights dashboard.
+	 */
+	public function render_dashboard_page() {
+		$bookings = wp_booking_system_luca()->database->get_bookings();
+		$stats    = WP_Booking_System_Luca_Stats::summarize( $bookings );
+		$cur      = get_option( 'wpbsl_currency', 'CHF' );
+		$t        = $stats['totals'];
+
+		$money = function ( $v ) use ( $cur ) {
+			return number_format( (float) $v, 2 ) . ' ' . $cur;
+		};
+		$pay_methods  = WP_Booking_System_Luca_Helpers::payment_methods();
+		$max_owner    = 1;
+		foreach ( $stats['by_owner'] as $row ) {
+			$max_owner = max( $max_owner, (int) $row['nights'] );
+		}
+		$max_month = 1;
+		foreach ( $stats['by_month'] as $count ) {
+			$max_month = max( $max_month, (int) $count );
+		}
+
+		$cards = array(
+			array( __( 'Bookings', 'wp-booking-system-luca' ), $t['bookings'], '#2271b1' ),
+			array( __( 'Nights booked', 'wp-booking-system-luca' ), $t['nights'], '#3858e9' ),
+			array( __( 'Guests', 'wp-booking-system-luca' ), $t['guests'], '#00a32a' ),
+			array( __( 'Revenue', 'wp-booking-system-luca' ), $money( $t['revenue'] ), '#8B0000' ),
+			array( __( 'Collected', 'wp-booking-system-luca' ), $money( $t['collected'] ), '#4caf50' ),
+			array( __( 'Outstanding', 'wp-booking-system-luca' ), $money( $t['outstanding'] ), '#ff9800' ),
+		);
+		?>
+		<div class="wrap wpbs-admin-wrap">
+			<h1><?php esc_html_e( 'Booking Dashboard', 'wp-booking-system-luca' ); ?></h1>
+			<p class="description"><?php esc_html_e( 'Insights across all non-cancelled bookings.', 'wp-booking-system-luca' ); ?></p>
+
+			<div class="wpbs-stat-cards">
+				<?php foreach ( $cards as $c ) : ?>
+					<div class="wpbs-stat-card" style="border-top:3px solid <?php echo esc_attr( $c[2] ); ?>;">
+						<span class="wpbs-stat-number"><?php echo esc_html( $c[1] ); ?></span>
+						<span class="wpbs-stat-label"><?php echo esc_html( $c[0] ); ?></span>
+					</div>
+				<?php endforeach; ?>
+			</div>
+
+			<div class="wpbs-dash-grid">
+				<div class="wpbs-dash-panel">
+					<h2><?php esc_html_e( 'Bookings per guest', 'wp-booking-system-luca' ); ?></h2>
+					<?php if ( empty( $stats['by_guest'] ) ) : ?>
+						<p class="description"><?php esc_html_e( 'No data yet.', 'wp-booking-system-luca' ); ?></p>
+					<?php else : ?>
+						<table class="widefat striped">
+							<thead><tr>
+								<th><?php esc_html_e( 'Guest', 'wp-booking-system-luca' ); ?></th>
+								<th><?php esc_html_e( 'Bookings', 'wp-booking-system-luca' ); ?></th>
+								<th><?php esc_html_e( 'Nights', 'wp-booking-system-luca' ); ?></th>
+								<th><?php esc_html_e( 'Guests', 'wp-booking-system-luca' ); ?></th>
+								<th><?php esc_html_e( 'Revenue', 'wp-booking-system-luca' ); ?></th>
+							</tr></thead>
+							<tbody>
+							<?php foreach ( array_slice( $stats['by_guest'], 0, 15 ) as $g ) : ?>
+								<tr>
+									<td><strong><?php echo esc_html( $g['name'] ? $g['name'] : $g['email'] ); ?></strong><?php echo $g['email'] ? '<br /><small>' . esc_html( $g['email'] ) . '</small>' : ''; ?></td>
+									<td><?php echo esc_html( $g['bookings'] ); ?></td>
+									<td><?php echo esc_html( $g['nights'] ); ?></td>
+									<td><?php echo esc_html( $g['guests'] ); ?></td>
+									<td><?php echo esc_html( $money( $g['revenue'] ) ); ?></td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php endif; ?>
+				</div>
+
+				<div class="wpbs-dash-panel">
+					<h2><?php esc_html_e( 'Owner usage', 'wp-booking-system-luca' ); ?></h2>
+					<?php if ( empty( $stats['by_owner'] ) ) : ?>
+						<p class="description"><?php esc_html_e( 'No data yet.', 'wp-booking-system-luca' ); ?></p>
+					<?php else : ?>
+						<?php foreach ( $stats['by_owner'] as $o ) : ?>
+							<div class="wpbs-bar-row">
+								<span class="wpbs-bar-label"><?php echo esc_html( $o['owner'] ? $o['owner'] : __( 'Unassigned', 'wp-booking-system-luca' ) ); ?></span>
+								<span class="wpbs-bar-track"><span class="wpbs-bar-fill" style="width:<?php echo esc_attr( round( $o['nights'] / $max_owner * 100 ) ); ?>%;"></span></span>
+								<span class="wpbs-bar-value">
+									<?php
+									/* translators: 1: nights, 2: bookings */
+									echo esc_html( sprintf( __( '%1$d nights · %2$d bookings', 'wp-booking-system-luca' ), $o['nights'], $o['bookings'] ) );
+									?>
+								</span>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
+
+					<h2 style="margin-top:24px;"><?php esc_html_e( 'Payments by method', 'wp-booking-system-luca' ); ?></h2>
+					<?php if ( empty( $stats['by_method'] ) ) : ?>
+						<p class="description"><?php esc_html_e( 'No payments recorded yet.', 'wp-booking-system-luca' ); ?></p>
+					<?php else : ?>
+						<table class="widefat striped">
+							<tbody>
+							<?php foreach ( $stats['by_method'] as $m ) : ?>
+								<tr>
+									<td><?php echo esc_html( $m['method'] && isset( $pay_methods[ $m['method'] ] ) ? $pay_methods[ $m['method'] ] : __( 'Unspecified', 'wp-booking-system-luca' ) ); ?></td>
+									<td><?php echo esc_html( $m['count'] ); ?>&times;</td>
+									<td><strong><?php echo esc_html( $money( $m['amount'] ) ); ?></strong></td>
+								</tr>
+							<?php endforeach; ?>
+							</tbody>
+						</table>
+					<?php endif; ?>
+				</div>
+
+				<div class="wpbs-dash-panel">
+					<h2><?php esc_html_e( 'Bookings by month (check-in)', 'wp-booking-system-luca' ); ?></h2>
+					<?php if ( empty( $stats['by_month'] ) ) : ?>
+						<p class="description"><?php esc_html_e( 'No data yet.', 'wp-booking-system-luca' ); ?></p>
+					<?php else : ?>
+						<?php foreach ( $stats['by_month'] as $month => $count ) : ?>
+							<div class="wpbs-bar-row">
+								<span class="wpbs-bar-label"><?php echo esc_html( date_i18n( 'M Y', strtotime( $month . '-01' ) ) ); ?></span>
+								<span class="wpbs-bar-track"><span class="wpbs-bar-fill" style="width:<?php echo esc_attr( round( $count / $max_month * 100 ) ); ?>%;"></span></span>
+								<span class="wpbs-bar-value"><?php echo esc_html( $count ); ?></span>
+							</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
+
+					<h2 style="margin-top:24px;"><?php esc_html_e( 'Other', 'wp-booking-system-luca' ); ?></h2>
+					<ul class="wpbs-dash-list">
+						<li><?php echo esc_html( sprintf( /* translators: %d count */ __( 'Adults: %d', 'wp-booking-system-luca' ), $t['adults'] ) ); ?></li>
+						<li><?php echo esc_html( sprintf( /* translators: %d count */ __( 'Kids: %d', 'wp-booking-system-luca' ), $t['kids'] ) ); ?></li>
+						<li><?php echo esc_html( sprintf( /* translators: %d count */ __( 'Bookings welcoming visitors: %d', 'wp-booking-system-luca' ), $t['visitors'] ) ); ?></li>
+						<li><?php echo esc_html( sprintf( /* translators: %d count */ __( 'Cancelled bookings: %d', 'wp-booking-system-luca' ), $t['cancelled'] ) ); ?></li>
+					</ul>
+				</div>
+			</div>
 		</div>
 		<?php
 	}

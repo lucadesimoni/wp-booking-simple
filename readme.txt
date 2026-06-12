@@ -3,7 +3,7 @@ Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.7.0
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,9 @@ A simple and modern booking system for WordPress with calendar management, email
 WP booking Luca is a clean and modern booking solution for WordPress. It provides a simple interface for managing bookings with the following features:
 
 * Admin calendar overview: see every booking at a glance, colour-coded by status, with summary cards
+* Insights dashboard: bookings per guest, owner usage, nights, revenue and payment breakdowns
+* Per-booking payment tracking (status, method: Bank/TWINT/Cash, amount paid) with a full booking editor
+* Change history: every later edit to a booking is recorded with who changed what, and when
 * Frontend booking form with date selection
 * No external CDN — date picker and calendar libraries are bundled with the plugin
 * Price calculation based on number of adults and kids
@@ -81,7 +84,23 @@ Yes. Under WP booking Luca > Settings > Email Templates you can either edit the 
 
 Yes. Under WP booking Luca > Settings > Booking Form you can show an "Owner" dropdown (populated from a list of names you enter) and a "Visitors welcome?" yes/no field. Both are saved with the booking and available in emails as {owner} and {visitors_welcome}.
 
+= Can I record payments and edit a booking after it is made? =
+
+Yes. On WP booking Luca > All Bookings, click "View / Edit" on any booking to open the editor. You can change every field — guest details, dates, guests, owner, price, status and notes — and record the payment status (Unpaid/Partial/Paid), the method (Bank, TWINT or Cash) and the amount paid. Availability is re-checked so you cannot create an overlap, and a "Recalc" button recomputes the price from the dates and guests. Every change is saved to a per-booking change history shown at the bottom of the editor, recording who changed what and when.
+
+= Where can I see statistics about my bookings? =
+
+Open WP booking Luca > Dashboard for insights across all non-cancelled bookings: totals (bookings, nights, guests, revenue, collected and outstanding amounts), bookings per guest, owner usage, payments by method and bookings by month.
+
 == Changelog ==
+
+= 1.8.0 =
+* 2026-06-12
+* Per-booking payment tracking: payment status (Unpaid/Partial/Paid), method (Bank/TWINT/Cash) and amount paid, shown as a Payment column on the bookings list
+* Full booking editor: edit any field (guest, dates, guests, owner, price, payment, notes) from a modal, with availability re-checked and price recalculation
+* Change history: every later edit is recorded with who changed what and when, shown as a timeline in the editor
+* New Insights dashboard: KPIs (bookings, nights, guests, revenue, collected, outstanding), bookings per guest, owner usage, payments by method and bookings by month
+* Added {payment_status}, {payment_method} and {amount_paid} email merge tags
 
 = 1.7.0 =
 * 2026-06-12
