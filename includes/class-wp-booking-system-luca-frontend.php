@@ -33,17 +33,17 @@ class WP_Booking_System_Luca_Frontend {
 	 * the site lean and fast.
 	 */
 	public function enqueue_scripts() {
-		// Third-party libraries (CDN).
-		wp_register_style( 'flatpickr', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), '4.6.13' );
-		wp_register_script( 'flatpickr', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js', array(), '4.6.13', true );
-		wp_register_style( 'fullcalendar', 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css', array(), '6.1.10' );
-		wp_register_script( 'fullcalendar', 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js', array(), '6.1.10', true );
+		// Third-party libraries bundled with the plugin (no external CDN, so the
+		// date picker and calendar work even behind a strict CSP or offline).
+		wp_register_style( 'flatpickr', WP_BOOKING_SYSTEM_LUCA_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.css', array(), '4.6.13' );
+		wp_register_script( 'flatpickr', WP_BOOKING_SYSTEM_LUCA_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.js', array(), '4.6.13', true );
+		wp_register_script( 'fullcalendar', WP_BOOKING_SYSTEM_LUCA_PLUGIN_URL . 'assets/vendor/fullcalendar/index.global.min.js', array(), '6.1.10', true );
 
 		// Plugin assets.
 		wp_register_style(
 			'wp-booking-system-luca-frontend',
 			WP_BOOKING_SYSTEM_LUCA_PLUGIN_URL . 'assets/css/frontend.css',
-			array( 'flatpickr', 'fullcalendar' ),
+			array( 'flatpickr' ),
 			WP_BOOKING_SYSTEM_LUCA_VERSION
 		);
 

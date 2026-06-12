@@ -86,10 +86,22 @@
 
 		const calendar = new FullCalendar.Calendar(calendarEl, {
 			initialView: 'dayGridMonth',
+			initialDate: calendarEl.dataset.initialDate || undefined,
 			headerToolbar: {
 				left: 'prev,next today',
 				center: 'title',
-				right: 'dayGridMonth,timeGridWeek,timeGridDay'
+				right: 'dayGridMonth,listMonth'
+			},
+			firstDay: 1,
+			displayEventTime: false,
+			eventDidMount: function(info) {
+				const p = info.event.extendedProps || {};
+				const parts = [];
+				if (p.status) { parts.push(p.status); }
+				if (typeof p.guests !== 'undefined') { parts.push(p.guests + ' guests'); }
+				if (p.owner) { parts.push('Owner: ' + p.owner); }
+				if (p.checkIn && p.checkOut) { parts.push(p.checkIn + ' → ' + p.checkOut); }
+				info.el.setAttribute('title', info.event.title + (parts.length ? ' — ' + parts.join(', ') : ''));
 			},
 			events: function(fetchInfo, successCallback, failureCallback) {
 				$.ajax({
@@ -146,6 +158,8 @@
 						<strong>Check-in:</strong> ${booking.check_in}<br>
 						<strong>Check-out:</strong> ${booking.check_out}<br>
 						<strong>Guests:</strong> ${booking.adults} adults, ${booking.kids} kids<br>
+						${booking.owner ? '<strong>Owner:</strong> ' + booking.owner + '<br>' : ''}
+						<strong>Visitors welcome:</strong> ${(booking.visitors_welcome == 1) ? 'Yes' : 'No'}<br>
 						<strong>Price:</strong> ${booking.total_price} ${wpbslAdmin.currency || 'CHF'}<br>
 						<strong>Status:</strong> ${booking.status}<br>
 						${booking.notes ? '<strong>Notes:</strong> ' + booking.notes + '<br>' : ''}

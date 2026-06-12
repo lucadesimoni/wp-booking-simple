@@ -271,12 +271,22 @@ class WP_Booking_System_Luca_Ajax {
 
 		$events = array();
 		foreach ( $bookings as $booking ) {
+			$guests = (int) $booking->adults + (int) $booking->kids;
+			$name   = trim( $booking->first_name . ' ' . $booking->last_name );
+
 			$events[] = array(
-				'id'    => $booking->id,
-				'title' => $booking->first_name . ' ' . $booking->last_name,
-				'start' => $booking->check_in,
-				'end'   => date( 'Y-m-d', strtotime( $booking->check_out . ' +1 day' ) ),
-				'color' => $this->get_status_color( $booking->status ),
+				'id'            => $booking->id,
+				'title'         => $name . ' (' . $guests . ')',
+				'start'         => $booking->check_in,
+				'end'           => date( 'Y-m-d', strtotime( $booking->check_out . ' +1 day' ) ),
+				'color'         => $this->get_status_color( $booking->status ),
+				'extendedProps' => array(
+					'status'  => ucfirst( $booking->status ),
+					'guests'  => $guests,
+					'owner'   => isset( $booking->owner ) ? $booking->owner : '',
+					'checkIn' => $booking->check_in,
+					'checkOut' => $booking->check_out,
+				),
 			);
 		}
 

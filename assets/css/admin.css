@@ -192,3 +192,55 @@
 .wpbsl-block-body input,
 .wpbsl-block-body textarea { display: block; }
 .wpbsl-tag-select { margin-top: 4px; }
+
+/* Calendar overview: summary cards + legend */
+.wpbs-stat-cards {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin: 16px 0;
+}
+.wpbs-stat-card {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	padding: 14px 18px;
+	min-width: 120px;
+	box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+.wpbs-stat-number {
+	display: block;
+	font-size: 26px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+.wpbs-stat-label {
+	display: block;
+	color: #646970;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: .02em;
+}
+.wpbs-calendar-legend {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px;
+	margin: 0 0 12px;
+	font-size: 13px;
+}
+.wpbs-calendar-legend > span { display: inline-flex; align-items: center; }
+.wpbs-legend-dot {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	margin-right: 6px;
+}
+#wpbs-calendar {
+	background: #fff;
+	padding: 16px;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	max-width: 1100px;
+}

@@ -3,7 +3,7 @@ Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,8 +13,9 @@ A simple and modern booking system for WordPress with calendar management, email
 
 WP booking Luca is a clean and modern booking solution for WordPress. It provides a simple interface for managing bookings with the following features:
 
-* Admin calendar view for managing all bookings
+* Admin calendar overview: see every booking at a glance, colour-coded by status, with summary cards
 * Frontend booking form with date selection
+* No external CDN — date picker and calendar libraries are bundled with the plugin
 * Price calculation based on number of adults and kids
 * Email notifications for booking confirmations and cancellations
 * Built-in SMTP delivery (e.g. Gmail / Google Workspace) with a test-email button for reliable sending
@@ -81,6 +82,12 @@ Yes. Under WP booking Luca > Settings > Email Templates you can either edit the 
 Yes. Under WP booking Luca > Settings > Booking Form you can show an "Owner" dropdown (populated from a list of names you enter) and a "Visitors welcome?" yes/no field. Both are saved with the booking and available in emails as {owner} and {visitors_welcome}.
 
 == Changelog ==
+
+= 1.7.0 =
+* 2026-06-12
+* Admin calendar overview: month/list views with bookings colour-coded by status, summary cards (upcoming/pending/confirmed/total), a legend, and it opens on the next upcoming booking
+* Added an Owner column to the All Bookings table, plus Owner and "Visitors welcome?" in the booking details view
+* Bundled Flatpickr and FullCalendar locally — the date picker and calendar no longer depend on an external CDN (works behind strict CSP / offline)
 
 = 1.6.0 =
 * 2026-06-12

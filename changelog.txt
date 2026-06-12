@@ -1,5 +1,10 @@
 *** WP booking Luca Changelog ***
 
+2026.06.12 - version 1.7.0
+ * New - Admin calendar overview to see all bookings at a glance: month and list views, entries colour-coded by status (pending/confirmed/cancelled) with party size, summary cards (upcoming, pending, confirmed, total), a legend, "next check-in" note, and the calendar opens on the next upcoming booking.
+ * New - "Owner" column on the All Bookings table; Owner and "Visitors welcome?" are also shown in the booking details popup.
+ * Tweak - Flatpickr (date picker) and FullCalendar are now bundled with the plugin instead of loaded from a CDN, so the booking form and calendar keep working behind a strict Content-Security-Policy, on intranets, or when the CDN is unreachable.
+
 2026.06.12 - version 1.6.0
  * New - Drag-and-drop email template builder: arrange Text, Heading, Booking-details, Button, Image and Divider blocks for each email, reorder them by dragging, and insert merge tags from a dropdown. Blocks take precedence over the plain-text body, which remains as a fallback.
  * New - Configurable booking-form fields: an "Owner" dropdown populated from a list of names you define in Settings, and a "Visitors welcome?" yes/no field. Both are stored with the booking and exposed as the {owner} and {visitors_welcome} merge tags.

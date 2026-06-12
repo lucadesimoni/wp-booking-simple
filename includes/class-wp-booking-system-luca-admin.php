@@ -117,7 +117,7 @@ class WP_Booking_System_Luca_Admin {
 		wp_enqueue_script(
 			'wp-booking-system-luca-admin',
 			WP_BOOKING_SYSTEM_LUCA_PLUGIN_URL . 'assets/js/admin.js',
-			array( 'jquery' ),
+			array( 'jquery', 'fullcalendar' ),
 			WP_BOOKING_SYSTEM_LUCA_VERSION,
 			true
 		);
@@ -180,17 +180,10 @@ class WP_Booking_System_Luca_Admin {
 			);
 		}
 
-		// FullCalendar CSS and JS.
-		wp_enqueue_style(
-			'fullcalendar',
-			'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css',
-			array(),
-			'6.1.10'
-		);
-
+		// FullCalendar (bundled v6 global build; injects its own styles, no CDN).
 		wp_enqueue_script(
 			'fullcalendar',
-			'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.js',
+			WP_BOOKING_SYSTEM_LUCA_PLUGIN_URL . 'assets/vendor/fullcalendar/index.global.min.js',
 			array(),
 			'6.1.10',
 			true
@@ -202,10 +195,60 @@ class WP_Booking_System_Luca_Admin {
 	 */
 	public function render_calendar_page() {
 		$bookings = wp_booking_system_luca()->database->get_bookings();
+
+		$today     = current_time( 'Y-m-d' );
+		$counts    = array( 'pending' => 0, 'confirmed' => 0, 'cancelled' => 0 );
+		$upcoming  = 0;
+		$next_in   = null;
+
+		foreach ( $bookings as $b ) {
+			if ( isset( $counts[ $b->status ] ) ) {
+				$counts[ $b->status ]++;
+			}
+			if ( 'cancelled' !== $b->status && $b->check_in >= $today ) {
+				$upcoming++;
+				if ( null === $next_in || $b->check_in < $next_in ) {
+					$next_in = $b->check_in;
+				}
+			}
+		}
+
+		$cards = array(
+			array( __( 'Upcoming stays', 'wp-booking-system-luca' ), $upcoming, '#2271b1' ),
+			array( __( 'Pending', 'wp-booking-system-luca' ), $counts['pending'], '#ff9800' ),
+			array( __( 'Confirmed', 'wp-booking-system-luca' ), $counts['confirmed'], '#4caf50' ),
+			array( __( 'Total bookings', 'wp-booking-system-luca' ), count( $bookings ), '#757575' ),
+		);
 		?>
 		<div class="wrap wpbs-admin-wrap">
 			<h1><?php esc_html_e( 'Booking Calendar', 'wp-booking-system-luca' ); ?></h1>
-			<div id="wpbs-calendar"></div>
+
+			<div class="wpbs-stat-cards">
+				<?php foreach ( $cards as $card ) : ?>
+					<div class="wpbs-stat-card" style="border-top:3px solid <?php echo esc_attr( $card[2] ); ?>;">
+						<span class="wpbs-stat-number"><?php echo esc_html( $card[1] ); ?></span>
+						<span class="wpbs-stat-label"><?php echo esc_html( $card[0] ); ?></span>
+					</div>
+				<?php endforeach; ?>
+			</div>
+
+			<?php if ( $next_in ) : ?>
+				<p class="description" style="margin:4px 0 12px;">
+					<?php
+					/* translators: %s: formatted date of the next check-in */
+					printf( esc_html__( 'Next check-in: %s', 'wp-booking-system-luca' ), '<strong>' . esc_html( date_i18n( get_option( 'date_format' ), strtotime( $next_in ) ) ) . '</strong>' );
+					?>
+				</p>
+			<?php endif; ?>
+
+			<div class="wpbs-calendar-legend">
+				<span><span class="wpbs-legend-dot" style="background:#ff9800;"></span><?php esc_html_e( 'Pending', 'wp-booking-system-luca' ); ?></span>
+				<span><span class="wpbs-legend-dot" style="background:#4caf50;"></span><?php esc_html_e( 'Confirmed', 'wp-booking-system-luca' ); ?></span>
+				<span><span class="wpbs-legend-dot" style="background:#f44336;"></span><?php esc_html_e( 'Cancelled', 'wp-booking-system-luca' ); ?></span>
+				<span class="description"><?php esc_html_e( 'Click an entry for details.', 'wp-booking-system-luca' ); ?></span>
+			</div>
+
+			<div id="wpbs-calendar" data-initial-date="<?php echo esc_attr( $next_in ? $next_in : $today ); ?>"></div>
 		</div>
 		<?php
 	}
@@ -227,6 +270,7 @@ class WP_Booking_System_Luca_Admin {
 						<th><?php esc_html_e( 'Check-in', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Check-out', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Guests', 'wp-booking-system-luca' ); ?></th>
+						<th><?php esc_html_e( 'Owner', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Price', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Status', 'wp-booking-system-luca' ); ?></th>
 						<th><?php esc_html_e( 'Actions', 'wp-booking-system-luca' ); ?></th>
@@ -235,7 +279,7 @@ class WP_Booking_System_Luca_Admin {
 				<tbody>
 					<?php if ( empty( $bookings ) ) : ?>
 						<tr>
-							<td colspan="9"><?php esc_html_e( 'No bookings found.', 'wp-booking-system-luca' ); ?></td>
+							<td colspan="10"><?php esc_html_e( 'No bookings found.', 'wp-booking-system-luca' ); ?></td>
 						</tr>
 					<?php else : ?>
 						<?php foreach ( $bookings as $booking ) : ?>
@@ -246,6 +290,7 @@ class WP_Booking_System_Luca_Admin {
 								<td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $booking->check_in ) ) ); ?></td>
 								<td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $booking->check_out ) ) ); ?></td>
 								<td><?php echo esc_html( $booking->adults . ' ' . __( 'adults', 'wp-booking-system-luca' ) . ', ' . $booking->kids . ' ' . __( 'kids', 'wp-booking-system-luca' ) ); ?></td>
+								<td><?php echo esc_html( ! empty( $booking->owner ) ? $booking->owner : '—' ); ?></td>
 								<td><?php echo esc_html( number_format( $booking->total_price, 2 ) . ' ' . get_option( 'wpbsl_currency', 'CHF' ) ); ?></td>
 								<td>
 									<span class="wpbs-status wpbs-status-<?php echo esc_attr( $booking->status ); ?>">
