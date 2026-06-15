@@ -216,17 +216,7 @@
 			data: formData + '&action=wpbsl_submit_booking&nonce=' + wpbslFrontend.nonce,
 			success: function(response) {
 				if (response.success) {
-					showMessage('success', response.data.message);
-					form[0].reset();
-					$('#wpbs-price-summary').hide();
-					
-					// Reset date pickers
-					if (typeof flatpickr !== 'undefined') {
-						const checkInPicker = flatpickr('#wpbs-check-in');
-						const checkOutPicker = flatpickr('#wpbs-check-out');
-						if (checkInPicker) checkInPicker.clear();
-						if (checkOutPicker) checkOutPicker.clear();
-					}
+					showBookingSuccess(response.data.message);
 				} else {
 					showMessage('error', response.data.message || 'An error occurred. Please try again.');
 				}
@@ -240,6 +230,29 @@
 				submitButton.text(originalText);
 			}
 		});
+	}
+
+	/**
+	 * Replace the booking form with a clear confirmation panel so the guest
+	 * knows the request went through and isn't tempted to submit again.
+	 */
+	function showBookingSuccess(message) {
+		const form = $('#wpbs-booking-form');
+		const note = wpbslFrontend.i18n.submittedNote || '';
+
+		const panel = $('<div class="wpbs-booking-confirmation wpbs-success" role="status" tabindex="-1"></div>');
+		panel.append($('<div class="wpbs-confirmation-icon" aria-hidden="true">✓</div>'));
+		panel.append($('<p class="wpbs-confirmation-title"></p>').text(message));
+		if (note) {
+			panel.append($('<p class="wpbs-confirmation-note"></p>').text(note));
+		}
+		const again = $('<button type="button" class="wpbs-book-another"></button>')
+			.text(wpbslFrontend.i18n.bookAnother || 'Book another stay')
+			.on('click', function() { window.location.reload(); });
+		panel.append(again);
+
+		form.hide().after(panel);
+		$('html, body').animate({ scrollTop: panel.offset().top - 100 }, 300);
 	}
 
 	/**

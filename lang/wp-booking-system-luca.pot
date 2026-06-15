@@ -837,3 +837,9 @@ msgstr ""
 
 msgid "Pricing & Notifications"
 msgstr ""
+
+msgid "A confirmation email with a link to manage your booking is on its way. If you don't see it shortly, please check your spam folder."
+msgstr ""
+
+msgid "Book another stay"
+msgstr ""

@@ -1,5 +1,8 @@
 *** WP booking Luca Changelog ***
 
+2026.06.14 - version 1.12.0
+ * Tweak - Polished the booking confirmation: on success the form is now replaced by a clear confirmation panel (checkmark, the success message, a reassuring "check your email / spam folder" note, and a "Book another stay" button) instead of leaving an empty form on screen. New strings are translated into German.
+
 2026.06.14 - version 1.11.0
  * Tweak - Restructured the Settings screen into clear tabbed sections (General, Booking Rules, Booking Form, Email Delivery, Email Templates) for much easier navigation. It remains a single form with one Save button, and the tab you saved on stays open afterwards.
  * Tweak - The "Send a Test Email" tool now lives under the Email Delivery tab, alongside the SMTP settings.

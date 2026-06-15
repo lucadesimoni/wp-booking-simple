@@ -75,6 +75,8 @@ class WP_Booking_System_Luca_Frontend {
 					'invalidDates'  => __( 'Check-out date must be after check-in date', 'wp-booking-system-luca' ),
 					'calculating'   => __( 'Calculating price...', 'wp-booking-system-luca' ),
 					'submitting'    => __( 'Submitting...', 'wp-booking-system-luca' ),
+					'submittedNote' => __( 'A confirmation email with a link to manage your booking is on its way. If you don\'t see it shortly, please check your spam folder.', 'wp-booking-system-luca' ),
+					'bookAnother'   => __( 'Book another stay', 'wp-booking-system-luca' ),
 					'confirmCancel' => __( 'Are you sure you want to cancel this booking?', 'wp-booking-system-luca' ),
 					'cancelled'     => __( 'Cancelled', 'wp-booking-system-luca' ),
 				),

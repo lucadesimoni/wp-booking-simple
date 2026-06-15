@@ -3,7 +3,7 @@ Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.11.0
+Stable tag: 1.12.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,10 @@ Yes. The All Bookings and Dashboard screens have an "Export CSV" button that dow
 Yes. A complete German translation ships with the plugin (German/Germany and German/Switzerland). Set Settings > General > Site Language to "Deutsch" or "Deutsch (Schweiz)" and the admin screens, the booking form and the emails appear in German. To adjust any wording, edit the .po file under /lang and recompile the .mo with tools/i18n/po2mo.php.
 
 == Changelog ==
+
+= 1.12.0 =
+* 2026-06-14
+* Friendlier booking confirmation: after a successful submission the form is replaced by a clear confirmation panel with a checkmark, a "what happens next" note (check your email / spam folder) and a "Book another stay" button, so guests are never left wondering whether it worked
 
 = 1.11.0 =
 * 2026-06-14

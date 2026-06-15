@@ -841,3 +841,9 @@ msgstr "E-Mail-Versand"
 
 msgid "Pricing & Notifications"
 msgstr "Preise & Benachrichtigungen"
+
+msgid "A confirmation email with a link to manage your booking is on its way. If you don't see it shortly, please check your spam folder."
+msgstr "Eine Bestätigungs-E-Mail mit einem Link zur Verwaltung Ihrer Buchung ist unterwegs. Falls Sie sie nicht in Kürze sehen, prüfen Sie bitte Ihren Spam-Ordner."
+
+msgid "Book another stay"
+msgstr "Weitere Buchung vornehmen"
