@@ -121,6 +121,9 @@ class WP_Booking_System_Luca {
 		// Initialize block editor support.
 		new WP_Booking_System_Luca_Block();
 
+		// Initialize Elementor support (only does anything when Elementor is active).
+		new WP_Booking_System_Luca_Elementor();
+
 		// Load plugin textdomain.
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 	}

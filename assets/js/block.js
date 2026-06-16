@@ -68,7 +68,7 @@
 		title: __('Booking Calendar', 'wp-booking-system-luca'),
 		description: __('Show a monthly availability calendar.', 'wp-booking-system-luca'),
 		icon: 'calendar-alt',
-		category: 'widgets',
+		category: 'wp-booking-luca',
 		keywords: [__('booking', 'wp-booking-system-luca'), __('calendar', 'wp-booking-system-luca'), __('availability', 'wp-booking-system-luca')],
 		attributes: {
 			title: { type: 'string', default: __('Booking Calendar', 'wp-booking-system-luca') }
@@ -83,7 +83,7 @@
 		title: __('Booking Form', 'wp-booking-system-luca'),
 		description: __('Show the booking form with live price and availability.', 'wp-booking-system-luca'),
 		icon: 'calendar',
-		category: 'widgets',
+		category: 'wp-booking-luca',
 		keywords: [__('booking', 'wp-booking-system-luca'), __('reservation', 'wp-booking-system-luca'), __('form', 'wp-booking-system-luca')],
 		attributes: {
 			title: { type: 'string', default: __('Book Your Stay', 'wp-booking-system-luca') }

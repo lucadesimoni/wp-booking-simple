@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WP booking Luca
- * Version: 1.14.0
+ * Version: 1.15.0
  * Plugin URI: https://famiglia-desimoni.ch/
  * Description: A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.
  * Author: Famiglia De Simoni
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'WP_BOOKING_SYSTEM_LUCA_VERSION', '1.14.0' );
+define( 'WP_BOOKING_SYSTEM_LUCA_VERSION', '1.15.0' );
 define( 'WP_BOOKING_SYSTEM_LUCA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WP_BOOKING_SYSTEM_LUCA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -37,6 +37,7 @@ require_once WP_BOOKING_SYSTEM_LUCA_PLUGIN_DIR . 'includes/class-wp-booking-syst
 require_once WP_BOOKING_SYSTEM_LUCA_PLUGIN_DIR . 'includes/class-wp-booking-system-luca-email.php';
 require_once WP_BOOKING_SYSTEM_LUCA_PLUGIN_DIR . 'includes/class-wp-booking-system-luca-widget.php';
 require_once WP_BOOKING_SYSTEM_LUCA_PLUGIN_DIR . 'includes/class-wp-booking-system-luca-block.php';
+require_once WP_BOOKING_SYSTEM_LUCA_PLUGIN_DIR . 'includes/class-wp-booking-system-luca-elementor.php';
 
 /**
  * Returns the main instance of WP_Booking_System_Luca to prevent the need to use globals.

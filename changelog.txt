@@ -1,5 +1,9 @@
 *** WP booking Luca Changelog ***
 
+2026.06.16 - version 1.15.0
+ * New - Native Elementor widgets: "Booking Form" and "Booking Calendar" now appear in the Elementor editor under a dedicated "WP booking Luca" category, each with a Title control. They render the same form/calendar as the shortcodes.
+ * New - The Gutenberg blocks now live in their own discoverable "WP booking Luca" category (instead of the generic Widgets group) and carry full server-side metadata. This also makes them easy to find in Spectra, which uses the standard block inserter.
+
 2026.06.15 - version 1.14.0
  * New - Theme compatibility hardening for Astra / Astra Pro and other opinionated themes. The booking form, primary/cancel/secondary buttons, dropdowns and the availability calendar are re-asserted with wrapper-scoped CSS so theme globals (e.g. `.ast-container button`, `.entry-content input/select` resets, forced link underlines) can no longer override or break the booking UI, while the calendar's click-to-select date picking keeps working.
  * Note - Verified against a faithful simulation of Astra's signature global styles (container-scoped button/input resets, forced link underlines, 15px base, box-sizing): the submit button stays branded red, inputs/selects stay white at a consistent 48px height, calendar links stay un-underlined, and range selection still functions.

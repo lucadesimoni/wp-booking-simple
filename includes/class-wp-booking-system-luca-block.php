@@ -20,6 +20,35 @@ class WP_Booking_System_Luca_Block {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_block' ) );
+		// `block_categories_all` is WP 5.8+; `block_categories` covers older installs.
+		add_filter( 'block_categories_all', array( $this, 'register_block_category' ), 10, 1 );
+		add_filter( 'block_categories', array( $this, 'register_block_category' ), 10, 1 );
+	}
+
+	/**
+	 * Add a dedicated "WP booking Luca" category to the block inserter so the
+	 * blocks are easy to find (works in Gutenberg and Spectra alike).
+	 *
+	 * @param array $categories Existing block categories.
+	 * @return array
+	 */
+	public function register_block_category( $categories ) {
+		foreach ( $categories as $category ) {
+			if ( isset( $category['slug'] ) && 'wp-booking-luca' === $category['slug'] ) {
+				return $categories;
+			}
+		}
+
+		return array_merge(
+			array(
+				array(
+					'slug'  => 'wp-booking-luca',
+					'title' => __( 'WP booking Luca', 'wp-booking-system-luca' ),
+					'icon'  => 'calendar-alt',
+				),
+			),
+			$categories
+		);
 	}
 
 	/**
@@ -44,6 +73,11 @@ class WP_Booking_System_Luca_Block {
 		register_block_type(
 			'wp-booking-system/calendar',
 			array(
+				'title'           => __( 'Booking Calendar', 'wp-booking-system-luca' ),
+				'description'     => __( 'Show a monthly availability calendar.', 'wp-booking-system-luca' ),
+				'category'        => 'wp-booking-luca',
+				'icon'            => 'calendar-alt',
+				'keywords'        => array( 'booking', 'calendar', 'availability', 'chalet' ),
 				'editor_script'   => 'wp-booking-system-luca-block',
 				'render_callback' => array( $this, 'render_calendar_block' ),
 				'attributes'      => array(
@@ -59,6 +93,11 @@ class WP_Booking_System_Luca_Block {
 		register_block_type(
 			'wp-booking-system/form',
 			array(
+				'title'           => __( 'Booking Form', 'wp-booking-system-luca' ),
+				'description'     => __( 'Show the booking form with live price and availability.', 'wp-booking-system-luca' ),
+				'category'        => 'wp-booking-luca',
+				'icon'            => 'calendar',
+				'keywords'        => array( 'booking', 'reservation', 'form', 'chalet' ),
 				'editor_script'   => 'wp-booking-system-luca-block',
 				'render_callback' => array( $this, 'render_form_block' ),
 				'attributes'      => array(

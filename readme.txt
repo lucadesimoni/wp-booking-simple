@@ -3,7 +3,7 @@ Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.14.0
+Stable tag: 1.15.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,7 @@ WP booking Luca is a clean and modern booking solution for WordPress. It provide
 * Built-in SMTP delivery (e.g. Gmail / Google Workspace) with a test-email button for reliable sending
 * Customizable email templates (subject and body) with merge tags
 * Drag-and-drop email builder: arrange content blocks (text, heading, booking details, button, image, divider)
+* Native Elementor widgets and Gutenberg blocks (also work in Spectra) under a "WP booking Luca" category, plus shortcodes
 * Configurable booking-form fields, including an Owner dropdown and a "Visitors welcome?" field
 * Calendar (.ics) invite attached to confirmation emails so guests can add the stay to their calendar
 * Unique links for guests to manage or cancel their bookings
@@ -58,7 +59,11 @@ Activation creates a "Book Now" page for you. To place the form elsewhere, use t
 
 = Can I embed the form on an existing page (e.g. my Chalet page)? =
 
-Yes. Add `[wp_booking_form_luca]` (booking form) and/or `[wp_booking_calendar_luca]` (availability calendar) anywhere on the page — in the block/classic editor, or in a page builder's shortcode element (Elementor, Divi, WPBakery, etc.). The required styles and scripts load automatically wherever the form or calendar is rendered, so it works even when the page content is managed by a page builder. You can pass a custom heading, e.g. `[wp_booking_form_luca title="Reserve Your Stay"]`.
+Yes. You have three options: (1) drag the native "Booking Form" / "Booking Calendar" widgets onto the page in Elementor (look under the "WP booking Luca" category); (2) add the "Booking Form" / "Booking Calendar" blocks in the WordPress block editor or Spectra (also under a "WP booking Luca" category); or (3) use the shortcodes `[wp_booking_form_luca]` and `[wp_booking_calendar_luca]` anywhere, including a page builder's shortcode element (Divi, WPBakery, etc.). The required styles and scripts load automatically wherever the form or calendar is rendered. You can pass a custom heading, e.g. `[wp_booking_form_luca title="Reserve Your Stay"]`.
+
+= Does it work with Elementor, Gutenberg and Spectra? =
+
+Yes. The plugin registers native Elementor widgets ("Booking Form" and "Booking Calendar") and Gutenberg blocks of the same names, both grouped under a "WP booking Luca" category so they are easy to find. Spectra (Ultimate Addons for Gutenberg) uses the standard block inserter, so the blocks appear there too. Each widget/block has a "Title" option; everything else is configured under WP booking Luca → Settings.
 
 = How do guests manage their bookings? =
 
