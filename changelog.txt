@@ -1,5 +1,9 @@
 *** WP booking Luca Changelog ***
 
+2026.06.16 - version 1.18.1
+ * New - "Refunded" payment status, completing the payment lifecycle: mark a booking refunded from the editor (set the amount paid back to 0); it shows a Refunded badge on the bookings list, is recorded in the change history, and the TWINT QR code never shows for a refunded or cancelled booking.
+ * Tweak - Verified end to end: the guest's TWINT QR tracks the outstanding balance (e.g. 500 → 300 after a deposit) and disappears once the booking is paid in full, cancelled or refunded.
+
 2026.06.16 - version 1.18.0
  * New - TWINT / Swiss QR-bill payment integration (free, no merchant account). When enabled, a booking with an outstanding balance shows a Swiss QR code on the guest's manage page; the guest scans it with TWINT or any Swiss banking app to pay. Configure your IBAN and address under Settings > General > TWINT / QR-bill Payments. The payload follows Swiss Payment Standards QR-bill 2.0 and the QR generator (MIT, Kazuhiko Arase) is bundled with the plugin — nothing is sent to an external service.
 

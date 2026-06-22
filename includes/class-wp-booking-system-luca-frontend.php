@@ -318,7 +318,8 @@ class WP_Booking_System_Luca_Frontend {
 			$qr_cur  = strtoupper( (string) get_option( 'wpbsl_currency', 'CHF' ) );
 			$qr_cur  = in_array( $qr_cur, array( 'CHF', 'EUR' ), true ) ? $qr_cur : 'CHF';
 
-			if ( (int) get_option( 'wpbsl_qr_enabled', 0 ) && 'cancelled' !== $booking->status && $qr_due > 0 && WP_Booking_System_Luca_Helpers::is_valid_ch_iban( $qr_iban ) ) :
+			$qr_pstatus = isset( $booking->payment_status ) ? $booking->payment_status : 'unpaid';
+			if ( (int) get_option( 'wpbsl_qr_enabled', 0 ) && 'cancelled' !== $booking->status && 'refunded' !== $qr_pstatus && $qr_due > 0 && WP_Booking_System_Luca_Helpers::is_valid_ch_iban( $qr_iban ) ) :
 				wp_enqueue_script( 'wpbsl-qrcode' );
 				$qr_ref     = trim( sprintf( 'Booking #%d %s %s', (int) $booking->id, $booking->first_name, $booking->last_name ) );
 				$qr_payload = WP_Booking_System_Luca_Helpers::build_swiss_qr_payload(

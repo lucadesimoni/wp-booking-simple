@@ -124,9 +124,10 @@ class WP_Booking_System_Luca_Helpers {
 	 */
 	public static function payment_statuses() {
 		return array(
-			'unpaid'  => __( 'Unpaid', 'wp-booking-system-luca' ),
-			'partial' => __( 'Partially paid', 'wp-booking-system-luca' ),
-			'paid'    => __( 'Paid', 'wp-booking-system-luca' ),
+			'unpaid'   => __( 'Unpaid', 'wp-booking-system-luca' ),
+			'partial'  => __( 'Partially paid', 'wp-booking-system-luca' ),
+			'paid'     => __( 'Paid', 'wp-booking-system-luca' ),
+			'refunded' => __( 'Refunded', 'wp-booking-system-luca' ),
 		);
 	}
 

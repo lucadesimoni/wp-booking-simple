@@ -906,3 +906,6 @@ msgstr "Ländercode"
 msgid "Please enter a valid Swiss/Liechtenstein IBAN (CH… or LI…) to enable TWINT / QR-bill payments."
 msgstr "Bitte geben Sie eine gültige Schweizer/Liechtensteiner IBAN (CH… oder LI…) ein, um TWINT-/QR-Rechnung-Zahlungen zu aktivieren."
 
+
+msgid "Refunded"
+msgstr "Erstattet"

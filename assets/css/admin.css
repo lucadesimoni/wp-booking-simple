@@ -264,6 +264,7 @@
 .wpbs-pay-unpaid  { background:#fce8e6; color:#b32d2e; }
 .wpbs-pay-partial { background:#fff3e0; color:#b26a00; }
 .wpbs-pay-paid    { background:#e6f4ea; color:#1e7e34; }
+.wpbs-pay-refunded { background:#eef0f2; color:#555d66; }
 
 /* Booking edit modal */
 .wpbs-modal { position:fixed; inset:0; z-index:100000; }
