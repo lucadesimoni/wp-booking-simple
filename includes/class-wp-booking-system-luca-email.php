@@ -282,6 +282,34 @@ class WP_Booking_System_Luca_Email {
 		return isset( $map[ $key ] ) ? $map[ $key ] : '—';
 	}
 
+	/**
+	 * Configured creditor IBAN, grouped in fours (e.g. "CH20 8080 …"), or ''.
+	 *
+	 * @return string
+	 */
+	private function formatted_iban() {
+		$iban = WP_Booking_System_Luca_Helpers::normalize_iban( get_option( 'wpbsl_qr_creditor_iban', '' ) );
+		return '' === $iban ? '' : trim( chunk_split( $iban, 4, ' ' ) );
+	}
+
+	/**
+	 * The TWINT pay link as an HTML anchor (using the configured label, or a
+	 * default), or '' when no pay link is set.
+	 *
+	 * @return string
+	 */
+	private function twint_paylink_html() {
+		$url = (string) get_option( 'wpbsl_qr_twint_paylink', '' );
+		if ( '' === trim( $url ) ) {
+			return '';
+		}
+		$label = trim( (string) get_option( 'wpbsl_qr_twint_label', '' ) );
+		if ( '' === $label ) {
+			$label = __( 'Pay with TWINT', 'wp-booking-system-luca' );
+		}
+		return '<a href="' . esc_url( $url ) . '" style="color:#8B0000; font-weight:bold;">' . esc_html( $label ) . '</a>';
+	}
+
 	private function get_merge_vars( $booking ) {
 		$currency   = get_option( 'wpbsl_currency', 'CHF' );
 		$date_fmt   = get_option( 'date_format' );
@@ -316,6 +344,11 @@ class WP_Booking_System_Luca_Email {
 			'{amount_paid}'     => esc_html( number_format( isset( $booking->amount_paid ) ? (float) $booking->amount_paid : 0, 2 ) . ' ' . $currency ),
 			'{amount_due}'      => esc_html( number_format( WP_Booking_System_Luca_Helpers::amount_due( $booking ), 2 ) . ' ' . $currency ),
 			'{notes}'           => esc_html( (string) $booking->notes ),
+			'{payment_account}' => esc_html( (string) get_option( 'wpbsl_qr_creditor_name', '' ) ),
+			'{payment_bank}'    => esc_html( (string) get_option( 'wpbsl_qr_bank_name', '' ) ),
+			'{payment_iban}'    => esc_html( $this->formatted_iban() ),
+			'{payment_twint}'   => $this->twint_paylink_html(),
+			'{payment_twint_url}' => esc_url( (string) get_option( 'wpbsl_qr_twint_paylink', '' ) ),
 			'{manage_url}'      => esc_url( $manage_url ),
 			'{manage_link}'     => '<a href="' . esc_url( $manage_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'Manage Booking', 'wp-booking-system-luca' ) . '</a>',
 			'{admin_link}'      => '<a href="' . esc_url( $admin_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'View Booking', 'wp-booking-system-luca' ) . '</a>',

@@ -933,3 +933,10 @@ msgstr ""
 msgid "Scan the QR code with TWINT or your banking app to pay."
 msgstr ""
 
+
+msgid "TWINT link text (optional)"
+msgstr ""
+
+msgid "The clickable text for the {payment_twint} email link. Defaults to \"Pay with TWINT\"."
+msgstr ""
+

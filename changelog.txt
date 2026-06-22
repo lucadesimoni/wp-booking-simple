@@ -1,5 +1,8 @@
 *** WP booking Luca Changelog ***
 
+2026.06.16 - version 1.19.1
+ * New - Granular payment merge tags for full control of the email wording: {payment_account}, {payment_bank}, {payment_iban} (grouped IBAN) and {payment_twint} (a clickable TWINT pay-link, with a configurable link text). This lets you reproduce a custom "Bankdaten" block exactly. Verified the real Raiffeisenbank Pilatus IBAN (CH20 8080 8007 2705 8857 2) validates.
+
 2026.06.16 - version 1.19.0
  * New - Offer payment at checkout: the post-booking confirmation now shows the Swiss QR code, configurable bank details (account holder, bank name, IBAN), amount and reference, plus a "Pay with TWINT" button. The same panel appears on the manage page, and a new {payment_info} merge tag adds it to the confirmation email (included in the default template).
  * New - Configurable Bank name and TWINT Pay link URL under Settings > General > TWINT / QR-bill Payments. All payment surfaces (email, checkout, manage page) share one payment_context so they stay consistent.

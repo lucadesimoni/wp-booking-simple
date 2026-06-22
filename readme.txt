@@ -3,7 +3,7 @@ Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.19.0
+Stable tag: 1.19.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,10 @@ Yes. The All Bookings and Dashboard screens have an "Export CSV" button that dow
 Yes. A complete German translation ships with the plugin (German/Germany and German/Switzerland). Set Settings > General > Site Language to "Deutsch" or "Deutsch (Schweiz)" and the admin screens, the booking form and the emails appear in German. To adjust any wording, edit the .po file under /lang and recompile the .mo with tools/i18n/po2mo.php.
 
 == Changelog ==
+
+= 1.19.1 =
+* 2026-06-16
+* Added granular email merge tags — {payment_account}, {payment_bank}, {payment_iban} and {payment_twint} (clickable pay-link, configurable text) — so you can write your bank-details block in the email exactly as you want it
 
 = 1.19.0 =
 * 2026-06-16

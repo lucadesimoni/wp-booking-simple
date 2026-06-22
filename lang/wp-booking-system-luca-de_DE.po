@@ -937,3 +937,10 @@ msgstr "Jetzt bezahlen"
 msgid "Scan the QR code with TWINT or your banking app to pay."
 msgstr "Scannen Sie den QR-Code mit TWINT oder Ihrer Banking-App, um zu bezahlen."
 
+
+msgid "TWINT link text (optional)"
+msgstr "TWINT-Linktext (optional)"
+
+msgid "The clickable text for the {payment_twint} email link. Defaults to \"Pay with TWINT\"."
+msgstr "Der anklickbare Text für den {payment_twint}-E-Mail-Link. Standard ist „Mit TWINT bezahlen“."
+

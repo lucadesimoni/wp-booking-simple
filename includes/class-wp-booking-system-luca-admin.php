@@ -240,7 +240,8 @@ class WP_Booking_System_Luca_Admin {
 						'{site_name}', '{guest_name}', '{first_name}', '{last_name}', '{guest_email}', '{guest_phone}',
 						'{check_in}', '{check_out}', '{adults}', '{kids}', '{guests}', '{total_price}', '{status}',
 						'{owner}', '{visitors_welcome}', '{payment_status}', '{payment_method}', '{amount_paid}', '{amount_due}',
-						'{notes}', '{booking_details}', '{payment_info}', '{manage_url}', '{manage_link}', '{admin_link}',
+						'{notes}', '{booking_details}', '{payment_info}', '{payment_account}', '{payment_bank}', '{payment_iban}', '{payment_twint}',
+						'{manage_url}', '{manage_link}', '{admin_link}',
 					),
 					'i18n'      => array(
 						'addBlock'      => __( 'Add block', 'wp-booking-system-luca' ),
@@ -811,6 +812,7 @@ class WP_Booking_System_Luca_Admin {
 			$qr_country = isset( $_POST['wpbsl_qr_creditor_country'] ) ? strtoupper( substr( sanitize_text_field( wp_unslash( $_POST['wpbsl_qr_creditor_country'] ) ), 0, 2 ) ) : 'CH';
 			$qr_bank    = isset( $_POST['wpbsl_qr_bank_name'] ) ? sanitize_text_field( wp_unslash( $_POST['wpbsl_qr_bank_name'] ) ) : '';
 			$qr_paylink = isset( $_POST['wpbsl_qr_twint_paylink'] ) ? esc_url_raw( wp_unslash( $_POST['wpbsl_qr_twint_paylink'] ) ) : '';
+			$qr_tlabel  = isset( $_POST['wpbsl_qr_twint_label'] ) ? sanitize_text_field( wp_unslash( $_POST['wpbsl_qr_twint_label'] ) ) : '';
 
 			// Email template options. Subjects are plain text; bodies allow safe HTML.
 			// Saving a blank value resets that template to its built-in default.
@@ -892,6 +894,7 @@ class WP_Booking_System_Luca_Admin {
 				update_option( 'wpbsl_qr_creditor_country', $qr_country );
 				update_option( 'wpbsl_qr_bank_name', $qr_bank );
 				update_option( 'wpbsl_qr_twint_paylink', $qr_paylink );
+				update_option( 'wpbsl_qr_twint_label', $qr_tlabel );
 				foreach ( $template_values as $field_key => $field_value ) {
 					update_option( $field_key, $field_value );
 				}
@@ -1043,6 +1046,13 @@ class WP_Booking_System_Luca_Admin {
 					<td>
 						<input type="url" id="wpbsl_qr_twint_paylink" name="wpbsl_qr_twint_paylink" value="<?php echo esc_attr( get_option( 'wpbsl_qr_twint_paylink', '' ) ); ?>" class="regular-text" placeholder="https://go.twint.ch/..." />
 						<p class="description"><?php esc_html_e( 'Your TWINT pay-link URL (from portal.twint.ch). Shown as a \'Pay with TWINT\' button alongside the QR code.', 'wp-booking-system-luca' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="wpbsl_qr_twint_label"><?php esc_html_e( 'TWINT link text (optional)', 'wp-booking-system-luca' ); ?></label></th>
+					<td>
+						<input type="text" id="wpbsl_qr_twint_label" name="wpbsl_qr_twint_label" value="<?php echo esc_attr( get_option( 'wpbsl_qr_twint_label', '' ) ); ?>" class="regular-text" placeholder="Twint-Paylink Chalet De Simoni" />
+						<p class="description"><?php esc_html_e( 'The clickable text for the {payment_twint} email link. Defaults to "Pay with TWINT".', 'wp-booking-system-luca' ); ?></p>
 					</td>
 				</tr>
 			</table>
@@ -1229,7 +1239,7 @@ class WP_Booking_System_Luca_Admin {
 				<?php esc_html_e( 'Customise the wording of the automatic emails. Clear a field and save to restore its default. You can use these merge tags, which are replaced with each booking\'s details:', 'wp-booking-system-luca' ); ?>
 			</p>
 			<p class="description" style="max-width:760px;">
-				<code>{site_name}</code> <code>{guest_name}</code> <code>{first_name}</code> <code>{last_name}</code> <code>{guest_email}</code> <code>{guest_phone}</code> <code>{check_in}</code> <code>{check_out}</code> <code>{adults}</code> <code>{kids}</code> <code>{guests}</code> <code>{total_price}</code> <code>{status}</code> <code>{owner}</code> <code>{visitors_welcome}</code> <code>{payment_status}</code> <code>{payment_method}</code> <code>{amount_paid}</code> <code>{amount_due}</code> <code>{notes}</code> <code>{booking_details}</code> <code>{payment_info}</code> <code>{manage_link}</code> <code>{manage_url}</code> <code>{admin_link}</code>
+				<code>{site_name}</code> <code>{guest_name}</code> <code>{first_name}</code> <code>{last_name}</code> <code>{guest_email}</code> <code>{guest_phone}</code> <code>{check_in}</code> <code>{check_out}</code> <code>{adults}</code> <code>{kids}</code> <code>{guests}</code> <code>{total_price}</code> <code>{status}</code> <code>{owner}</code> <code>{visitors_welcome}</code> <code>{payment_status}</code> <code>{payment_method}</code> <code>{amount_paid}</code> <code>{amount_due}</code> <code>{notes}</code> <code>{booking_details}</code> <code>{payment_info}</code> <code>{payment_account}</code> <code>{payment_bank}</code> <code>{payment_iban}</code> <code>{payment_twint}</code> <code>{manage_link}</code> <code>{manage_url}</code> <code>{admin_link}</code>
 			</p>
 			<table class="form-table">
 				<tr>
