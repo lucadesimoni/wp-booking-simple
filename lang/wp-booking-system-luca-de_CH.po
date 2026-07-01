@@ -944,3 +944,39 @@ msgstr "TWINT-Linktext (optional)"
 msgid "The clickable text for the {payment_twint} email link. Defaults to \"Pay with TWINT\"."
 msgstr "Der anklickbare Text für den {payment_twint}-E-Mail-Link. Standard ist „Mit TWINT bezahlen“."
 
+
+msgid "%d night"
+msgid_plural "%d nights"
+msgstr[0] "%d Nacht"
+msgstr[1] "%d Nächte"
+
+msgid "Your booking is awaiting confirmation"
+msgstr "Ihre Buchung wartet auf Bestätigung"
+
+msgid "Your booking is confirmed"
+msgstr "Ihre Buchung ist bestätigt"
+
+msgid "This booking has been cancelled"
+msgstr "Diese Buchung wurde storniert"
+
+msgid "Booking #%d"
+msgstr "Buchung #%d"
+
+msgid "Payment:"
+msgstr "Zahlung:"
+
+msgid "%s outstanding"
+msgstr "%s offen"
+
+msgid "Insert German starter templates"
+msgstr "Deutsche Vorlagen einsetzen"
+
+msgid "Fills the guest confirmation, cancellation and payment-reminder emails with ready-made German text (used as the fallback body — you can still edit it). Then click Save Settings."
+msgstr "Füllt die E-Mails für Bestätigung, Stornierung und Zahlungserinnerung mit fertigem deutschem Text (wird als Fallback-Text verwendet – Sie können ihn weiterhin bearbeiten). Klicken Sie danach auf „Einstellungen speichern“."
+
+msgid "Replace the confirmation, cancellation and reminder email text with the German starter?"
+msgstr "Den Text der E-Mails für Bestätigung, Stornierung und Erinnerung durch die deutsche Vorlage ersetzen?"
+
+msgid "Inserted — remember to click Save Settings."
+msgstr "Eingefügt – denken Sie daran, auf „Einstellungen speichern“ zu klicken."
+

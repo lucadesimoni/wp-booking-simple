@@ -33,7 +33,38 @@
 		if ($('.wpbs-settings-tabs').length) {
 			initSettingsTabs();
 		}
+
+		// Insert German starter email templates
+		$('#wpbsl-insert-de').on('click', insertGermanTemplates);
 	});
+
+	/**
+	 * Fill the guest email templates (confirmation / cancellation / reminder)
+	 * with ready-made German text from the button's data-templates payload.
+	 */
+	function insertGermanTemplates() {
+		var data;
+		try {
+			data = JSON.parse(decodeURIComponent(escape(window.atob(this.getAttribute('data-templates')))));
+		} catch (e) {
+			try { data = JSON.parse(window.atob(this.getAttribute('data-templates'))); } catch (e2) { return; }
+		}
+		var i18n = (window.wpbslAdmin && wpbslAdmin.i18n) || {};
+		if (!window.confirm(i18n.confirmInsertDe || 'Replace the confirmation, cancellation and reminder email text with the German starter?')) {
+			return;
+		}
+		Object.keys(data).forEach(function (slug) {
+			var subj = document.getElementById('wpbsl_email_' + slug + '_subject');
+			var body = document.getElementById('wpbsl_email_' + slug + '_body');
+			if (subj) { subj.value = data[slug].subject; }
+			if (body) { body.value = data[slug].body; }
+		});
+		var msg = document.getElementById('wpbsl-insert-de-msg');
+		if (msg) {
+			msg.style.color = '#0a7d28';
+			msg.textContent = i18n.insertedDe || 'Inserted — remember to click Save Settings.';
+		}
+	}
 
 	/**
 	 * Tabbed navigation on the settings screen. Keeps everything in one form

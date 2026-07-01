@@ -940,3 +940,39 @@ msgstr ""
 msgid "The clickable text for the {payment_twint} email link. Defaults to \"Pay with TWINT\"."
 msgstr ""
 
+
+msgid "%d night"
+msgid_plural "%d nights"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Your booking is awaiting confirmation"
+msgstr ""
+
+msgid "Your booking is confirmed"
+msgstr ""
+
+msgid "This booking has been cancelled"
+msgstr ""
+
+msgid "Booking #%d"
+msgstr ""
+
+msgid "Payment:"
+msgstr ""
+
+msgid "%s outstanding"
+msgstr ""
+
+msgid "Insert German starter templates"
+msgstr ""
+
+msgid "Fills the guest confirmation, cancellation and payment-reminder emails with ready-made German text (used as the fallback body — you can still edit it). Then click Save Settings."
+msgstr ""
+
+msgid "Replace the confirmation, cancellation and reminder email text with the German starter?"
+msgstr ""
+
+msgid "Inserted — remember to click Save Settings."
+msgstr ""
+

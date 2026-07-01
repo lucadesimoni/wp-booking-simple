@@ -710,3 +710,36 @@
 	letter-spacing: 0.3px;
 }
 .wpbs-twint-btn:hover { background: #222222; }
+
+/* Manage Booking — status banner + payment badge (refined) */
+.wpbs-manage-banner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+	padding: 14px 18px;
+	border-radius: 8px;
+	margin-bottom: 22px;
+	font-size: 1rem;
+}
+.wpbs-manage-banner-text { font-weight: 600; }
+.wpbs-manage-ref { font-size: 0.85rem; opacity: 0.85; }
+.wpbs-manage-banner-confirmed { background: #e6f4ea; color: #1e7e34; }
+.wpbs-manage-banner-pending   { background: #fff3e0; color: #b26a00; }
+.wpbs-manage-banner-cancelled { background: #fce8e6; color: #b32d2e; }
+
+.wpbs-nights { color: #888; font-weight: 400; }
+
+.wpbs-pay {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 10px;
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+.wpbs-pay-unpaid   { background: #fce8e6; color: #b32d2e; }
+.wpbs-pay-partial  { background: #fff3e0; color: #b26a00; }
+.wpbs-pay-paid     { background: #e6f4ea; color: #1e7e34; }
+.wpbs-pay-refunded { background: #eef0f2; color: #555d66; }
+.wpbs-outstanding { color: #b26a00; font-size: 0.9rem; margin-left: 6px; }

@@ -3,7 +3,7 @@ Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.19.1
+Stable tag: 1.20.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,11 @@ Yes. The All Bookings and Dashboard screens have an "Export CSV" button that dow
 Yes. A complete German translation ships with the plugin (German/Germany and German/Switzerland). Set Settings > General > Site Language to "Deutsch" or "Deutsch (Schweiz)" and the admin screens, the booking form and the emails appear in German. To adjust any wording, edit the .po file under /lang and recompile the .mo with tools/i18n/po2mo.php.
 
 == Changelog ==
+
+= 1.20.0 =
+* 2026-06-16
+* Cleaner "Manage Booking" page: a clear status banner (confirmed / awaiting confirmation / cancelled), the booking reference, nights count and the payment status with any outstanding balance — alongside the existing TWINT/QR payment panel
+* One-click German email templates: an "Insert German starter templates" button on Settings > Email Templates fills the guest confirmation, cancellation and payment-reminder emails with ready-made German wording (including the bank/QR payment block)
 
 = 1.19.1 =
 * 2026-06-16

@@ -311,17 +311,42 @@ class WP_Booking_System_Luca_Frontend {
 			return '<p>' . esc_html__( 'Booking not found.', 'wp-booking-system-luca' ) . '</p>';
 		}
 
+		$currency       = get_option( 'wpbsl_currency', 'CHF' );
+		$nights         = WP_Booking_System_Luca_Helpers::calculate_nights( $booking->check_in, $booking->check_out );
+		$pay_labels     = WP_Booking_System_Luca_Helpers::payment_statuses();
+		$pstatus        = isset( $booking->payment_status ) ? $booking->payment_status : 'unpaid';
+		$due            = WP_Booking_System_Luca_Helpers::amount_due( $booking );
+		$status_message = array(
+			'pending'   => __( 'Your booking is awaiting confirmation', 'wp-booking-system-luca' ),
+			'confirmed' => __( 'Your booking is confirmed', 'wp-booking-system-luca' ),
+			'cancelled' => __( 'This booking has been cancelled', 'wp-booking-system-luca' ),
+		);
+		$status_icon    = array( 'pending' => '⏳', 'confirmed' => '✓', 'cancelled' => '✕' );
+		$bstatus        = isset( $status_message[ $booking->status ] ) ? $booking->status : 'pending';
+
 		ob_start();
 		?>
 		<div class="wpbs-booking-manage-wrapper">
 			<h2><?php esc_html_e( 'Manage Your Booking', 'wp-booking-system-luca' ); ?></h2>
+
+			<div class="wpbs-manage-banner wpbs-manage-banner-<?php echo esc_attr( $bstatus ); ?>">
+				<span class="wpbs-manage-banner-text"><?php echo esc_html( $status_icon[ $bstatus ] . ' ' . $status_message[ $bstatus ] ); ?></span>
+				<span class="wpbs-manage-ref"><?php echo esc_html( sprintf( /* translators: %d: booking id */ __( 'Booking #%d', 'wp-booking-system-luca' ), (int) $booking->id ) ); ?></span>
+			</div>
+
 			<div class="wpbs-booking-details">
 				<p><strong><?php esc_html_e( 'Guest:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( $booking->first_name . ' ' . $booking->last_name ); ?></p>
 				<p><strong><?php esc_html_e( 'Check-in:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $booking->check_in ) ) ); ?></p>
-				<p><strong><?php esc_html_e( 'Check-out:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $booking->check_out ) ) ); ?></p>
+				<p><strong><?php esc_html_e( 'Check-out:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $booking->check_out ) ) ); ?>
+					<span class="wpbs-nights">(<?php echo esc_html( sprintf( _n( '%d night', '%d nights', $nights, 'wp-booking-system-luca' ), $nights ) ); ?>)</span></p>
 				<p><strong><?php esc_html_e( 'Guests:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( $booking->adults . ' ' . __( 'adults', 'wp-booking-system-luca' ) . ', ' . $booking->kids . ' ' . __( 'kids', 'wp-booking-system-luca' ) ); ?></p>
-				<p><strong><?php esc_html_e( 'Total Price:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( number_format( $booking->total_price, 2 ) . ' ' . get_option( 'wpbsl_currency', 'CHF' ) ); ?></p>
-				<p><strong><?php esc_html_e( 'Status:', 'wp-booking-system-luca' ); ?></strong> <span class="wpbs-status wpbs-status-<?php echo esc_attr( $booking->status ); ?>"><?php echo esc_html( ucfirst( $booking->status ) ); ?></span></p>
+				<p><strong><?php esc_html_e( 'Total Price:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( number_format( $booking->total_price, 2 ) . ' ' . $currency ); ?></p>
+				<p><strong><?php esc_html_e( 'Payment:', 'wp-booking-system-luca' ); ?></strong>
+					<span class="wpbs-pay wpbs-pay-<?php echo esc_attr( $pstatus ); ?>"><?php echo esc_html( isset( $pay_labels[ $pstatus ] ) ? $pay_labels[ $pstatus ] : ucfirst( $pstatus ) ); ?></span>
+					<?php if ( $due > 0 && 'cancelled' !== $booking->status ) : ?>
+						<span class="wpbs-outstanding"><?php echo esc_html( sprintf( /* translators: %s: amount */ __( '%s outstanding', 'wp-booking-system-luca' ), number_format( $due, 2 ) . ' ' . $currency ) ); ?></span>
+					<?php endif; ?>
+				</p>
 			</div>
 
 			<?php

@@ -218,6 +218,8 @@ class WP_Booking_System_Luca_Admin {
 					'saving'         => __( 'Saving…', 'wp-booking-system-luca' ),
 					'sending'        => __( 'Sending…', 'wp-booking-system-luca' ),
 					'noHistory'      => __( 'No changes recorded yet.', 'wp-booking-system-luca' ),
+					'confirmInsertDe' => __( 'Replace the confirmation, cancellation and reminder email text with the German starter?', 'wp-booking-system-luca' ),
+					'insertedDe'     => __( 'Inserted — remember to click Save Settings.', 'wp-booking-system-luca' ),
 				),
 			)
 		);
@@ -1240,6 +1242,57 @@ class WP_Booking_System_Luca_Admin {
 			</p>
 			<p class="description" style="max-width:760px;">
 				<code>{site_name}</code> <code>{guest_name}</code> <code>{first_name}</code> <code>{last_name}</code> <code>{guest_email}</code> <code>{guest_phone}</code> <code>{check_in}</code> <code>{check_out}</code> <code>{adults}</code> <code>{kids}</code> <code>{guests}</code> <code>{total_price}</code> <code>{status}</code> <code>{owner}</code> <code>{visitors_welcome}</code> <code>{payment_status}</code> <code>{payment_method}</code> <code>{amount_paid}</code> <code>{amount_due}</code> <code>{notes}</code> <code>{booking_details}</code> <code>{payment_info}</code> <code>{payment_account}</code> <code>{payment_bank}</code> <code>{payment_iban}</code> <code>{payment_twint}</code> <code>{manage_link}</code> <code>{manage_url}</code> <code>{admin_link}</code>
+			</p>
+			<?php
+			$de_starters = array(
+				'confirmation' => array(
+					'subject' => 'Buchungsbestätigung – {site_name}',
+					'body'    => "Liebe/r {guest_name}
+
+vielen Dank für Ihre Buchung – wir freuen uns sehr auf Ihren Aufenthalt!
+
+{booking_details}
+
+{payment_info}
+
+Ihre Buchung können Sie jederzeit über den folgenden Link ansehen oder anpassen:
+
+{manage_link}
+
+Herzliche Grüsse
+{site_name}",
+				),
+				'cancellation' => array(
+					'subject' => 'Buchung storniert – {site_name}',
+					'body'    => "Liebe/r {guest_name}
+
+Ihre Buchung wurde storniert. Falls dies ein Versehen war, melden Sie sich bitte bei uns.
+
+Herzliche Grüsse
+{site_name}",
+				),
+				'reminder'     => array(
+					'subject' => 'Zahlungserinnerung – {site_name}',
+					'body'    => "Liebe/r {guest_name}
+
+eine freundliche Erinnerung an den offenen Betrag für Ihre Buchung.
+
+{booking_details}
+
+Bezahlter Betrag: {amount_paid}
+Offener Betrag: {amount_due}
+
+{payment_info}
+
+Herzliche Grüsse
+{site_name}",
+				),
+			);
+			?>
+			<p style="background:#f6f7f7;border:1px solid #dcdcde;border-radius:4px;padding:12px 16px;max-width:760px;">
+				<button type="button" class="button button-secondary" id="wpbsl-insert-de" data-templates="<?php echo esc_attr( base64_encode( wp_json_encode( $de_starters ) ) ); ?>"><?php esc_html_e( 'Insert German starter templates', 'wp-booking-system-luca' ); ?></button>
+				<span class="description" style="margin-left:8px;"><?php esc_html_e( 'Fills the guest confirmation, cancellation and payment-reminder emails with ready-made German text (used as the fallback body — you can still edit it). Then click Save Settings.', 'wp-booking-system-luca' ); ?></span>
+				<span id="wpbsl-insert-de-msg" style="margin-left:8px;font-weight:600;"></span>
 			</p>
 			<table class="form-table">
 				<tr>

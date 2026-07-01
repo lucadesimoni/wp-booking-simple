@@ -1,5 +1,9 @@
 *** WP booking Luca Changelog ***
 
+2026.06.16 - version 1.20.0
+ * New - Refined the guest "Manage Booking" page (magic-link flow): a colour-coded status banner (confirmed / awaiting confirmation / cancelled), the booking reference, the number of nights, and the payment status with any outstanding amount shown clearly above the TWINT/QR payment panel.
+ * New - One-click German email starter templates: an "Insert German starter templates" button under Settings > Email Templates fills the confirmation, cancellation and payment-reminder emails with polished German text (greeting, booking details, {payment_info} bank/QR block, sign-off) that you can still edit. Fully translated.
+
 2026.06.16 - version 1.19.1
  * New - Granular payment merge tags for full control of the email wording: {payment_account}, {payment_bank}, {payment_iban} (grouped IBAN) and {payment_twint} (a clickable TWINT pay-link, with a configurable link text). This lets you reproduce a custom "Bankdaten" block exactly. Verified the real Raiffeisenbank Pilatus IBAN (CH20 8080 8007 2705 8857 2) validates.
 
