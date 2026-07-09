@@ -5,7 +5,10 @@ Swiss chalet), with an availability calendar, a live-priced booking form, Swiss
 payment (TWINT / QR-bill), and email notifications. Guests manage their own
 booking through a secure magic link — **no WordPress account required**.
 
-Current version: **1.20.0** · Requires WordPress 5.0+ and PHP 7.4+.
+Current version: **1.20.1** · Requires WordPress 5.0+ and PHP 7.4+.
+
+Grab the latest `wp-booking-luca.zip` from the
+[**Releases page**](https://github.com/lucadesimoni/wp-booking-simple/releases/latest).
 
 ## Features
 
@@ -61,19 +64,19 @@ multiple calendars can coexist on one page.
 **3. Shortcodes**
 
 ```
-[wp_booking_form]                 Booking form
-[wp_booking_form title="Book Your Stay"]
+[wp_booking_form_luca]                 Booking form
+[wp_booking_form_luca title="Book Your Stay"]
 
-[wp_booking_calendar]             Availability calendar
-[wp_booking_calendar title="Check Availability"]
+[wp_booking_calendar_luca]             Availability calendar
+[wp_booking_calendar_luca title="Check Availability"]
 
-[wp_booking_manage]              Guest booking-management page (see below)
+[wp_booking_manage_luca]              Guest booking-management page (see below)
 ```
 
 ## Guest booking management (magic link)
 
-Create a page and add the `[wp_booking_manage]` shortcode. Guests reach it through
-the tokenised link in their confirmation email:
+Create a page and add the `[wp_booking_manage_luca]` shortcode. Guests reach it
+through the tokenised link in their confirmation email:
 
 ```
 yoursite.com/manage-booking/?token=BOOKING_TOKEN
@@ -108,6 +111,19 @@ German copy.
 - **Build:** `./build.sh` → `dist/wp-booking-luca.zip`.
 - **Translations:** edit `lang/*.po`, then compile with `php tools/i18n/po2mo.php`.
 - Text domain: `wp-booking-system-luca`. Bookings are stored in a custom table.
+
+## Releasing a new version
+
+1. Bump the version in three places (they must match):
+   - `wp-booking-system.php` — `Version:` header **and**
+     `WP_BOOKING_SYSTEM_LUCA_VERSION` constant
+   - `readme.txt` — `Stable tag:` line
+   - `changelog.txt` — new leading entry
+2. Merge to `main`.
+3. Tag the commit: `git tag v1.X.Y && git push origin v1.X.Y`.
+4. The `Release` workflow verifies the version matches, runs `./build.sh`,
+   extracts the matching `changelog.txt` entry, and publishes a GitHub
+   Release with `wp-booking-luca.zip` attached.
 
 ## License
 

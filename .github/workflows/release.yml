@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Verify plugin version matches tag
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          header_version=$(grep -E "^\s*\*\s*Version:" wp-booking-system.php | head -1 | sed -E 's/.*Version:\s*//')
+          constant_version=$(grep -E "WP_BOOKING_SYSTEM_LUCA_VERSION" wp-booking-system.php | head -1 | sed -E "s/.*'([0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
+          readme_stable=$(grep -E "^Stable tag:" readme.txt | head -1 | sed -E 's/Stable tag:\s*//')
+          echo "tag=$tag header=$header_version constant=$constant_version readme=$readme_stable"
+          if [ "$tag" != "$header_version" ] || [ "$tag" != "$constant_version" ] || [ "$tag" != "$readme_stable" ]; then
+            echo "::error::Tag ($tag) does not match plugin header/constant/readme version" >&2
+            exit 1
+          fi
+
+      - name: Build plugin ZIP
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          {
+            echo "notes<<CHANGELOG_EOF"
+            awk -v ver="$tag" '
+              /^[0-9]{4}\.[0-9]{2}\.[0-9]{2} - version / {
+                if (found) exit
+                if (index($0, "version " ver)) { found=1; print; next }
+              }
+              found { print }
+            ' changelog.txt
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "WP booking Luca ${{ github.ref_name }}"
+          body: |
+            **Install:** download `wp-booking-luca.zip` below and upload it via
+            *WordPress → Plugins → Add New → Upload Plugin*.
+
+            ## Changes
+
+            ${{ steps.changelog.outputs.notes }}
+          files: dist/wp-booking-luca.zip
+          fail_on_unmatched_files: true
+          draft: false
+          prerelease: false
