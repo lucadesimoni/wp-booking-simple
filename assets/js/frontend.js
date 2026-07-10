@@ -216,8 +216,18 @@
 	 * and pushed into the booking form (booked/past days can't be selected).
 	 */
 	function initAvailabilityCalendar() {
-		const calendarEl = document.getElementById('wpbs-calendar-shortcode');
-		if (!calendarEl || typeof FullCalendar === 'undefined') {
+		if (typeof FullCalendar === 'undefined') {
+			return;
+		}
+		// Support any number of calendars on a page (shortcode, block, widget).
+		document.querySelectorAll('.wpbs-calendar-shortcode').forEach(initOneCalendar);
+	}
+
+	/**
+	 * Build one interactive availability calendar in the given element.
+	 */
+	function initOneCalendar(calendarEl) {
+		if (!calendarEl) {
 			return;
 		}
 

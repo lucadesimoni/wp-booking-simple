@@ -1,5 +1,9 @@
 *** WP booking Luca Changelog ***
 
+2026.07.10 - version 1.20.1
+ * Fix - The classic "Booking Calendar" widget now renders the same interactive calendar as the block and shortcode (range selection, tooltips, static enqueued JS) instead of its own inline script, so it behaves consistently and is safe to place anywhere.
+ * Improvement - Multiple calendars can now coexist on a single page (any mix of block, widget and shortcode); each initialises independently via a unique id.
+
 2026.06.16 - version 1.20.0
  * New - Refined the guest "Manage Booking" page (magic-link flow): a colour-coded status banner (confirmed / awaiting confirmation / cancelled), the booking reference, the number of nights, and the payment status with any outstanding amount shown clearly above the TWINT/QR payment panel.
  * New - One-click German email starter templates: an "Insert German starter templates" button under Settings > Email Templates fills the confirmation, cancellation and payment-reminder emails with polished German text (greeting, booking details, {payment_info} bank/QR block, sign-off) that you can still edit. Fully translated.

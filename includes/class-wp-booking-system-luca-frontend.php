@@ -428,8 +428,7 @@ class WP_Booking_System_Luca_Frontend {
 			'wp_booking_calendar_luca'
 		);
 
-		// Get unavailable dates.
-		$unavailable_dates = $this->get_unavailable_dates();
+		$cal_id = wp_unique_id( 'wpbs-calendar-' );
 
 		ob_start();
 		?>
@@ -437,7 +436,7 @@ class WP_Booking_System_Luca_Frontend {
 			<?php if ( ! empty( $atts['title'] ) ) : ?>
 				<h3 class="wpbs-calendar-title"><?php echo esc_html( $atts['title'] ); ?></h3>
 			<?php endif; ?>
-			<div id="wpbs-calendar-shortcode" class="wpbs-calendar-shortcode"></div>
+			<div id="<?php echo esc_attr( $cal_id ); ?>" class="wpbs-calendar-shortcode"></div>
 			<div class="wpbs-calendar-legend">
 				<span class="wpbs-legend-item">
 					<span class="wpbs-legend-available"></span>

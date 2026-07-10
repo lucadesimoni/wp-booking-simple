@@ -1,134 +1,114 @@
 # WP booking Luca
 
-A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.
+A simple, modern booking system for WordPress — built for a single property (a
+Swiss chalet), with an availability calendar, a live-priced booking form, Swiss
+payment (TWINT / QR-bill), and email notifications. Guests manage their own
+booking through a secure magic link — **no WordPress account required**.
+
+Current version: **1.20.0** · Requires WordPress 5.0+ and PHP 7.4+.
 
 ## Features
 
-- **Admin Calendar Interface**: Visual calendar view for managing all bookings
-- **Frontend Booking Form**: Clean, modern booking form with date selection
-- **Frontend Calendar Widget**: Monthly calendar widget showing availability and allowing date selection
-- **Price Calculation**: Automatic price calculation based on number of adults and kids per night
-- **Email Notifications**: Automatic email confirmations and cancellation notices
-- **Booking Management**: Unique links for guests to view, modify, or cancel their bookings
-- **Modern Design**: Responsive design that matches modern website aesthetics
-- **WordPress Best Practices**: Follows all WordPress coding standards and security best practices
+- **Availability calendar** — interactive monthly calendar (FullCalendar) showing
+  free/booked nights. Click a check-in then a check-out to select a stay; the
+  dates flow straight into the booking form. Available as a block, a widget, or a
+  shortcode.
+- **Booking form** — clean, responsive form with live price and availability
+  checks. Price is calculated per night from the adult/kid rates you configure.
+- **Swiss payments** — offer **TWINT** and a **Swiss QR-bill** (QR-bill 2.0) at
+  checkout and on the manage page. The QR code is generated locally (bundled MIT
+  library) — no external service, no data leaves the site.
+- **Magic-link booking management** — each confirmation email carries a unique,
+  tokenised link. Guests view their booking, see what's outstanding, pay, or
+  cancel — all without logging in.
+- **Email notifications** — automatic confirmation, cancellation, and reminder
+  emails with a visual template builder and merge tags (booking details, payment
+  info, manage link). One click inserts ready-made **German** templates.
+- **Full payment lifecycle** — unpaid / partially paid / paid / refunded, with the
+  outstanding balance surfaced to both admin and guest.
+- **Admin overview** — visual calendar of all bookings, a filterable bookings
+  list, and settings for pricing, capacity, payment details, and email.
+- **German localisation** — ships with `de_DE` / `de_CH` translations.
+- **WordPress best practices** — nonces, capability checks, escaping, and a custom
+  bookings table created on activation.
 
 ## Installation
 
-1. Upload the plugin files to `/wp-content/plugins/wp-booking-system/`
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to **WP booking Luca > Settings** to configure:
-   - Price per adult (per night)
-   - Price per kid (per night)
-   - Currency
-   - Email settings
-   - Admin notification email
-   - Chalet maximum capacity
+1. Download `wp-booking-luca.zip` (or build it with `./build.sh`).
+2. In WordPress, go to **Plugins → Add New → Upload Plugin**, choose the zip, and
+   activate.
+3. Go to **WP booking Luca → Settings** to configure:
+   - Price per adult and per kid (per night)
+   - Currency (e.g. CHF, EUR)
+   - Maximum capacity
+   - Payment details (account name, IBAN, TWINT) for the QR-bill
+   - Email from-address / from-name and the admin notification address
 
-## Usage
+## Placing the calendar and form
 
-### Displaying the Booking Form
+The calendar is available three ways — pick whichever suits your theme:
 
-Add the booking form to any page or post using the shortcode:
+**1. Gutenberg block (recommended)**
+Edit a page, click **+**, search the **WP booking Luca** category for
+**Booking Calendar** or **Booking Form**. Colours are configurable in the block
+sidebar.
+
+**2. Classic widget**
+Go to **Appearance → Widgets** and add the **Booking Calendar** widget to any
+sidebar. It renders the same interactive calendar as the block/shortcode, so
+multiple calendars can coexist on one page.
+
+**3. Shortcodes**
 
 ```
-[wp_booking_form]
-```
-
-You can also customize the title:
-
-```
+[wp_booking_form]                 Booking form
 [wp_booking_form title="Book Your Stay"]
-```
 
-### Booking Management Page
-
-Create a new page and add the shortcode:
-
-```
-[wp_booking_manage]
-```
-
-Guests will access this page via a unique token sent in their confirmation email. The URL format will be:
-`yoursite.com/your-page/?token=BOOKING_TOKEN`
-
-### Frontend Calendar Widget
-
-**Option 1: Gutenberg Block (Recommended)**
-1. Edit a page using Gutenberg editor
-2. Click "+" to add a block
-3. Search for "Booking Calendar"
-4. Add the block and configure the title
-
-**Option 2: Classic Widget**
-1. Go to **Appearance > Widgets**
-2. Find the **Booking Calendar** widget
-3. Drag it to your desired sidebar
-4. Configure the widget title (optional)
-
-The calendar displays:
-- Available dates (green)
-- Booked dates (red)
-- Click on dates to select them in the booking form
-
-### Calendar Shortcode
-
-You can also display the calendar using a shortcode:
-
-```
-[wp_booking_calendar]
-```
-
-Or with a custom title:
-
-```
+[wp_booking_calendar]             Availability calendar
 [wp_booking_calendar title="Check Availability"]
+
+[wp_booking_manage]              Guest booking-management page (see below)
 ```
 
-### Admin Features
+## Guest booking management (magic link)
 
-- **Calendar View**: Navigate to **WP booking Luca** in the admin menu to see a visual calendar of all bookings
-- **All Bookings**: View a list of all bookings with details and actions
-- **Settings**: Configure pricing, email settings, and chalet capacity
+Create a page and add the `[wp_booking_manage]` shortcode. Guests reach it through
+the tokenised link in their confirmation email:
 
-## Configuration
+```
+yoursite.com/manage-booking/?token=BOOKING_TOKEN
+```
 
-### Pricing
+There they see the booking status, reference, nights, amount outstanding, a TWINT /
+QR payment option, and a cancel button — no login required.
 
-Set your pricing in **Bookings > Settings**:
-- Price per adult per night
-- Price per kid per night
-- Currency symbol (e.g., CHF, EUR, USD)
+## Email templates
 
-### Email Settings
+Under **WP booking Luca → Settings → Email Templates** you can edit the
+confirmation, cancellation, and reminder emails with a visual builder. Available
+merge tags include `{booking_details}`, `{payment_info}`, `{manage_link}`,
+`{site_name}`, and granular payment tags (`{payment_iban}`, `{payment_twint}`,
+`{payment_twint_url}`, …). Use **Insert German templates** for ready-made
+German copy.
 
-Configure email settings in **WP booking Luca > Settings**:
-- Email from address
-- Email from name
-- Admin notification email (receives notifications for new bookings)
+## How it works
 
-## How It Works
+1. Guest picks dates on the calendar and submits the form.
+2. Price is calculated from nights × (adults, kids); availability is verified.
+3. A confirmation email goes out with the booking details, payment info, and a
+   magic-link management URL.
+4. Guest pays via TWINT / QR-bill and can view or cancel their booking through the
+   link.
+5. Admin tracks everything from the booking calendar and list, and updates payment
+   status as money arrives.
 
-1. **Guest makes a booking**: Fills out the booking form with dates, guest count, and contact information
-2. **Price is calculated**: Automatically calculated based on number of nights, adults, and kids
-3. **Availability is checked**: System verifies the selected dates are available
-4. **Confirmation email sent**: Guest receives an email with booking details and a unique management link
-5. **Admin can view**: All bookings appear in the admin calendar and list view
-6. **Guest can manage**: Guest can view or cancel their booking using the unique link
+## Development
 
-## Database
-
-The plugin creates a custom table `wp_wpbs_bookings` to store all booking data. The table is automatically created when the plugin is activated.
-
-## Requirements
-
-- WordPress 5.0 or higher
-- PHP 7.4 or higher
-
-## Support
-
-For issues or questions, please check the plugin documentation or contact support.
+- **Tests:** `php tests/standalone/run.php` (standalone, no WP install needed).
+- **Build:** `./build.sh` → `dist/wp-booking-luca.zip`.
+- **Translations:** edit `lang/*.po`, then compile with `php tools/i18n/po2mo.php`.
+- Text domain: `wp-booking-system-luca`. Bookings are stored in a custom table.
 
 ## License
 
-GPL-2.0 or later
+GPL-2.0-or-later.
