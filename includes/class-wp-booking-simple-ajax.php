@@ -77,6 +77,12 @@ class WP_Booking_Simple_Ajax {
 		$adults    = isset( $_POST['adults'] ) ? absint( $_POST['adults'] ) : 1;
 		$kids      = isset( $_POST['kids'] ) ? absint( $_POST['kids'] ) : 0;
 
+		// Mirror submit_booking(): with the kids field switched off there are no
+		// kids to charge for, so the quoted price matches what is booked.
+		if ( ! WP_Booking_Simple_Helpers::shows_field( 'kids' ) ) {
+			$kids = 0;
+		}
+
 		if ( empty( $check_in ) || empty( $check_out ) ) {
 			wp_send_json_error( array( 'message' => __( 'Please select both dates.', 'wp-booking-simple' ) ) );
 		}
@@ -143,8 +149,39 @@ class WP_Booking_Simple_Ajax {
 		$data['owner']  = in_array( $owner, $allowed_owners, true ) ? $owner : '';
 		$data['visitors_welcome'] = ( isset( $_POST['visitors_welcome'] ) && '1' === (string) $_POST['visitors_welcome'] ) ? 1 : 0;
 
-		// Validate required fields.
-		if ( empty( $data['first_name'] ) || empty( $data['last_name'] ) || empty( $data['email'] ) || empty( $data['check_in'] ) || empty( $data['check_out'] ) ) {
+		// Discard anything sent for a field this site has switched off. The form
+		// does not render those inputs, so a value can only come from a crafted
+		// request - and a hidden field must not reach the booking either way.
+		$fields = WP_Booking_Simple_Helpers::form_fields();
+
+		foreach ( array(
+			'last_name' => '',
+			'phone'     => '',
+			'notes'     => '',
+		) as $field => $blank ) {
+			if ( ! $fields[ $field ] ) {
+				$data[ $field ] = $blank;
+			}
+		}
+
+		if ( ! $fields['kids'] ) {
+			$data['kids'] = 0;
+		}
+
+		if ( ! $fields['visitors'] ) {
+			$data['visitors_welcome'] = 0;
+		}
+
+		if ( ! $fields['owner'] ) {
+			$data['owner'] = '';
+		}
+
+		// Validate required fields. Last name only counts while it is on the form.
+		$missing = empty( $data['first_name'] ) || empty( $data['email'] )
+			|| empty( $data['check_in'] ) || empty( $data['check_out'] )
+			|| ( $fields['last_name'] && empty( $data['last_name'] ) );
+
+		if ( $missing ) {
 			wp_send_json_error( array( 'message' => __( 'Please fill in all required fields.', 'wp-booking-simple' ) ) );
 		}
 
@@ -178,8 +215,9 @@ class WP_Booking_Simple_Ajax {
 			);
 		}
 
-		// Require a phone number when configured to do so.
-		if ( (int) get_option( 'wpbsl_require_phone', 0 ) && empty( $data['phone'] ) ) {
+		// Require a phone number when configured to do so - but only while the
+		// phone field is actually shown, otherwise the form could never be sent.
+		if ( $fields['phone'] && (int) get_option( 'wpbsl_require_phone', 0 ) && empty( $data['phone'] ) ) {
 			wp_send_json_error( array( 'message' => __( 'Please provide a phone number.', 'wp-booking-simple' ) ) );
 		}
 

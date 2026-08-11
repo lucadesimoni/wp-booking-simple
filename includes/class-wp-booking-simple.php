@@ -173,6 +173,10 @@ class WP_Booking_Simple {
 			'wpbsl_default_adults'           => 2,
 			'wpbsl_default_kids'             => 0,
 			'wpbsl_require_phone'            => 0,
+			// Removable form fields, all shown by default.
+			'wpbsl_show_last_name'           => 1,
+			'wpbsl_show_phone'               => 1,
+			'wpbsl_show_kids'                => 1,
 			'wpbsl_show_notes'               => 1,
 			'wpbsl_auto_confirm'             => 0,
 			// Extra booking-form fields.

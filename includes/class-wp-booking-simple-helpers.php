@@ -454,4 +454,47 @@ class WP_Booking_Simple_Helpers {
 	public static function is_valid_status( $status ) {
 		return in_array( $status, self::allowed_statuses(), true );
 	}
+
+	/**
+	 * The booking-form fields a site owner can switch off, and whether each one
+	 * is currently switched on.
+	 *
+	 * Check-in, check-out, adults, first name and email are not listed: the
+	 * booking cannot be priced, held or confirmed by email without them.
+	 *
+	 * Both the rendered form and the AJAX validation read this single map, so a
+	 * field can never be hidden in the form while still being enforced on
+	 * submit (or, worse, accepted from a hand-crafted request).
+	 *
+	 * The owner dropdown additionally needs at least one configured name -
+	 * showing an empty dropdown would just be a dead control.
+	 *
+	 * @return array Field key => bool.
+	 */
+	public static function form_fields() {
+		return array(
+			'last_name' => (bool) get_option( 'wpbsl_show_last_name', 1 ),
+			'phone'     => (bool) get_option( 'wpbsl_show_phone', 1 ),
+			'kids'      => (bool) get_option( 'wpbsl_show_kids', 1 ),
+			'owner'     => (bool) get_option( 'wpbsl_show_owner', 1 )
+				&& array() !== self::parse_owners( get_option( 'wpbsl_owners', '' ) ),
+			'visitors'  => (bool) get_option( 'wpbsl_show_visitors', 1 ),
+			'notes'     => (bool) get_option( 'wpbsl_show_notes', 1 ),
+		);
+	}
+
+	/**
+	 * Whether one booking-form field is switched on.
+	 *
+	 * Unknown keys report true, so the mandatory fields that are not part of
+	 * the map are never treated as hidden.
+	 *
+	 * @param string $field Field key.
+	 * @return bool
+	 */
+	public static function shows_field( $field ) {
+		$fields = self::form_fields();
+
+		return isset( $fields[ $field ] ) ? $fields[ $field ] : true;
+	}
 }

@@ -1,5 +1,10 @@
 *** WP Booking Simple Changelog ***
 
+2026.08.11 - version 1.22.0
+ * New - Remove fields from the booking form: last name, phone and the number of kids can each be switched off under Settings > Booking Form, alongside the existing notes, owner and visitors toggles. Check-in, check-out, adults, first name and email stay mandatory - a booking cannot be priced, held or confirmed by email without them.
+ * New - A hidden field is enforced nowhere: the form and the AJAX handler read one shared field map, so switching a field off also stops it being required, discards anything a hand-crafted request sends for it, and keeps the quoted price equal to the booked price. Requiring a phone number now only applies while the phone field is shown.
+ * Fix - Guest counts in emails read "2 adults, 1 kid" instead of "1 kids", and kids are left out entirely when there are none, so a site with the kids field switched off no longer sends ", 0 kids".
+
 2026.08.11 - version 1.21.0
  * Rename - The plugin is now "WP Booking Simple" throughout: plugin name, folder and ZIP slug (wp-booking-simple), main file, text domain, classes, constants, functions, script/style handles, admin page slugs and the Elementor/Gutenberg category. Existing shortcodes ([wp_booking_form_luca], [wp_booking_manage_luca], [wp_booking_calendar_luca]) and blocks (wp-booking-system/calendar, wp-booking-system/form) stay registered as hidden aliases, so pages that already embed them keep rendering unchanged.
  * Compatibility - Option names and the booking/history database tables are deliberately unchanged, so updating an existing site keeps every booking, setting and auto-created page.

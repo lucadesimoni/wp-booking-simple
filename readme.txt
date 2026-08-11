@@ -4,7 +4,7 @@ Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 1.21.0
+Stable tag: 1.22.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ WP Booking Simple is a clean and modern booking solution for WordPress. It provi
 * Customizable email templates (subject and body) with merge tags
 * Drag-and-drop email builder: arrange content blocks (text, heading, booking details, button, image, divider)
 * Native Elementor widgets and Gutenberg blocks (also work in Spectra) under a "WP Booking Simple" category, plus shortcodes
-* Configurable booking-form fields, including an Owner dropdown and a "Visitors welcome?" field
+* Removable booking-form fields: switch off last name, phone, kids, notes, the Owner dropdown or "Visitors welcome?" to ask guests only what you need
 * Calendar (.ics) invite attached to confirmation emails so guests can add the stay to their calendar
 * Unique links for guests to manage or cancel their bookings
 * Configurable booking rules: minimum/maximum stay, advance notice, booking window, default guests, required fields, and auto-confirm
@@ -77,7 +77,7 @@ Go to Bookings > Settings in your WordPress admin and configure the price per ad
 
 = Can I set booking rules like a minimum stay? =
 
-Yes. Under WP Booking Simple > Settings you can configure the minimum and maximum stay (nights), the minimum advance notice and how far ahead guests may book, the default number of adults/kids on the form, whether the phone number is required, whether the notes field is shown, and whether new bookings are confirmed automatically. These rules are applied in the date picker and enforced again on the server.
+Yes. Under WP Booking Simple > Settings you can configure the minimum and maximum stay (nights), the minimum advance notice and how far ahead guests may book, the default number of adults/kids on the form, which optional fields appear at all (last name, phone, kids, notes, owner, visitors welcome), whether the phone number is required, and whether new bookings are confirmed automatically. These rules are applied in the date picker and enforced again on the server.
 
 = Do booking emails send automatically, and can I use Gmail? =
 

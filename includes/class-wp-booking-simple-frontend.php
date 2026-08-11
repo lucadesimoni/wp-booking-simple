@@ -202,11 +202,20 @@ class WP_Booking_Simple_Frontend {
 
 		$default_adults = max( 1, absint( get_option( 'wpbsl_default_adults', 2 ) ) );
 		$default_kids   = absint( get_option( 'wpbsl_default_kids', 0 ) );
-		$require_phone  = (int) get_option( 'wpbsl_require_phone', 0 );
-		$show_notes     = (int) get_option( 'wpbsl_show_notes', 1 );
-		$show_visitors  = (int) get_option( 'wpbsl_show_visitors', 1 );
 		$owners         = WP_Booking_Simple_Helpers::parse_owners( get_option( 'wpbsl_owners', '' ) );
-		$show_owner     = (int) get_option( 'wpbsl_show_owner', 1 ) && ! empty( $owners );
+
+		// Which optional fields this site shows. The AJAX handler reads the same
+		// map, so hiding a field here also stops it being required on submit.
+		$fields         = WP_Booking_Simple_Helpers::form_fields();
+		$show_last_name = $fields['last_name'];
+		$show_phone     = $fields['phone'];
+		$show_kids      = $fields['kids'];
+		$show_owner     = $fields['owner'];
+		$show_visitors  = $fields['visitors'];
+		$show_notes     = $fields['notes'];
+
+		// Phone can only be mandatory while it is actually on the form.
+		$require_phone = $show_phone && (int) get_option( 'wpbsl_require_phone', 0 );
 
 		ob_start();
 		?>
@@ -225,14 +234,16 @@ class WP_Booking_Simple_Frontend {
 				</div>
 
 				<div class="wpbs-form-row">
-					<div class="wpbs-form-group">
+					<div class="wpbs-form-group<?php echo $show_kids ? '' : ' wpbs-form-group-full'; ?>">
 						<label for="wpbs-adults"><?php esc_html_e( 'Adults', 'wp-booking-simple' ); ?></label>
 						<input type="number" id="wpbs-adults" name="adults" min="1" value="<?php echo esc_attr( $default_adults ); ?>" required />
 					</div>
+					<?php if ( $show_kids ) : ?>
 					<div class="wpbs-form-group">
 						<label for="wpbs-kids"><?php esc_html_e( 'Kids', 'wp-booking-simple' ); ?></label>
 						<input type="number" id="wpbs-kids" name="kids" min="0" value="<?php echo esc_attr( $default_kids ); ?>" required />
 					</div>
+					<?php endif; ?>
 				</div>
 
 				<div class="wpbs-form-row">
@@ -242,12 +253,14 @@ class WP_Booking_Simple_Frontend {
 					</div>
 				</div>
 
+				<?php if ( $show_last_name ) : ?>
 				<div class="wpbs-form-row">
 					<div class="wpbs-form-group wpbs-form-group-full">
 						<label for="wpbs-last-name"><?php esc_html_e( 'Last Name', 'wp-booking-simple' ); ?></label>
 						<input type="text" id="wpbs-last-name" name="last_name" required />
 					</div>
 				</div>
+				<?php endif; ?>
 
 				<div class="wpbs-form-row">
 					<div class="wpbs-form-group wpbs-form-group-full">
@@ -256,12 +269,14 @@ class WP_Booking_Simple_Frontend {
 					</div>
 				</div>
 
+				<?php if ( $show_phone ) : ?>
 				<div class="wpbs-form-row">
 					<div class="wpbs-form-group wpbs-form-group-full">
 						<label for="wpbs-phone"><?php esc_html_e( 'Phone', 'wp-booking-simple' ); ?></label>
 						<input type="tel" id="wpbs-phone" name="phone" <?php echo $require_phone ? 'required' : ''; ?> />
 					</div>
 				</div>
+				<?php endif; ?>
 
 				<?php if ( $show_owner ) : ?>
 				<div class="wpbs-form-row">

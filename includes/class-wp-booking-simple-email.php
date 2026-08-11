@@ -310,18 +310,43 @@ class WP_Booking_Simple_Email {
 		return '<a href="' . esc_url( $url ) . '" style="color:#8B0000; font-weight:bold;">' . esc_html( $label ) . '</a>';
 	}
 
+	/**
+	 * Human-readable guest count, e.g. "2 adults, 1 kid" or just "1 adult".
+	 *
+	 * Pluralised properly, and kids are left out entirely at zero: with the
+	 * kids field switched off every booking would otherwise read ", 0 kids".
+	 *
+	 * @param object $booking Booking row.
+	 * @return string
+	 */
+	private function guests_label( $booking ) {
+		$adults = (int) $booking->adults;
+		$kids   = (int) $booking->kids;
+
+		$label = sprintf(
+			/* translators: %d: number of adults */
+			_n( '%d adult', '%d adults', $adults, 'wp-booking-simple' ),
+			$adults
+		);
+
+		if ( $kids > 0 ) {
+			$label .= ', ' . sprintf(
+				/* translators: %d: number of kids */
+				_n( '%d kid', '%d kids', $kids, 'wp-booking-simple' ),
+				$kids
+			);
+		}
+
+		return $label;
+	}
+
 	private function get_merge_vars( $booking ) {
 		$currency   = get_option( 'wpbsl_currency', 'CHF' );
 		$date_fmt   = get_option( 'date_format' );
 		$manage_url = $this->get_manage_url( $booking->booking_token );
 		$admin_url  = admin_url( 'admin.php?page=wp-booking-simple-list' );
 
-		$guests = sprintf(
-			/* translators: 1: number of adults, 2: number of kids */
-			__( '%1$d adults, %2$d kids', 'wp-booking-simple' ),
-			(int) $booking->adults,
-			(int) $booking->kids
-		);
+		$guests = $this->guests_label( $booking );
 
 		return array(
 			'{site_name}'       => esc_html( get_bloginfo( 'name' ) ),
@@ -373,7 +398,7 @@ class WP_Booking_Simple_Email {
 			<h3 style="color:#333333; margin-top:0;"><?php esc_html_e( 'Booking Details', 'wp-booking-simple' ); ?></h3>
 			<p><strong><?php esc_html_e( 'Check-in:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( date_i18n( $date_fmt, strtotime( $booking->check_in ) ) ); ?></p>
 			<p><strong><?php esc_html_e( 'Check-out:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( date_i18n( $date_fmt, strtotime( $booking->check_out ) ) ); ?></p>
-			<p><strong><?php esc_html_e( 'Guests:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $booking->adults . ' ' . __( 'adults', 'wp-booking-simple' ) . ', ' . $booking->kids . ' ' . __( 'kids', 'wp-booking-simple' ) ); ?></p>
+			<p><strong><?php esc_html_e( 'Guests:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $this->guests_label( $booking ) ); ?></p>
 			<p><strong><?php esc_html_e( 'Total Price:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( number_format( (float) $booking->total_price, 2 ) . ' ' . $currency ); ?></p>
 			<?php if ( ! empty( $booking->notes ) ) : ?>
 				<p><strong><?php esc_html_e( 'Notes:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $booking->notes ); ?></p>

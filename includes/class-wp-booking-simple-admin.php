@@ -787,6 +787,9 @@ class WP_Booking_Simple_Admin {
 			$default_adults   = isset( $_POST['wpbsl_default_adults'] ) ? max( 1, absint( $_POST['wpbsl_default_adults'] ) ) : 2;
 			$default_kids     = isset( $_POST['wpbsl_default_kids'] ) ? absint( $_POST['wpbsl_default_kids'] ) : 0;
 			$require_phone    = isset( $_POST['wpbsl_require_phone'] ) ? 1 : 0;
+			$show_last_name   = isset( $_POST['wpbsl_show_last_name'] ) ? 1 : 0;
+			$show_phone       = isset( $_POST['wpbsl_show_phone'] ) ? 1 : 0;
+			$show_kids        = isset( $_POST['wpbsl_show_kids'] ) ? 1 : 0;
 			$show_notes       = isset( $_POST['wpbsl_show_notes'] ) ? 1 : 0;
 			$auto_confirm     = isset( $_POST['wpbsl_auto_confirm'] ) ? 1 : 0;
 			$show_owner       = isset( $_POST['wpbsl_show_owner'] ) ? 1 : 0;
@@ -876,6 +879,9 @@ class WP_Booking_Simple_Admin {
 				update_option( 'wpbsl_default_adults', $default_adults );
 				update_option( 'wpbsl_default_kids', $default_kids );
 				update_option( 'wpbsl_require_phone', $require_phone );
+				update_option( 'wpbsl_show_last_name', $show_last_name );
+				update_option( 'wpbsl_show_phone', $show_phone );
+				update_option( 'wpbsl_show_kids', $show_kids );
 				update_option( 'wpbsl_show_notes', $show_notes );
 				update_option( 'wpbsl_auto_confirm', $auto_confirm );
 				update_option( 'wpbsl_show_owner', $show_owner );
@@ -1112,12 +1118,38 @@ class WP_Booking_Simple_Admin {
 					<td><input type="number" id="wpbsl_default_kids" name="wpbsl_default_kids" value="<?php echo esc_attr( get_option( 'wpbsl_default_kids', 0 ) ); ?>" min="0" class="small-text" /></td>
 				</tr>
 				<tr>
+					<th scope="row"><?php esc_html_e( 'Last Name Field', 'wp-booking-simple' ); ?></th>
+					<td>
+						<label>
+							<input type="checkbox" name="wpbsl_show_last_name" value="1" <?php checked( 1, (int) get_option( 'wpbsl_show_last_name', 1 ) ); ?> />
+							<?php esc_html_e( 'Show the last name field on the booking form.', 'wp-booking-simple' ); ?>
+						</label>
+						<p class="description"><?php esc_html_e( 'Turn this off to ask for a first name only. Existing bookings keep the last name they were made with.', 'wp-booking-simple' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Kids Field', 'wp-booking-simple' ); ?></th>
+					<td>
+						<label>
+							<input type="checkbox" name="wpbsl_show_kids" value="1" <?php checked( 1, (int) get_option( 'wpbsl_show_kids', 1 ) ); ?> />
+							<?php esc_html_e( 'Show the number of kids on the booking form.', 'wp-booking-simple' ); ?>
+						</label>
+						<p class="description"><?php esc_html_e( 'With this off, every booking counts as adults only and the kid price is never applied.', 'wp-booking-simple' ); ?></p>
+					</td>
+				</tr>
+				<tr>
 					<th scope="row"><?php esc_html_e( 'Phone Field', 'wp-booking-simple' ); ?></th>
 					<td>
+						<label>
+							<input type="checkbox" name="wpbsl_show_phone" value="1" <?php checked( 1, (int) get_option( 'wpbsl_show_phone', 1 ) ); ?> />
+							<?php esc_html_e( 'Show the phone field on the booking form.', 'wp-booking-simple' ); ?>
+						</label>
+						<br />
 						<label>
 							<input type="checkbox" name="wpbsl_require_phone" value="1" <?php checked( 1, (int) get_option( 'wpbsl_require_phone', 0 ) ); ?> />
 							<?php esc_html_e( 'Require the guest to provide a phone number.', 'wp-booking-simple' ); ?>
 						</label>
+						<p class="description"><?php esc_html_e( 'Requiring a phone number only applies while the field is shown.', 'wp-booking-simple' ); ?></p>
 					</td>
 				</tr>
 				<tr>

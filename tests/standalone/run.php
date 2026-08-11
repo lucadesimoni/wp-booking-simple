@@ -83,6 +83,7 @@ function register_block_type( $name, $args = array() ) { $GLOBALS['_wpbsl_test']
 function is_admin() { return true; }
 function load_plugin_textdomain() { return true; }
 function __( $s, $d = null ) { return $s; }
+function _n( $single, $plural, $number, $d = null ) { return 1 === (int) $number ? $single : $plural; }
 function esc_html__( $s, $d = null ) { return $s; }
 function esc_html_e( $s, $d = null ) { echo $s; }
 function esc_attr( $s ) { return $s; }
@@ -288,6 +289,18 @@ $email->configure_phpmailer( $pm );
 check_equals( '', $pm->SMTPSecure, 'encryption "none" clears SMTPSecure' );
 check( false === $pm->SMTPAutoTLS, 'encryption "none" disables SMTPAutoTLS' );
 
+echo "\nEmail: guest count wording\n";
+$guests_label = new ReflectionMethod( 'WP_Booking_Simple_Email', 'guests_label' );
+$guests_label->setAccessible( true );
+$email_obj = new WP_Booking_Simple_Email();
+$guests_of = function ( $adults, $kids ) use ( $guests_label, $email_obj ) {
+	return $guests_label->invoke( $email_obj, (object) array( 'adults' => $adults, 'kids' => $kids ) );
+};
+check_equals( '2 adults, 1 kid', $guests_of( 2, 1 ), 'a single kid is not pluralised' );
+check_equals( '1 adult', $guests_of( 1, 0 ), 'a single adult is not pluralised' );
+check_equals( '2 adults, 3 kids', $guests_of( 2, 3 ), 'several kids are pluralised' );
+check_equals( '4 adults', $guests_of( 4, 0 ), 'zero kids are left out entirely' );
+
 echo "\nEmail: merge-tag replacement (customizable templates)\n";
 $vars = array(
 	'{guest_name}'  => 'Anna Rossi',
@@ -474,6 +487,45 @@ echo "\nHelpers: tracked fields\n";
 $tf = WP_Booking_Simple_Helpers::tracked_fields();
 check( isset( $tf['payment_status'], $tf['total_price'], $tf['check_in'], $tf['status'] ), 'tracked fields include the key booking fields' );
 check( is_string( $tf['payment_status'] ) && '' !== $tf['payment_status'], 'each tracked field has a human label' );
+
+echo "\nHelpers: removable booking-form fields\n";
+$saved_options = $GLOBALS['_wpbsl_test']['options'];
+
+// Nothing configured: every optional field defaults to shown, except the owner
+// dropdown, which also needs at least one configured name.
+$GLOBALS['_wpbsl_test']['options'] = array();
+$ff = WP_Booking_Simple_Helpers::form_fields();
+check( true === $ff['last_name'], 'last name shown by default' );
+check( true === $ff['phone'], 'phone shown by default' );
+check( true === $ff['kids'], 'kids shown by default' );
+check( true === $ff['notes'], 'notes shown by default' );
+check( true === $ff['visitors'], 'visitors shown by default' );
+check( false === $ff['owner'], 'owner hidden while no owners are configured' );
+
+$GLOBALS['_wpbsl_test']['options']['wpbsl_owners'] = "Alberto\nLuca";
+check( true === WP_Booking_Simple_Helpers::shows_field( 'owner' ), 'owner shown once names exist' );
+
+// Switching fields off.
+$GLOBALS['_wpbsl_test']['options']['wpbsl_show_last_name'] = 0;
+$GLOBALS['_wpbsl_test']['options']['wpbsl_show_phone']     = 0;
+$GLOBALS['_wpbsl_test']['options']['wpbsl_show_kids']      = 0;
+$ff = WP_Booking_Simple_Helpers::form_fields();
+check( false === $ff['last_name'], 'last name can be switched off' );
+check( false === $ff['phone'], 'phone can be switched off' );
+check( false === $ff['kids'], 'kids can be switched off' );
+check( true === $ff['notes'], 'switching one field off leaves the others alone' );
+
+// Mandatory fields are not part of the map and must never read as hidden.
+check( true === WP_Booking_Simple_Helpers::shows_field( 'email' ), 'unknown/mandatory field reads as shown' );
+check( true === WP_Booking_Simple_Helpers::shows_field( 'check_in' ), 'check-in is never hidden' );
+check( false === WP_Booking_Simple_Helpers::shows_field( 'kids' ), 'shows_field agrees with the map' );
+
+// With kids switched off nobody is charged the kid rate: 3 nights x 2 adults
+// x 50 = 300, where the same stay with one kid would have been 375.
+check_equals( 300, WP_Booking_Simple_Helpers::calculate_price( '2026-03-01', '2026-03-04', 2, 0, 50, 25 ), 'kids forced to zero bills adults only' );
+check_equals( 375, WP_Booking_Simple_Helpers::calculate_price( '2026-03-01', '2026-03-04', 2, 1, 50, 25 ), 'the same stay with a kid costs more' );
+
+$GLOBALS['_wpbsl_test']['options'] = $saved_options;
 
 echo "\nHelpers: owners parsing edge cases\n";
 check_equals( array( 'Alberto', 'Luca' ), WP_Booking_Simple_Helpers::parse_owners( "  Alberto \n\n Luca \n" ), 'owners trimmed and blank lines dropped' );
