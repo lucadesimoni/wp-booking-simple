@@ -1,5 +1,14 @@
 *** WP Booking Simple Changelog ***
 
+2026.08.11 - version 1.22.1
+ * Fix - The German translation is complete again. 33 strings had no translation at all (the Elementor widget labels, the block descriptions, the new form-field settings, "Select a date", the IBAN hint and more), because the template was maintained by hand while nothing checked that the catalogs kept up. tools/i18n/build-catalogs.py now regenerates the .pot and both .po files from the source and fails when any string is left untranslated.
+ * Fix - Saving the settings no longer freezes the email templates in whatever language the admin was viewing. The form pre-fills each field with the rendered default, so opening the Email Templates tab and pressing Save used to store the English text permanently - after which the emails stayed English on a German site. An unedited field is now stored blank and keeps following the site language.
+ * Fix - The guest count on the guest's manage page said "1 Kinder"; it built its own unpluralised string instead of the one the emails use. Both now share WP_Booking_Simple_Helpers::guests_label().
+ * Fix - The payment reference in the QR bill and the confirmation email is translatable, so it reads "Buchung Nr. 12 ..." on a German site instead of "Booking #12 ...".
+ * Fix - The IBAN hint under Settings showed mojibake ("CHâ¦" instead of "CH…") from a double-encoded ellipsis in the source, present since 1.18.0.
+ * Fix - The Elementor widget labels were invisible to the string extractor, so includes/elementor/ was never translated.
+ * Improvement - The Swiss German (de_CH) catalog no longer contains "ß"; it is generated from de_DE with Swiss spelling.
+
 2026.08.11 - version 1.22.0
  * New - Remove fields from the booking form: last name, phone and the number of kids can each be switched off under Settings > Booking Form, alongside the existing notes, owner and visitors toggles. Check-in, check-out, adults, first name and email stay mandatory - a booking cannot be priced, held or confirmed by email without them.
  * New - A hidden field is enforced nowhere: the form and the AJAX handler read one shared field map, so switching a field off also stops it being required, discards anything a hand-crafted request sends for it, and keeps the quoted price equal to the booked price. Requiring a phone number now only applies while the phone field is shown.

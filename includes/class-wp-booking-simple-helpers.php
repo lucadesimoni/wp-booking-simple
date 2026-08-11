@@ -456,6 +456,41 @@ class WP_Booking_Simple_Helpers {
 	}
 
 	/**
+	 * Human-readable guest count, e.g. "2 adults, 1 kid" or just "1 adult".
+	 *
+	 * Pluralised properly, and kids are left out entirely at zero: with the
+	 * kids field switched off every booking would otherwise read ", 0 kids".
+	 *
+	 * Lives here so the booking emails and the guest's manage page cannot
+	 * drift apart - they each used to build this string themselves, and both
+	 * got the plural wrong.
+	 *
+	 * @param object|array $booking Booking row.
+	 * @return string
+	 */
+	public static function guests_label( $booking ) {
+		$booking = (object) $booking;
+		$adults  = isset( $booking->adults ) ? (int) $booking->adults : 0;
+		$kids    = isset( $booking->kids ) ? (int) $booking->kids : 0;
+
+		$label = sprintf(
+			/* translators: %d: number of adults */
+			_n( '%d adult', '%d adults', $adults, 'wp-booking-simple' ),
+			$adults
+		);
+
+		if ( $kids > 0 ) {
+			$label .= ', ' . sprintf(
+				/* translators: %d: number of kids */
+				_n( '%d kid', '%d kids', $kids, 'wp-booking-simple' ),
+				$kids
+			);
+		}
+
+		return $label;
+	}
+
+	/**
 	 * The booking-form fields a site owner can switch off, and whether each one
 	 * is currently switched on.
 	 *

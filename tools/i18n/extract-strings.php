@@ -1,7 +1,14 @@
 <?php
 // Token-based extractor for WP i18n calls.
 $funcs = ['__','_e','esc_html__','esc_html_e','esc_attr__','esc_attr_e','_x','_ex','esc_attr_x','esc_html_x','_n','_nx'];
-$files = array_merge(glob('includes/*.php'), ['wp-booking-simple.php']);
+// Every PHP file that ships with the plugin. includes/elementor/ holds the
+// Elementor widget labels and was previously missed, so those strings never
+// reached the template.
+$files = array_merge(
+	glob('includes/*.php'),
+	glob('includes/elementor/*.php'),
+	['wp-booking-simple.php']
+);
 $entries = []; // key => ['msgid'=>, 'plural'=>, 'context'=>]
 foreach ($files as $f) {
 	$tokens = token_get_all(file_get_contents($f));

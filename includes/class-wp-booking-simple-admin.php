@@ -280,6 +280,29 @@ class WP_Booking_Simple_Admin {
 	}
 
 	/**
+	 * The built-in default text for every email template field.
+	 *
+	 * Used to tell an untouched field from a genuinely customised one when the
+	 * settings form is saved, so the defaults keep following the site language.
+	 *
+	 * @return array Option key => default text.
+	 */
+	private function email_template_defaults() {
+		$email = wp_booking_simple()->email;
+
+		return array(
+			'wpbsl_email_confirmation_subject' => $email->default_confirmation_subject(),
+			'wpbsl_email_confirmation_body'    => $email->default_confirmation_body(),
+			'wpbsl_email_cancellation_subject' => $email->default_cancellation_subject(),
+			'wpbsl_email_cancellation_body'    => $email->default_cancellation_body(),
+			'wpbsl_email_reminder_subject'     => $email->default_reminder_subject(),
+			'wpbsl_email_reminder_body'        => $email->default_reminder_body(),
+			'wpbsl_email_admin_subject'        => $email->default_admin_subject(),
+			'wpbsl_email_admin_body'           => $email->default_admin_body(),
+		);
+	}
+
+	/**
 	 * Render calendar page.
 	 */
 	public function render_calendar_page() {
@@ -819,8 +842,9 @@ class WP_Booking_Simple_Admin {
 			$qr_paylink = isset( $_POST['wpbsl_qr_twint_paylink'] ) ? esc_url_raw( wp_unslash( $_POST['wpbsl_qr_twint_paylink'] ) ) : '';
 			$qr_tlabel  = isset( $_POST['wpbsl_qr_twint_label'] ) ? sanitize_text_field( wp_unslash( $_POST['wpbsl_qr_twint_label'] ) ) : '';
 
-			// Email template options. Subjects are plain text; bodies allow safe HTML.
-			// Saving a blank value resets that template to its built-in default.
+			// Email template options. Subjects are plain text; bodies allow safe
+			// HTML. Saving a blank value resets that template to its built-in
+			// default, which is also what an unedited field is stored as.
 			$template_fields = array(
 				'wpbsl_email_confirmation_subject' => 'subject',
 				'wpbsl_email_confirmation_body'    => 'body',
@@ -831,14 +855,28 @@ class WP_Booking_Simple_Admin {
 				'wpbsl_email_admin_subject'        => 'subject',
 				'wpbsl_email_admin_body'           => 'body',
 			);
+			// The form pre-fills each field with the rendered default, so simply
+			// opening this tab and pressing Save would otherwise freeze the
+			// default into the option in whatever language the admin was viewing
+			// - and the emails would stay in that language for good. Storing a
+			// blank whenever the text still equals the current default keeps the
+			// template following the site language until it is really edited.
+			$template_defaults = $this->email_template_defaults();
+
 			$template_values = array();
 			foreach ( $template_fields as $field_key => $field_type ) {
 				if ( ! isset( $_POST[ $field_key ] ) ) {
 					$template_values[ $field_key ] = '';
 					continue;
 				}
-				$raw = wp_unslash( $_POST[ $field_key ] );
-				$template_values[ $field_key ] = ( 'body' === $field_type ) ? wp_kses_post( $raw ) : sanitize_text_field( $raw );
+				$raw   = wp_unslash( $_POST[ $field_key ] );
+				$value = ( 'body' === $field_type ) ? wp_kses_post( $raw ) : sanitize_text_field( $raw );
+
+				if ( isset( $template_defaults[ $field_key ] ) && trim( $value ) === trim( $template_defaults[ $field_key ] ) ) {
+					$value = '';
+				}
+
+				$template_values[ $field_key ] = $value;
 			}
 
 			// Visual builder blocks (JSON) per template.
@@ -863,7 +901,7 @@ class WP_Booking_Simple_Admin {
 			} elseif ( $smtp_enabled && '' === $smtp_host ) {
 				echo '<div class="notice notice-error"><p>' . esc_html__( 'Please enter an SMTP host (e.g. smtp.gmail.com) to enable SMTP delivery.', 'wp-booking-simple' ) . '</p></div>';
 			} elseif ( $qr_enabled && ! WP_Booking_Simple_Helpers::is_valid_ch_iban( $qr_iban ) ) {
-				echo '<div class="notice notice-error"><p>' . esc_html__( 'Please enter a valid Swiss/Liechtenstein IBAN (CHâ¦ or LIâ¦) to enable TWINT / QR-bill payments.', 'wp-booking-simple' ) . '</p></div>';
+				echo '<div class="notice notice-error"><p>' . esc_html__( 'Please enter a valid Swiss/Liechtenstein IBAN (CH… or LI…) to enable TWINT / QR-bill payments.', 'wp-booking-simple' ) . '</p></div>';
 			} else {
 				update_option( 'wpbsl_price_adult', $price_adult );
 				update_option( 'wpbsl_price_kid', $price_kid );

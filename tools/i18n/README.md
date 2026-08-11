@@ -31,6 +31,24 @@ then run `po2mo.php` on it.
 
 ## Regenerating the template after code changes
 
-`extract-strings.php` lists every translatable string found in the PHP source
-(used to build the `.pot`). After adding or changing strings, re-extract and
-update the `.po` files with the new/changed entries before recompiling.
+```
+python3 tools/i18n/build-catalogs.py
+php tools/i18n/po2mo.php lang/wp-booking-simple-de_DE.po
+php tools/i18n/po2mo.php lang/wp-booking-simple-de_CH.po
+```
+
+`build-catalogs.py` re-reads every translatable string from the source (via
+`extract-strings.php`), rewrites the `.pot`, and rewrites both German `.po`
+files — carrying existing translations over untouched and filling gaps from
+its `NEW_TRANSLATIONS` table. It **exits non-zero and names any string that
+still has no translation**, so a new string cannot quietly ship in English.
+
+Add the German text for new strings to `NEW_TRANSLATIONS` in that script (or
+edit the `.po` directly and re-run it; existing translations always win).
+
+`de_CH` is generated from `de_DE` with `ß` replaced by `ss`, so only `de_DE`
+needs translating.
+
+The template used to be maintained by hand, which is how 33 strings ended up
+untranslated at once — `extract-strings.php` listed them but nothing checked
+that the catalogs kept up. Run the script instead of editing the `.pot`.

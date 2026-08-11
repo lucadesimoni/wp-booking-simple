@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WP Booking Simple
- * Version: 1.22.0
+ * Version: 1.22.1
  * Plugin URI: https://famiglia-desimoni.ch/
  * Description: A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.
  * Author: Famiglia De Simoni
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'WP_BOOKING_SIMPLE_VERSION', '1.22.0' );
+define( 'WP_BOOKING_SIMPLE_VERSION', '1.22.1' );
 define( 'WP_BOOKING_SIMPLE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WP_BOOKING_SIMPLE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

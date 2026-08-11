@@ -2,22 +2,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Booking Simple\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: \n"
-"Language-Team: German\n"
-"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: wp-booking-simple\n"
 
-msgid "%1$d adults, %2$d kids"
-msgstr "%1$d Erwachsene, %2$d Kinder"
 
 msgid "%1$d nights · %2$d bookings"
 msgstr "%1$d Nächte · %2$d Buchungen"
 
 msgid "%1$s - Booking #%2$d"
 msgstr "%1$s – Buchung #%2$d"
+
+msgid "%d adult"
+msgid_plural "%d adults"
+msgstr[0] "%d Erwachsener"
+msgstr[1] "%d Erwachsene"
+
+msgid "%d kid"
+msgid_plural "%d kids"
+msgstr[0] "%d Kind"
+msgstr[1] "%d Kinder"
+
+msgid "%d night"
+msgid_plural "%d nights"
+msgstr[0] "%d Nacht"
+msgstr[1] "%d Nächte"
+
+msgid "%s outstanding"
+msgstr "%s offen"
+
+msgid "A confirmation email with a link to manage your booking is on its way. If you don't see it shortly, please check your spam folder."
+msgstr "Eine Bestätigungs-E-Mail mit einem Link zur Verwaltung Ihrer Buchung ist unterwegs. Falls Sie sie nicht in Kürze sehen, prüfen Sie bitte Ihren Spam-Ordner."
 
 msgid "A horizontal divider."
 msgstr "Eine horizontale Trennlinie."
@@ -30,11 +49,23 @@ msgstr[1] "Ein Mindestaufenthalt von %d Nächten ist erforderlich."
 msgid "A new booking has been submitted.\n\nGuest: {guest_name}\nEmail: {guest_email}\nPhone: {guest_phone}\nOwner: {owner}\nVisitors welcome: {visitors_welcome}\nStatus: {status}\n\n{booking_details}\n\n{admin_link}"
 msgstr "Es wurde eine neue Buchung übermittelt.\n\nGast: {guest_name}\nE-Mail: {guest_email}\nTelefon: {guest_phone}\nEigentümer: {owner}\nBesuch willkommen: {visitors_welcome}\nStatus: {status}\n\n{booking_details}\n\n{admin_link}"
 
+msgid "Accent color"
+msgstr "Akzentfarbe"
+
+msgid "Account holder (name)"
+msgstr "Kontoinhaber (Name)"
+
 msgid "Actions"
 msgstr "Aktionen"
 
 msgid "Add block"
 msgstr "Block hinzufügen"
+
+msgid "Address (postal code & town)"
+msgstr "Adresse (PLZ & Ort)"
+
+msgid "Address (street & number)"
+msgstr "Adresse (Strasse & Nummer)"
 
 msgid "Admin Notification"
 msgstr "Administrator-Benachrichtigung"
@@ -51,6 +82,9 @@ msgstr "Erwachsene: %d"
 msgid "All Bookings"
 msgstr "Alle Buchungen"
 
+msgid "Already booked"
+msgstr "Bereits gebucht"
+
 msgid "Alt text"
 msgstr "Alternativtext"
 
@@ -59,6 +93,9 @@ msgstr "Bezahlter Betrag"
 
 msgid "Amount paid (%s)"
 msgstr "Bezahlter Betrag (%s)"
+
+msgid "Amount:"
+msgstr "Betrag:"
 
 msgid "An error occurred. Please try again."
 msgstr "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
@@ -84,8 +121,14 @@ msgstr "Verfügbar"
 msgid "Available in emails as {visitors_welcome}."
 msgstr "In E-Mails als {visitors_welcome} verfügbar."
 
+msgid "Available — click to select your dates"
+msgstr "Verfügbar – zur Auswahl Ihrer Daten anklicken"
+
 msgid "Bank"
 msgstr "Bank"
+
+msgid "Bank name (optional)"
+msgstr "Bankname (optional)"
 
 msgid "Body (fallback)"
 msgstr "Textkörper (Fallback)"
@@ -96,11 +139,23 @@ msgstr "Jetzt buchen"
 msgid "Book Your Stay"
 msgstr "Buchen Sie Ihren Aufenthalt"
 
+msgid "Book another stay"
+msgstr "Weitere Buchung vornehmen"
+
 msgid "Booked"
 msgstr "Gebucht"
 
+msgid "Booked color"
+msgstr "Farbe für belegte Tage"
+
 msgid "Booking"
 msgstr "Buchung"
+
+msgid "Booking #%1$d %2$s %3$s"
+msgstr "Buchung Nr. %1$d %2$s %3$s"
+
+msgid "Booking #%d"
+msgstr "Buchung #%d"
 
 msgid "Booking Calendar"
 msgstr "Buchungskalender"
@@ -188,8 +243,23 @@ msgstr "Schaltfläche"
 msgid "Button URL (e.g. {manage_url})"
 msgstr "Schaltflächen-URL (z. B. {manage_url})"
 
+msgid "Button background"
+msgstr "Hintergrund der Schaltfläche"
+
+msgid "Button corner radius"
+msgstr "Eckenradius der Schaltfläche"
+
+msgid "Button font size"
+msgstr "Schriftgröße der Schaltfläche"
+
+msgid "Button hover background"
+msgstr "Hintergrund der Schaltfläche (Mauszeiger darüber)"
+
 msgid "Button label"
 msgstr "Schaltflächen-Beschriftung"
+
+msgid "Button text color"
+msgstr "Textfarbe der Schaltfläche"
 
 msgid "Calculating price..."
 msgstr "Preis wird berechnet …"
@@ -263,6 +333,9 @@ msgstr "Bestätigt"
 msgid "Content"
 msgstr "Inhalt"
 
+msgid "Country code"
+msgstr "Ländercode"
+
 msgid "Currency"
 msgstr "Währung"
 
@@ -272,8 +345,11 @@ msgstr "Passen Sie den Wortlaut der automatischen E-Mails an. Leeren Sie ein Fel
 msgid "Dashboard"
 msgstr "Dashboard"
 
-msgid "Dear {guest_name},\n\nThank you for your booking! We are pleased to confirm your reservation.\n\n{booking_details}\n\nYou can manage or cancel your booking using the link below:\n\n{manage_link}\n\nWe look forward to welcoming you!\n\nBest regards,\n{site_name}"
-msgstr "Liebe/r {guest_name},\n\nvielen Dank für Ihre Buchung! Wir freuen uns, Ihre Reservierung zu bestätigen.\n\n{booking_details}\n\nSie können Ihre Buchung über den folgenden Link verwalten oder stornieren:\n\n{manage_link}\n\nWir freuen uns darauf, Sie begrüßen zu dürfen!\n\nMit freundlichen Grüßen,\n{site_name}"
+msgid "Day cell height"
+msgstr "Höhe der Tageszelle"
+
+msgid "Dear {guest_name},\n\nThank you for your booking! We are pleased to confirm your reservation.\n\n{booking_details}\n\n{payment_info}\n\nYou can manage or cancel your booking using the link below:\n\n{manage_link}\n\nWe look forward to welcoming you!\n\nBest regards,\n{site_name}"
+msgstr "Liebe/r {guest_name},\n\nvielen Dank für Ihre Buchung! Wir freuen uns, Ihre Reservierung zu bestätigen.\n\n{booking_details}\n\n{payment_info}\n\nSie können Ihre Buchung über den folgenden Link verwalten oder stornieren:\n\n{manage_link}\n\nWir freuen uns darauf, Sie begrüßen zu dürfen!\n\nMit freundlichen Grüßen,\n{site_name}"
 
 msgid "Dear {guest_name},\n\nThis is a friendly reminder about the balance for your booking.\n\n{booking_details}\n\nAmount paid: {amount_paid}\nOutstanding balance: {amount_due}\n\nYou can review your booking using the link below:\n\n{manage_link}\n\nThank you,\n{site_name}"
 msgstr "Liebe/r {guest_name},\n\ndies ist eine freundliche Erinnerung an den offenen Betrag für Ihre Buchung.\n\n{booking_details}\n\nBezahlter Betrag: {amount_paid}\nOffener Betrag: {amount_due}\n\nSie können Ihre Buchung über den folgenden Link einsehen:\n\n{manage_link}\n\nVielen Dank,\n{site_name}"
@@ -308,6 +384,9 @@ msgstr "Frühestmögliche Anreise eines Gastes, in Tagen ab heute. 0 = heute erl
 msgid "Email"
 msgstr "E-Mail"
 
+msgid "Email Delivery"
+msgstr "E-Mail-Versand"
+
 msgid "Email Delivery (SMTP)"
 msgstr "E-Mail-Zustellung (SMTP)"
 
@@ -322,6 +401,9 @@ msgstr "E-Mail-Vorlagen"
 
 msgid "Email address to receive notifications when new bookings are made."
 msgstr "E-Mail-Adresse, an die Benachrichtigungen bei neuen Buchungen gesendet werden."
+
+msgid "Enable QR payments"
+msgstr "QR-Zahlungen aktivieren"
 
 msgid "Encryption"
 msgstr "Verschlüsselung"
@@ -341,6 +423,9 @@ msgstr "Löschen der Buchung fehlgeschlagen."
 msgid "Failed to update booking status."
 msgstr "Aktualisierung des Buchungsstatus fehlgeschlagen."
 
+msgid "Fills the guest confirmation, cancellation and payment-reminder emails with ready-made German text (used as the fallback body — you can still edit it). Then click Save Settings."
+msgstr "Füllt die E-Mails für Bestätigung, Stornierung und Zahlungserinnerung mit fertigem deutschem Text (wird als Fallback-Text verwendet – Sie können ihn weiterhin bearbeiten). Klicken Sie danach auf „Einstellungen speichern“."
+
 msgid "First Name"
 msgstr "Vorname"
 
@@ -352,6 +437,9 @@ msgstr "Für Gmail: Host smtp.gmail.com, Port 587 (TLS), Ihre vollständige Adre
 
 msgid "From"
 msgstr "Von"
+
+msgid "General"
+msgstr "Allgemein"
 
 msgid "Guest"
 msgstr "Gast"
@@ -377,6 +465,12 @@ msgstr "Überschrift"
 msgid "How far ahead guests may book, in days. 0 = no limit."
 msgstr "Wie weit im Voraus Gäste buchen dürfen, in Tagen. 0 = keine Begrenzung."
 
+msgid "IBAN"
+msgstr "IBAN"
+
+msgid "IBAN:"
+msgstr "IBAN:"
+
 msgid "ID"
 msgstr "ID"
 
@@ -386,8 +480,14 @@ msgstr "Bild"
 msgid "Image URL"
 msgstr "Bild-URL"
 
+msgid "Insert German starter templates"
+msgstr "Deutsche Vorlagen einsetzen"
+
 msgid "Insert tag"
 msgstr "Tag einfügen"
+
+msgid "Inserted — remember to click Save Settings."
+msgstr "Eingefügt – denken Sie daran, auf „Einstellungen speichern“ zu klicken."
 
 msgid "Insights across all non-cancelled bookings. Filter by check-in date below; the export respects the same range."
 msgstr "Auswertungen über alle nicht stornierten Buchungen. Filtern Sie unten nach Anreisedatum; der Export berücksichtigt denselben Zeitraum."
@@ -419,11 +519,17 @@ msgstr "Ungültige Anfrage."
 msgid "Kids"
 msgstr "Kinder"
 
+msgid "Kids Field"
+msgstr "Feld „Kinder“"
+
 msgid "Kids: %d"
 msgstr "Kinder: %d"
 
 msgid "Last Name"
 msgstr "Nachname"
+
+msgid "Last Name Field"
+msgstr "Feld „Nachname“"
 
 msgid "Last name"
 msgstr "Nachname"
@@ -506,6 +612,12 @@ msgstr "Notizfeld"
 msgid "Notes:"
 msgstr "Notizen:"
 
+msgid "Offer TWINT / QR-bill payment on the manage-booking page."
+msgstr "TWINT-/QR-Rechnung-Zahlung auf der Buchungsverwaltungsseite anbieten."
+
+msgid "Or pay by TWINT:"
+msgstr "Oder per TWINT bezahlen:"
+
 msgid "Other"
 msgstr "Sonstiges"
 
@@ -530,8 +642,17 @@ msgstr "Bezahlt"
 msgid "Partially paid"
 msgstr "Teilweise bezahlt"
 
+msgid "Pay now"
+msgstr "Jetzt bezahlen"
+
+msgid "Pay with TWINT"
+msgstr "Mit TWINT bezahlen"
+
 msgid "Payment"
 msgstr "Zahlung"
+
+msgid "Payment Details"
+msgstr "Zahlungsdetails"
 
 msgid "Payment Reminder"
 msgstr "Zahlungserinnerung"
@@ -548,6 +669,9 @@ msgstr "Zahlungserinnerung gesendet."
 msgid "Payment status"
 msgstr "Zahlungsstatus"
 
+msgid "Payment:"
+msgstr "Zahlung:"
+
 msgid "Payments by method"
 msgstr "Zahlungen nach Methode"
 
@@ -559,6 +683,9 @@ msgstr "Telefon"
 
 msgid "Phone Field"
 msgstr "Telefonfeld"
+
+msgid "Please enter a valid Swiss/Liechtenstein IBAN (CH… or LI…) to enable TWINT / QR-bill payments."
+msgstr "Bitte geben Sie eine gültige Schweizer oder Liechtensteiner IBAN (CH… oder LI…) ein, um Zahlungen per TWINT / QR-Rechnung zu aktivieren."
 
 msgid "Please enter a valid email address to send the test to."
 msgstr "Bitte geben Sie eine gültige E-Mail-Adresse für den Testversand ein."
@@ -593,17 +720,35 @@ msgstr "Preis pro Erwachsener (pro Nacht)"
 msgid "Price per Kid (per night)"
 msgstr "Preis pro Kind (pro Nacht)"
 
+msgid "Pricing & Notifications"
+msgstr "Preise & Benachrichtigungen"
+
+msgid "Pricing, fields and booking rules are configured under WP Booking Simple → Settings."
+msgstr "Preise, Felder und Buchungsregeln werden unter WP Booking Simple → Einstellungen konfiguriert."
+
 msgid "Recalc"
 msgstr "Neu berechnen"
 
+msgid "Reference:"
+msgstr "Referenz:"
+
+msgid "Refunded"
+msgstr "Erstattet"
+
 msgid "Remove"
 msgstr "Entfernen"
+
+msgid "Replace the confirmation, cancellation and reminder email text with the German starter?"
+msgstr "Den Text der E-Mails für Bestätigung, Stornierung und Erinnerung durch die deutsche Vorlage ersetzen?"
 
 msgid "Request failed. Please try again."
 msgstr "Anfrage fehlgeschlagen. Bitte versuchen Sie es erneut."
 
 msgid "Require the guest to provide a phone number."
 msgstr "Den Gast zur Angabe einer Telefonnummer verpflichten."
+
+msgid "Requiring a phone number only applies while the field is shown."
+msgstr "Die Telefonpflicht gilt nur, solange das Feld angezeigt wird."
 
 msgid "Reset"
 msgstr "Zurücksetzen"
@@ -640,6 +785,15 @@ msgstr "Speichern Sie zuerst Ihre Einstellungen und senden Sie dann eine Test-E-
 
 msgid "Saving…"
 msgstr "Wird gespeichert …"
+
+msgid "Scan the QR code with TWINT or your banking app to pay."
+msgstr "Scannen Sie den QR-Code mit TWINT oder Ihrer Banking-App, um zu bezahlen."
+
+msgid "Scan this QR code with TWINT or your banking app to pay the outstanding balance."
+msgstr "Scannen Sie diesen QR-Code mit TWINT oder Ihrer Banking-App, um den offenen Betrag zu bezahlen."
+
+msgid "Select a date"
+msgstr "Datum wählen"
 
 msgid "Selected dates are not available."
 msgstr "Die ausgewählten Daten sind nicht verfügbar."
@@ -680,26 +834,50 @@ msgstr "Einstellungen gespeichert."
 msgid "Show a \"Visitors welcome?\" yes/no field on the booking form."
 msgstr "Ein Ja/Nein-Feld „Besuch willkommen?“ im Buchungsformular anzeigen."
 
+msgid "Show a Swiss QR-bill on the guest's booking-management page so they can pay the outstanding balance by scanning it with TWINT or any Swiss banking app. This is free — it only needs your IBAN, with no merchant account or transaction fees."
+msgstr "Zeigen Sie auf der Buchungsverwaltungsseite des Gastes eine Schweizer QR-Rechnung an, damit der offene Betrag per TWINT oder einer beliebigen Schweizer Banking-App durch Scannen bezahlt werden kann. Das ist kostenlos – es wird nur Ihre IBAN benötigt, ohne Händlerkonto oder Transaktionsgebühren."
+
+msgid "Show a monthly availability calendar."
+msgstr "Zeigt einen Monatskalender mit der Verfügbarkeit."
+
 msgid "Show an \"Owner\" dropdown on the booking form."
 msgstr "Ein Dropdown „Eigentümer“ im Buchungsformular anzeigen."
+
+msgid "Show the booking form with live price and availability."
+msgstr "Zeigt das Buchungsformular mit Live-Preis und Verfügbarkeit."
+
+msgid "Show the last name field on the booking form."
+msgstr "Das Feld „Nachname“ im Buchungsformular anzeigen."
+
+msgid "Show the number of kids on the booking form."
+msgstr "Die Anzahl der Kinder im Buchungsformular anzeigen."
 
 msgid "Show the optional notes field on the booking form."
 msgstr "Das optionale Notizfeld im Buchungsformular anzeigen."
 
+msgid "Show the phone field on the booking form."
+msgstr "Das Feld „Telefon“ im Buchungsformular anzeigen."
+
+msgid "Shown in the payment details on the confirmation email and at checkout."
+msgstr "Wird in den Zahlungsdetails der Bestätigungs-E-Mail und beim Checkout angezeigt."
+
 msgid "Status"
 msgstr "Status"
 
-msgid "Status:"
-msgstr "Status:"
-
 msgid "Stored in your database. Leave blank to keep the current password."
 msgstr "In Ihrer Datenbank gespeichert. Leer lassen, um das aktuelle Passwort beizubehalten."
+
+msgid "Style"
+msgstr "Stil"
 
 msgid "Subject"
 msgstr "Betreff"
 
 msgid "Submitting..."
 msgstr "Wird übermittelt …"
+
+msgid "Swiss QR payment code"
+msgstr "Schweizer QR-Zahlungscode"
 
 msgid "System"
 msgstr "System"
@@ -710,6 +888,15 @@ msgstr "TLS (empfohlen, Port 587)"
 msgid "TWINT"
 msgstr "TWINT"
 
+msgid "TWINT / QR-bill Payments"
+msgstr "TWINT / QR-Rechnung"
+
+msgid "TWINT Pay link (optional)"
+msgstr "TWINT-Paylink (optional)"
+
+msgid "TWINT link text (optional)"
+msgstr "TWINT-Linktext (optional)"
+
 msgid "Test email sent to %s. Please check the inbox (and spam folder)."
 msgstr "Test-E-Mail an %s gesendet. Bitte prüfen Sie den Posteingang (und den Spam-Ordner)."
 
@@ -718,6 +905,9 @@ msgstr "Text"
 
 msgid "The chalet can accommodate a maximum of %d guests. Please reduce the number of guests."
 msgstr "Das Chalet bietet Platz für maximal %d Gäste. Bitte reduzieren Sie die Anzahl der Gäste."
+
+msgid "The clickable text for the {payment_twint} email link. Defaults to \"Pay with TWINT\"."
+msgstr "Der anklickbare Text für den {payment_twint}-E-Mail-Link. Standard ist „Mit TWINT bezahlen“."
 
 msgid "The dropdown only appears when at least one name is listed. Available in emails as {owner}."
 msgstr "Das Dropdown erscheint nur, wenn mindestens ein Name aufgeführt ist. In E-Mails als {owner} verfügbar."
@@ -733,14 +923,23 @@ msgstr "Die Erinnerung konnte nicht gesendet werden. Prüfen Sie Ihre E-Mail-Ein
 msgid "The styled booking-details box is inserted here."
 msgstr "Hier wird die formatierte Buchungsdetails-Box eingefügt."
 
+msgid "This booking has been cancelled"
+msgstr "Diese Buchung wurde storniert"
+
 msgid "This booking has no valid email address."
 msgstr "Diese Buchung hat keine gültige E-Mail-Adresse."
+
+msgid "This date has already passed"
+msgstr "Dieses Datum liegt in der Vergangenheit"
 
 msgid "This is a test email from WP Booking Simple. If you received it, your booking notifications are being delivered correctly (%s)."
 msgstr "Dies ist eine Test-E-Mail von WP Booking Simple. Wenn Sie sie erhalten haben, werden Ihre Buchungsbenachrichtigungen korrekt zugestellt (%s)."
 
 msgid "Those dates overlap another booking."
 msgstr "Diese Daten überschneiden sich mit einer anderen Buchung."
+
+msgid "Title"
+msgstr "Titel"
 
 msgid "Title:"
 msgstr "Titel:"
@@ -759,6 +958,9 @@ msgstr "Gesamtpreis"
 
 msgid "Total price (%s)"
 msgstr "Gesamtpreis (%s)"
+
+msgid "Turn this off to ask for a first name only. Existing bookings keep the last name they were made with."
+msgstr "Ausschalten, um nur nach dem Vornamen zu fragen. Bestehende Buchungen behalten den Nachnamen, mit dem sie erstellt wurden."
 
 msgid "Unassigned"
 msgstr "Nicht zugewiesen"
@@ -811,8 +1013,26 @@ msgstr "WP Booking Simple verwendet den Standard-Mailer Ihres Servers, der Buchu
 msgid "Width (px, optional)"
 msgstr "Breite (px, optional)"
 
+msgid "With this off, every booking counts as adults only and the kid price is never applied."
+msgstr "Ist dies ausgeschaltet, zählt jede Buchung nur Erwachsene und der Kinderpreis wird nie angewendet."
+
 msgid "Yes"
 msgstr "Ja"
+
+msgid "You can also scan the Swiss QR code on your booking page."
+msgstr "Sie können auch den Schweizer QR-Code auf Ihrer Buchungsseite scannen."
+
+msgid "Your Swiss or Liechtenstein IBAN (CH… or LI…)."
+msgstr "Ihre Schweizer oder Liechtensteiner IBAN (CH… oder LI…)."
+
+msgid "Your TWINT pay-link URL (from portal.twint.ch). Shown as a 'Pay with TWINT' button alongside the QR code."
+msgstr "Ihre TWINT-Paylink-URL (von portal.twint.ch). Wird als Schaltfläche „Mit TWINT bezahlen“ neben dem QR-Code angezeigt."
+
+msgid "Your booking is awaiting confirmation"
+msgstr "Ihre Buchung wartet auf Bestätigung"
+
+msgid "Your booking is confirmed"
+msgstr "Ihre Buchung ist bestätigt"
 
 msgid "[%s] Test email from WP Booking Simple"
 msgstr "[%s] Test-E-Mail von WP Booking Simple"
@@ -831,152 +1051,3 @@ msgstr "über den Standard-WordPress-Mailer"
 
 msgid "•••••••• (saved — leave blank to keep)"
 msgstr "•••••••• (gespeichert – leer lassen, um es beizubehalten)"
-
-
-msgid "General"
-msgstr "Allgemein"
-
-msgid "Email Delivery"
-msgstr "E-Mail-Versand"
-
-msgid "Pricing & Notifications"
-msgstr "Preise & Benachrichtigungen"
-
-msgid "A confirmation email with a link to manage your booking is on its way. If you don't see it shortly, please check your spam folder."
-msgstr "Eine Bestätigungs-E-Mail mit einem Link zur Verwaltung Ihrer Buchung ist unterwegs. Falls Sie sie nicht in Kürze sehen, prüfen Sie bitte Ihren Spam-Ordner."
-
-msgid "Book another stay"
-msgstr "Weitere Buchung vornehmen"
-
-msgid "Available — click to select your dates"
-msgstr "Verfügbar – zur Auswahl Ihrer Daten anklicken"
-
-msgid "Already booked"
-msgstr "Bereits gebucht"
-
-msgid "This date has already passed"
-msgstr "Dieses Datum liegt in der Vergangenheit"
-
-
-msgid "Pay with TWINT"
-msgstr "Mit TWINT bezahlen"
-
-msgid "Scan this QR code with TWINT or your banking app to pay the outstanding balance."
-msgstr "Scannen Sie diesen QR-Code mit TWINT oder Ihrer Banking-App, um den offenen Betrag zu bezahlen."
-
-msgid "Swiss QR payment code"
-msgstr "Schweizer QR-Zahlungscode"
-
-msgid "Amount:"
-msgstr "Betrag:"
-
-msgid "IBAN:"
-msgstr "IBAN:"
-
-msgid "Reference:"
-msgstr "Referenz:"
-
-msgid "TWINT / QR-bill Payments"
-msgstr "TWINT / QR-Rechnung"
-
-msgid "Show a Swiss QR-bill on the guest's booking-management page so they can pay the outstanding balance by scanning it with TWINT or any Swiss banking app. This is free — it only needs your IBAN, with no merchant account or transaction fees."
-msgstr "Zeigen Sie auf der Buchungsverwaltungsseite des Gastes eine Schweizer QR-Rechnung an, damit der offene Betrag per TWINT oder einer beliebigen Schweizer Banking-App durch Scannen bezahlt werden kann. Das ist kostenlos – es wird nur Ihre IBAN benötigt, ohne Händlerkonto oder Transaktionsgebühren."
-
-msgid "Enable QR payments"
-msgstr "QR-Zahlungen aktivieren"
-
-msgid "Offer TWINT / QR-bill payment on the manage-booking page."
-msgstr "TWINT-/QR-Rechnung-Zahlung auf der Buchungsverwaltungsseite anbieten."
-
-msgid "Account holder (name)"
-msgstr "Kontoinhaber (Name)"
-
-msgid "Your Swiss or Liechtenstein IBAN (CH… or LI…)."
-msgstr "Ihre Schweizer oder Liechtensteiner IBAN (CH… oder LI…)."
-
-msgid "Address (street & number)"
-msgstr "Adresse (Strasse & Nummer)"
-
-msgid "Address (postal code & town)"
-msgstr "Adresse (PLZ & Ort)"
-
-msgid "Country code"
-msgstr "Ländercode"
-
-msgid "Please enter a valid Swiss/Liechtenstein IBAN (CH… or LI…) to enable TWINT / QR-bill payments."
-msgstr "Bitte geben Sie eine gültige Schweizer/Liechtensteiner IBAN (CH… oder LI…) ein, um TWINT-/QR-Rechnung-Zahlungen zu aktivieren."
-
-
-msgid "Refunded"
-msgstr "Erstattet"
-
-msgid "Payment Details"
-msgstr "Zahlungsdetails"
-
-msgid "Or pay by TWINT:"
-msgstr "Oder per TWINT bezahlen:"
-
-msgid "You can also scan the Swiss QR code on your booking page."
-msgstr "Sie können auch den Schweizer QR-Code auf Ihrer Buchungsseite scannen."
-
-msgid "Bank name (optional)"
-msgstr "Bankname (optional)"
-
-msgid "Shown in the payment details on the confirmation email and at checkout."
-msgstr "Wird in den Zahlungsdetails der Bestätigungs-E-Mail und beim Checkout angezeigt."
-
-msgid "TWINT Pay link (optional)"
-msgstr "TWINT-Paylink (optional)"
-
-msgid "Your TWINT pay-link URL (from portal.twint.ch). Shown as a 'Pay with TWINT' button alongside the QR code."
-msgstr "Ihre TWINT-Paylink-URL (von portal.twint.ch). Wird als Schaltfläche „Mit TWINT bezahlen“ neben dem QR-Code angezeigt."
-
-msgid "Pay now"
-msgstr "Jetzt bezahlen"
-
-msgid "Scan the QR code with TWINT or your banking app to pay."
-msgstr "Scannen Sie den QR-Code mit TWINT oder Ihrer Banking-App, um zu bezahlen."
-
-
-msgid "TWINT link text (optional)"
-msgstr "TWINT-Linktext (optional)"
-
-msgid "The clickable text for the {payment_twint} email link. Defaults to \"Pay with TWINT\"."
-msgstr "Der anklickbare Text für den {payment_twint}-E-Mail-Link. Standard ist „Mit TWINT bezahlen“."
-
-
-msgid "%d night"
-msgid_plural "%d nights"
-msgstr[0] "%d Nacht"
-msgstr[1] "%d Nächte"
-
-msgid "Your booking is awaiting confirmation"
-msgstr "Ihre Buchung wartet auf Bestätigung"
-
-msgid "Your booking is confirmed"
-msgstr "Ihre Buchung ist bestätigt"
-
-msgid "This booking has been cancelled"
-msgstr "Diese Buchung wurde storniert"
-
-msgid "Booking #%d"
-msgstr "Buchung #%d"
-
-msgid "Payment:"
-msgstr "Zahlung:"
-
-msgid "%s outstanding"
-msgstr "%s offen"
-
-msgid "Insert German starter templates"
-msgstr "Deutsche Vorlagen einsetzen"
-
-msgid "Fills the guest confirmation, cancellation and payment-reminder emails with ready-made German text (used as the fallback body — you can still edit it). Then click Save Settings."
-msgstr "Füllt die E-Mails für Bestätigung, Stornierung und Zahlungserinnerung mit fertigem deutschem Text (wird als Fallback-Text verwendet – Sie können ihn weiterhin bearbeiten). Klicken Sie danach auf „Einstellungen speichern“."
-
-msgid "Replace the confirmation, cancellation and reminder email text with the German starter?"
-msgstr "Den Text der E-Mails für Bestätigung, Stornierung und Erinnerung durch die deutsche Vorlage ersetzen?"
-
-msgid "Inserted — remember to click Save Settings."
-msgstr "Eingefügt – denken Sie daran, auf „Einstellungen speichern“ zu klicken."
-

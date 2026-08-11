@@ -380,7 +380,7 @@ class WP_Booking_Simple_Frontend {
 				<p><strong><?php esc_html_e( 'Check-in:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $booking->check_in ) ) ); ?></p>
 				<p><strong><?php esc_html_e( 'Check-out:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $booking->check_out ) ) ); ?>
 					<span class="wpbs-nights">(<?php echo esc_html( sprintf( _n( '%d night', '%d nights', $nights, 'wp-booking-simple' ), $nights ) ); ?>)</span></p>
-				<p><strong><?php esc_html_e( 'Guests:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $booking->adults . ' ' . __( 'adults', 'wp-booking-simple' ) . ', ' . $booking->kids . ' ' . __( 'kids', 'wp-booking-simple' ) ); ?></p>
+				<p><strong><?php esc_html_e( 'Guests:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( WP_Booking_Simple_Helpers::guests_label( $booking ) ); ?></p>
 				<p><strong><?php esc_html_e( 'Total Price:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( number_format( $booking->total_price, 2 ) . ' ' . $currency ); ?></p>
 				<p><strong><?php esc_html_e( 'Payment:', 'wp-booking-simple' ); ?></strong>
 					<span class="wpbs-pay wpbs-pay-<?php echo esc_attr( $pstatus ); ?>"><?php echo esc_html( isset( $pay_labels[ $pstatus ] ) ? $pay_labels[ $pstatus ] : ucfirst( $pstatus ) ); ?></span>

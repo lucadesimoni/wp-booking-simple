@@ -289,12 +289,9 @@ $email->configure_phpmailer( $pm );
 check_equals( '', $pm->SMTPSecure, 'encryption "none" clears SMTPSecure' );
 check( false === $pm->SMTPAutoTLS, 'encryption "none" disables SMTPAutoTLS' );
 
-echo "\nEmail: guest count wording\n";
-$guests_label = new ReflectionMethod( 'WP_Booking_Simple_Email', 'guests_label' );
-$guests_label->setAccessible( true );
-$email_obj = new WP_Booking_Simple_Email();
-$guests_of = function ( $adults, $kids ) use ( $guests_label, $email_obj ) {
-	return $guests_label->invoke( $email_obj, (object) array( 'adults' => $adults, 'kids' => $kids ) );
+echo "\nGuest count wording (shared by emails and the manage page)\n";
+$guests_of = function ( $adults, $kids ) {
+	return WP_Booking_Simple_Helpers::guests_label( array( 'adults' => $adults, 'kids' => $kids ) );
 };
 check_equals( '2 adults, 1 kid', $guests_of( 2, 1 ), 'a single kid is not pluralised' );
 check_equals( '1 adult', $guests_of( 1, 0 ), 'a single adult is not pluralised' );

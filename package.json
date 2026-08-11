@@ -1,7 +1,7 @@
 {
 	"name": "wp-booking-simple",
 	"title": "WP Booking Simple",
-	"version": "1.22.0",
+	"version": "1.22.1",
 	"description": "A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.",
 	"homepage": "https://github.com/lucadesimoni/wp-booking-simple",
 	"license": "GPL-2.0-or-later",
