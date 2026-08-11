@@ -8,6 +8,7 @@
  * Author URI: https://famiglia-desimoni.ch/
  * Requires at least: 5.0
  * Tested up to: 6.9
+ * Requires PHP: 7.2
  *
  * Text Domain: wp-booking-system-luca
  * Domain Path: /lang/

@@ -20,9 +20,16 @@ class WP_Booking_System_Luca_Block {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_block' ) );
-		// `block_categories_all` is WP 5.8+; `block_categories` covers older installs.
+
+		// `block_categories_all` is WP 5.8+; `block_categories` covers older
+		// installs. Only register the legacy filter when the modern one is
+		// unavailable — attaching to the deprecated hook on WP 5.8+ makes core
+		// emit a `_deprecated_hook` notice, and would add the category twice.
 		add_filter( 'block_categories_all', array( $this, 'register_block_category' ), 10, 1 );
-		add_filter( 'block_categories', array( $this, 'register_block_category' ), 10, 1 );
+
+		if ( ! function_exists( 'get_default_block_categories' ) ) {
+			add_filter( 'block_categories', array( $this, 'register_block_category' ), 10, 1 );
+		}
 	}
 
 	/**

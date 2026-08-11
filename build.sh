@@ -28,15 +28,49 @@ INCLUDE=(
 	"lang"
 )
 
+# Runtime files the plugin enqueues by URL. A missing one does not fail the
+# build on its own, it just 404s in the browser and silently kills the date
+# picker, calendar or payment QR code, so verify them up front instead of
+# shipping a broken ZIP. See assets/vendor/README.md.
+REQUIRED_ASSETS=(
+	"assets/css/frontend.css"
+	"assets/css/admin.css"
+	"assets/js/frontend.js"
+	"assets/js/admin.js"
+	"assets/js/admin-template-builder.js"
+	"assets/js/block.js"
+	"assets/vendor/flatpickr/flatpickr.min.css"
+	"assets/vendor/flatpickr/flatpickr.min.js"
+	"assets/vendor/fullcalendar/index.global.min.js"
+	"assets/vendor/qrcode/qrcode.js"
+)
+
+echo "Verifying plugin files..."
+missing=()
+for item in "${INCLUDE[@]}" "${REQUIRED_ASSETS[@]}"; do
+	if [ ! -e "${ROOT}/${item}" ]; then
+		missing+=("${item}")
+	fi
+done
+
+if [ ${#missing[@]} -gt 0 ]; then
+	echo "ERROR: cannot build, these required files are missing:" >&2
+	for item in "${missing[@]}"; do
+		echo "  - ${item}" >&2
+	done
+	echo >&2
+	echo "If the bundled libraries under assets/vendor/ are missing, run" >&2
+	echo "./tools/fetch-vendor.sh to restore them." >&2
+	exit 1
+fi
+
 echo "Cleaning previous build..."
 rm -rf "${STAGE}" "${DIST}/${SLUG}.zip"
 mkdir -p "${STAGE}"
 
 echo "Staging plugin files..."
 for item in "${INCLUDE[@]}"; do
-	if [ -e "${ROOT}/${item}" ]; then
-		cp -R "${ROOT}/${item}" "${STAGE}/"
-	fi
+	cp -R "${ROOT}/${item}" "${STAGE}/"
 done
 
 # Strip any stray VCS/OS cruft from the staged copy.

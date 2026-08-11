@@ -1,7 +1,14 @@
-node*
-vendor*
+# Dependency directories installed by package managers.
+# These are anchored to the repository root on purpose: an unanchored
+# `vendor*` / `node*` rule also matches `assets/vendor/`, which is where the
+# plugin's bundled front-end libraries live and which must stay tracked.
+/node_modules/
+/vendor/
+
+# Editor / OS cruft.
 .vscode
 .DS_Store
+
+# Build output.
 dist/
 *.zip
-dist/

@@ -68,7 +68,7 @@ After activation, you should see:
 
 #### Test 4: Booking Form Shortcode
 1. Create a new page (Pages → Add New)
-2. Add the shortcode: `[wp_booking_form]`
+2. Add the shortcode: `[wp_booking_form_luca]`
 3. Publish the page
 4. View the page on the frontend
 5. ✅ **Expected**: 
@@ -149,7 +149,7 @@ After activation, you should see:
 
 #### Test 12: Calendar Shortcode
 1. Create a new page
-2. Add shortcode: `[wp_booking_calendar title="Check Availability"]`
+2. Add shortcode: `[wp_booking_calendar_luca title="Check Availability"]`
 3. Publish and view the page
 4. ✅ **Expected**: Calendar displays with custom title
 
@@ -173,7 +173,7 @@ After activation, you should see:
 
 #### Test 14: Booking Management Page
 1. Create a new page: "Manage Booking"
-2. Add shortcode: `[wp_booking_manage]`
+2. Add shortcode: `[wp_booking_manage_luca]`
 3. Publish the page
 4. Copy the management link from the confirmation email
 5. Open the link in a browser
@@ -275,7 +275,7 @@ For rapid testing, use this sequence:
 1. **Setup** (2 min)
    - Activate plugin
    - Configure settings (Bookings → Settings)
-   - Create a page with `[wp_booking_form]`
+   - Create a page with `[wp_booking_form_luca]`
 
 2. **Create Booking** (1 min)
    - Fill form with test data

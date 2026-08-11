@@ -19,7 +19,7 @@
 ### Step 3: Create Booking Page (1 minute)
 1. Go to **Pages → Add New**
 2. Title: "Book Now"
-3. Option A: Add shortcode: `[wp_booking_form]`
+3. Option A: Add shortcode: `[wp_booking_form_luca]`
    Option B: Use Gutenberg editor and add "Booking Calendar" block
 4. Click **Publish**
 5. View the page

@@ -46,7 +46,12 @@ class WP_Booking_System_Luca_Database {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE IF NOT EXISTS {$this->table_name} (
+		// dbDelta parses the table name with `|CREATE TABLE ([^ ]*)|`, so an
+		// `IF NOT EXISTS` here would make it read the table as "IF" and skip
+		// the column diff entirely, silently breaking every schema upgrade.
+		// dbDelta is already idempotent, and needs two spaces after
+		// `PRIMARY KEY` to recognise the primary key definition.
+		$sql = "CREATE TABLE {$this->table_name} (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			booking_token varchar(64) NOT NULL,
 			first_name varchar(100) NOT NULL,
@@ -67,20 +72,20 @@ class WP_Booking_System_Luca_Database {
 			notes text DEFAULT NULL,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP,
 			updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			PRIMARY KEY (id),
+			PRIMARY KEY  (id),
 			UNIQUE KEY booking_token (booking_token),
 			KEY check_in (check_in),
 			KEY check_out (check_out),
 			KEY status (status)
 		) $charset_collate;";
 
-		$history_sql = "CREATE TABLE IF NOT EXISTS {$this->history_table} (
+		$history_sql = "CREATE TABLE {$this->history_table} (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			booking_id bigint(20) NOT NULL,
 			changed_at datetime DEFAULT CURRENT_TIMESTAMP,
 			changed_by varchar(150) DEFAULT NULL,
 			changes longtext NOT NULL,
-			PRIMARY KEY (id),
+			PRIMARY KEY  (id),
 			KEY booking_id (booking_id)
 		) $charset_collate;";
 
