@@ -2,7 +2,7 @@
 /**
  * Main plugin class
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  * @since 1.0.0
  */
 
@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Main WP_Booking_System_Luca Class
+ * Main WP_Booking_Simple Class
  */
-class WP_Booking_System_Luca {
+class WP_Booking_Simple {
 
 	/**
 	 * The single instance of the class.
 	 *
-	 * @var WP_Booking_System_Luca
+	 * @var WP_Booking_Simple
 	 */
 	protected static $_instance = null;
 
@@ -39,37 +39,37 @@ class WP_Booking_System_Luca {
 	/**
 	 * Database instance.
 	 *
-	 * @var WP_Booking_System_Luca_Database
+	 * @var WP_Booking_Simple_Database
 	 */
 	public $database = null;
 
 	/**
 	 * Admin instance.
 	 *
-	 * @var WP_Booking_System_Luca_Admin
+	 * @var WP_Booking_Simple_Admin
 	 */
 	public $admin = null;
 
 	/**
 	 * Frontend instance.
 	 *
-	 * @var WP_Booking_System_Luca_Frontend
+	 * @var WP_Booking_Simple_Frontend
 	 */
 	public $frontend = null;
 
 	/**
 	 * Email instance.
 	 *
-	 * @var WP_Booking_System_Luca_Email
+	 * @var WP_Booking_Simple_Email
 	 */
 	public $email = null;
 
 	/**
-	 * Main WP_Booking_System_Luca Instance.
+	 * Main WP_Booking_Simple Instance.
 	 *
 	 * @param string $file Plugin file path.
 	 * @param string $version Plugin version.
-	 * @return WP_Booking_System_Luca
+	 * @return WP_Booking_Simple
 	 */
 	public static function instance( $file = '', $version = '1.0.0' ) {
 		if ( is_null( self::$_instance ) ) {
@@ -96,33 +96,33 @@ class WP_Booking_System_Luca {
 	 */
 	private function init() {
 		// Initialize database.
-		$this->database = new WP_Booking_System_Luca_Database();
+		$this->database = new WP_Booking_Simple_Database();
 
 		// Apply any schema changes for existing installs.
 		add_action( 'plugins_loaded', array( $this, 'maybe_upgrade_database' ) );
 
 		// Initialize admin.
 		if ( is_admin() ) {
-			$this->admin = new WP_Booking_System_Luca_Admin();
+			$this->admin = new WP_Booking_Simple_Admin();
 		}
 
 		// Initialize frontend.
-		$this->frontend = new WP_Booking_System_Luca_Frontend();
+		$this->frontend = new WP_Booking_Simple_Frontend();
 
 		// Initialize AJAX.
-		new WP_Booking_System_Luca_Ajax();
+		new WP_Booking_Simple_Ajax();
 
 		// Initialize email.
-		$this->email = new WP_Booking_System_Luca_Email();
+		$this->email = new WP_Booking_Simple_Email();
 
 		// Register widget.
 		add_action( 'widgets_init', array( $this, 'register_widget' ) );
 
 		// Initialize block editor support.
-		new WP_Booking_System_Luca_Block();
+		new WP_Booking_Simple_Block();
 
 		// Initialize Elementor support (only does anything when Elementor is active).
-		new WP_Booking_System_Luca_Elementor();
+		new WP_Booking_Simple_Elementor();
 
 		// Load plugin textdomain.
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
@@ -132,7 +132,7 @@ class WP_Booking_System_Luca {
 	 * Register widget.
 	 */
 	public function register_widget() {
-		register_widget( 'WP_Booking_System_Luca_Widget' );
+		register_widget( 'WP_Booking_Simple_Widget' );
 	}
 
 	/**
@@ -143,7 +143,7 @@ class WP_Booking_System_Luca {
 	 * with zero manual configuration.
 	 */
 	public static function activate() {
-		$database = new WP_Booking_System_Luca_Database();
+		$database = new WP_Booking_Simple_Database();
 		$database->create_tables();
 
 		self::seed_default_options();
@@ -205,12 +205,12 @@ class WP_Booking_System_Luca {
 	public static function create_pages() {
 		$pages = array(
 			'wpbsl_booking_page_id' => array(
-				'title'   => __( 'Book Now', 'wp-booking-system-luca' ),
-				'content' => '[wp_booking_calendar_luca]' . "\n\n" . '[wp_booking_form_luca]',
+				'title'   => __( 'Book Now', 'wp-booking-simple' ),
+				'content' => '[wp_booking_calendar_simple]' . "\n\n" . '[wp_booking_form_simple]',
 			),
 			'wpbsl_manage_page_id'  => array(
-				'title'   => __( 'Manage Booking', 'wp-booking-system-luca' ),
-				'content' => '[wp_booking_manage_luca]',
+				'title'   => __( 'Manage Booking', 'wp-booking-simple' ),
+				'content' => '[wp_booking_manage_simple]',
 			),
 		);
 
@@ -258,7 +258,7 @@ class WP_Booking_System_Luca {
 	 * Load plugin textdomain.
 	 */
 	public function load_plugin_textdomain() {
-		load_plugin_textdomain( 'wp-booking-system-luca', false, dirname( plugin_basename( $this->file ) ) . '/lang/' );
+		load_plugin_textdomain( 'wp-booking-simple', false, dirname( plugin_basename( $this->file ) ) . '/lang/' );
 	}
 
 	/**

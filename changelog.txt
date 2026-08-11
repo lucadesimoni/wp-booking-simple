@@ -1,4 +1,13 @@
-*** WP booking Luca Changelog ***
+*** WP Booking Simple Changelog ***
+
+2026.08.11 - version 1.21.0
+ * Rename - The plugin is now "WP Booking Simple" throughout: plugin name, folder and ZIP slug (wp-booking-simple), main file, text domain, classes, constants, functions, script/style handles, admin page slugs and the Elementor/Gutenberg category. Existing shortcodes ([wp_booking_form_luca], [wp_booking_manage_luca], [wp_booking_calendar_luca]) and blocks (wp-booking-system/calendar, wp-booking-system/form) stay registered as hidden aliases, so pages that already embed them keep rendering unchanged.
+ * Compatibility - Option names and the booking/history database tables are deliberately unchanged, so updating an existing site keeps every booking, setting and auto-created page.
+ * Fix - Removed a leftover second plugin header file that WordPress listed as a separate plugin and that fataled on activation because the files it loaded no longer exist.
+ * Fix - The bundled front-end libraries (flatpickr, FullCalendar, QR generator) are now committed and shipped; an unanchored .gitignore rule had excluded them, so the date picker, availability calendar and TWINT QR code silently did nothing in every install.
+ * Fix - dbDelta could never diff the schema because the CREATE TABLE statement used IF NOT EXISTS, which made it read the table name as "IF"; schema upgrades now apply.
+ * Fix - Declared Requires PHP: 7.2 so WordPress blocks activation on unsupported PHP instead of fataling.
+ * Improvement - build.sh now fails when a runtime asset is missing instead of quietly publishing an incomplete ZIP, and tools/fetch-vendor.sh restores the bundled libraries reproducibly.
 
 2026.07.10 - version 1.20.1
  * Fix - The classic "Booking Calendar" widget now renders the same interactive calendar as the block and shortcode (range selection, tooltips, static enqueued JS) instead of its own inline script, so it behaves consistently and is safe to place anywhere.
@@ -34,8 +43,8 @@
  * New - The Elementor "Booking Form" and "Booking Calendar" widgets gained a Style tab: pick the accent colour and button colours (form), or the accent and booked colours (calendar), directly from Elementor's design panel. The colours are applied with per-widget scoped CSS so each instance can differ.
 
 2026.06.16 - version 1.15.0
- * New - Native Elementor widgets: "Booking Form" and "Booking Calendar" now appear in the Elementor editor under a dedicated "WP booking Luca" category, each with a Title control. They render the same form/calendar as the shortcodes.
- * New - The Gutenberg blocks now live in their own discoverable "WP booking Luca" category (instead of the generic Widgets group) and carry full server-side metadata. This also makes them easy to find in Spectra, which uses the standard block inserter.
+ * New - Native Elementor widgets: "Booking Form" and "Booking Calendar" now appear in the Elementor editor under a dedicated "WP Booking Simple" category, each with a Title control. They render the same form/calendar as the shortcodes.
+ * New - The Gutenberg blocks now live in their own discoverable "WP Booking Simple" category (instead of the generic Widgets group) and carry full server-side metadata. This also makes them easy to find in Spectra, which uses the standard block inserter.
 
 2026.06.15 - version 1.14.0
  * New - Theme compatibility hardening for Astra / Astra Pro and other opinionated themes. The booking form, primary/cancel/secondary buttons, dropdowns and the availability calendar are re-asserted with wrapper-scoped CSS so theme globals (e.g. `.ast-container button`, `.entry-content input/select` resets, forced link underlines) can no longer override or break the booking UI, while the calendar's click-to-select date picking keeps working.
@@ -74,7 +83,7 @@
  * New - Per-booking payment tracking: payment status (Unpaid / Partially paid / Paid), payment method (Bank, TWINT, Cash) and the amount effectively paid. A Payment column on the bookings list shows status and paid/total at a glance.
  * New - Full booking editor in a modal: edit any field (guest details, dates, number of guests, owner, price, status, payment, notes). Availability is re-checked to prevent overlaps and a "Recalc" button recomputes the price from the dates and guests.
  * New - Change history per booking: every later edit (and status change) is recorded with who made it, when, and the before/after of each field, shown as a timeline in the editor.
- * New - Insights dashboard (WP booking Luca > Dashboard): KPIs for bookings, nights, guests, revenue, collected and outstanding amounts, plus bookings per guest, owner usage, payments by method and bookings per month.
+ * New - Insights dashboard (WP Booking Simple > Dashboard): KPIs for bookings, nights, guests, revenue, collected and outstanding amounts, plus bookings per guest, owner usage, payments by method and bookings per month.
  * New - {payment_status}, {payment_method} and {amount_paid} email merge tags.
  * Tweak - Adds the payment columns and a booking-history table automatically on upgrade.
 

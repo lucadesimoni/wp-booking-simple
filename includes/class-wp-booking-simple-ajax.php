@@ -2,7 +2,7 @@
 /**
  * AJAX class for handling frontend and admin requests
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  * @since 1.0.0
  */
 
@@ -11,9 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WP_Booking_System_Luca_Ajax Class
+ * WP_Booking_Simple_Ajax Class
  */
-class WP_Booking_System_Luca_Ajax {
+class WP_Booking_Simple_Ajax {
 
 	/**
 	 * Constructor.
@@ -47,21 +47,21 @@ class WP_Booking_System_Luca_Ajax {
 	 * Check availability.
 	 */
 	public function check_availability() {
-		check_ajax_referer( 'wp-booking-system-luca-frontend', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-frontend', 'nonce' );
 
 		$check_in  = isset( $_POST['check_in'] ) ? sanitize_text_field( wp_unslash( $_POST['check_in'] ) ) : '';
 		$check_out = isset( $_POST['check_out'] ) ? sanitize_text_field( wp_unslash( $_POST['check_out'] ) ) : '';
 
 		if ( empty( $check_in ) || empty( $check_out ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please select both dates.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please select both dates.', 'wp-booking-simple' ) ) );
 		}
 
 		// Validate date format and range.
-		if ( ! WP_Booking_System_Luca_Helpers::is_valid_range( $check_in, $check_out ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please select a valid date range (check-out after check-in).', 'wp-booking-system-luca' ) ) );
+		if ( ! WP_Booking_Simple_Helpers::is_valid_range( $check_in, $check_out ) ) {
+			wp_send_json_error( array( 'message' => __( 'Please select a valid date range (check-out after check-in).', 'wp-booking-simple' ) ) );
 		}
 
-		$available = wp_booking_system_luca()->database->is_available( $check_in, $check_out );
+		$available = wp_booking_simple()->database->is_available( $check_in, $check_out );
 
 		wp_send_json_success( array( 'available' => $available ) );
 	}
@@ -70,7 +70,7 @@ class WP_Booking_System_Luca_Ajax {
 	 * Calculate price.
 	 */
 	public function calculate_price() {
-		check_ajax_referer( 'wp-booking-system-luca-frontend', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-frontend', 'nonce' );
 
 		$check_in  = isset( $_POST['check_in'] ) ? sanitize_text_field( wp_unslash( $_POST['check_in'] ) ) : '';
 		$check_out = isset( $_POST['check_out'] ) ? sanitize_text_field( wp_unslash( $_POST['check_out'] ) ) : '';
@@ -78,23 +78,23 @@ class WP_Booking_System_Luca_Ajax {
 		$kids      = isset( $_POST['kids'] ) ? absint( $_POST['kids'] ) : 0;
 
 		if ( empty( $check_in ) || empty( $check_out ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please select both dates.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please select both dates.', 'wp-booking-simple' ) ) );
 		}
 
 		// Validate date format and range.
-		if ( ! WP_Booking_System_Luca_Helpers::is_valid_range( $check_in, $check_out ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please select a valid date range (check-out after check-in).', 'wp-booking-system-luca' ) ) );
+		if ( ! WP_Booking_Simple_Helpers::is_valid_range( $check_in, $check_out ) ) {
+			wp_send_json_error( array( 'message' => __( 'Please select a valid date range (check-out after check-in).', 'wp-booking-simple' ) ) );
 		}
 
 		// Validate capacity.
 		$max_capacity = absint( get_option( 'wpbsl_chalet_capacity', 10 ) );
 
-		if ( WP_Booking_System_Luca_Helpers::exceeds_capacity( $adults, $kids, $max_capacity ) ) {
+		if ( WP_Booking_Simple_Helpers::exceeds_capacity( $adults, $kids, $max_capacity ) ) {
 			wp_send_json_error(
 				array(
 					'message' => sprintf(
 						/* translators: %d: Maximum capacity */
-						__( 'The chalet can accommodate a maximum of %d guests. Please reduce the number of guests.', 'wp-booking-system-luca' ),
+						__( 'The chalet can accommodate a maximum of %d guests. Please reduce the number of guests.', 'wp-booking-simple' ),
 						$max_capacity
 					),
 				)
@@ -123,7 +123,7 @@ class WP_Booking_System_Luca_Ajax {
 	 * Submit booking.
 	 */
 	public function submit_booking() {
-		check_ajax_referer( 'wp-booking-system-luca-frontend', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-frontend', 'nonce' );
 
 		$data = array(
 			'first_name' => isset( $_POST['first_name'] ) ? sanitize_text_field( wp_unslash( $_POST['first_name'] ) ) : '',
@@ -139,39 +139,39 @@ class WP_Booking_System_Luca_Ajax {
 
 		// Optional extra fields. Owner must be one of the configured names.
 		$owner          = isset( $_POST['owner'] ) ? sanitize_text_field( wp_unslash( $_POST['owner'] ) ) : '';
-		$allowed_owners = WP_Booking_System_Luca_Helpers::parse_owners( get_option( 'wpbsl_owners', '' ) );
+		$allowed_owners = WP_Booking_Simple_Helpers::parse_owners( get_option( 'wpbsl_owners', '' ) );
 		$data['owner']  = in_array( $owner, $allowed_owners, true ) ? $owner : '';
 		$data['visitors_welcome'] = ( isset( $_POST['visitors_welcome'] ) && '1' === (string) $_POST['visitors_welcome'] ) ? 1 : 0;
 
 		// Validate required fields.
 		if ( empty( $data['first_name'] ) || empty( $data['last_name'] ) || empty( $data['email'] ) || empty( $data['check_in'] ) || empty( $data['check_out'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please fill in all required fields.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please fill in all required fields.', 'wp-booking-simple' ) ) );
 		}
 
 		// Validate email format.
 		if ( ! is_email( $data['email'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'wp-booking-simple' ) ) );
 		}
 
 		// Validate date format and range.
-		if ( ! WP_Booking_System_Luca_Helpers::is_valid_range( $data['check_in'], $data['check_out'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Check-out date must be after check-in date.', 'wp-booking-system-luca' ) ) );
+		if ( ! WP_Booking_Simple_Helpers::is_valid_range( $data['check_in'], $data['check_out'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Check-out date must be after check-in date.', 'wp-booking-simple' ) ) );
 		}
 
 		// Validate guest counts.
 		if ( $data['adults'] < 1 ) {
-			wp_send_json_error( array( 'message' => __( 'At least one adult is required.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'At least one adult is required.', 'wp-booking-simple' ) ) );
 		}
 
 		// Validate capacity.
 		$max_capacity = absint( get_option( 'wpbsl_chalet_capacity', 10 ) );
 
-		if ( WP_Booking_System_Luca_Helpers::exceeds_capacity( $data['adults'], $data['kids'], $max_capacity ) ) {
+		if ( WP_Booking_Simple_Helpers::exceeds_capacity( $data['adults'], $data['kids'], $max_capacity ) ) {
 			wp_send_json_error(
 				array(
 					'message' => sprintf(
 						/* translators: %d: Maximum capacity */
-						__( 'The chalet can accommodate a maximum of %d guests. Please reduce the number of guests.', 'wp-booking-system-luca' ),
+						__( 'The chalet can accommodate a maximum of %d guests. Please reduce the number of guests.', 'wp-booking-simple' ),
 						$max_capacity
 					),
 				)
@@ -180,7 +180,7 @@ class WP_Booking_System_Luca_Ajax {
 
 		// Require a phone number when configured to do so.
 		if ( (int) get_option( 'wpbsl_require_phone', 0 ) && empty( $data['phone'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please provide a phone number.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please provide a phone number.', 'wp-booking-simple' ) ) );
 		}
 
 		// Enforce booking rules (stay length and booking window).
@@ -190,8 +190,8 @@ class WP_Booking_System_Luca_Ajax {
 		}
 
 		// Check availability.
-		if ( ! wp_booking_system_luca()->database->is_available( $data['check_in'], $data['check_out'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Selected dates are not available.', 'wp-booking-system-luca' ) ) );
+		if ( ! wp_booking_simple()->database->is_available( $data['check_in'], $data['check_out'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Selected dates are not available.', 'wp-booking-simple' ) ) );
 		}
 
 		// Calculate price.
@@ -201,23 +201,23 @@ class WP_Booking_System_Luca_Ajax {
 		$data['status'] = (int) get_option( 'wpbsl_auto_confirm', 0 ) ? 'confirmed' : 'pending';
 
 		// Insert booking.
-		$booking_id = wp_booking_system_luca()->database->insert_booking( $data );
+		$booking_id = wp_booking_simple()->database->insert_booking( $data );
 
 		if ( ! $booking_id ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to create booking. Please try again.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to create booking. Please try again.', 'wp-booking-simple' ) ) );
 		}
 
 		// Get booking with token.
-		$booking = wp_booking_system_luca()->database->get_booking( $booking_id );
+		$booking = wp_booking_simple()->database->get_booking( $booking_id );
 
 		// Send email.
-		wp_booking_system_luca()->email->send_booking_confirmation( $booking );
+		wp_booking_simple()->email->send_booking_confirmation( $booking );
 
 		wp_send_json_success(
 			array(
-				'message'    => __( 'Booking submitted successfully! Check your email for confirmation.', 'wp-booking-system-luca' ),
+				'message'    => __( 'Booking submitted successfully! Check your email for confirmation.', 'wp-booking-simple' ),
 				'booking_id' => $booking_id,
-				'payment'    => wp_booking_system_luca()->email->payment_context( $booking ),
+				'payment'    => wp_booking_simple()->email->payment_context( $booking ),
 			)
 		);
 	}
@@ -226,41 +226,41 @@ class WP_Booking_System_Luca_Ajax {
 	 * Cancel booking.
 	 */
 	public function cancel_booking() {
-		check_ajax_referer( 'wp-booking-system-luca-frontend', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-frontend', 'nonce' );
 
 		$token = isset( $_POST['token'] ) ? sanitize_text_field( wp_unslash( $_POST['token'] ) ) : '';
 
 		if ( empty( $token ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid booking token.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid booking token.', 'wp-booking-simple' ) ) );
 		}
 
 		// Validate token format (64 character hex string).
-		if ( ! WP_Booking_System_Luca_Helpers::is_valid_token( $token ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid booking token format.', 'wp-booking-system-luca' ) ) );
+		if ( ! WP_Booking_Simple_Helpers::is_valid_token( $token ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid booking token format.', 'wp-booking-simple' ) ) );
 		}
 
-		$booking = wp_booking_system_luca()->database->get_booking_by_token( $token );
+		$booking = wp_booking_simple()->database->get_booking_by_token( $token );
 
 		if ( ! $booking ) {
-			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-simple' ) ) );
 		}
 
 		// Update status to cancelled.
-		$result = wp_booking_system_luca()->database->update_booking( $booking->id, array( 'status' => 'cancelled' ) );
+		$result = wp_booking_simple()->database->update_booking( $booking->id, array( 'status' => 'cancelled' ) );
 
 		if ( $result ) {
 			if ( 'cancelled' !== $booking->status ) {
-				wp_booking_system_luca()->database->insert_history(
+				wp_booking_simple()->database->insert_history(
 					$booking->id,
 					array( 'status' => array( 'from' => (string) $booking->status, 'to' => 'cancelled' ) ),
-					__( 'Guest', 'wp-booking-system-luca' )
+					__( 'Guest', 'wp-booking-simple' )
 				);
 			}
 			// Send cancellation email.
-			wp_booking_system_luca()->email->send_booking_cancellation( $booking );
-			wp_send_json_success( array( 'message' => __( 'Booking cancelled successfully.', 'wp-booking-system-luca' ) ) );
+			wp_booking_simple()->email->send_booking_cancellation( $booking );
+			wp_send_json_success( array( 'message' => __( 'Booking cancelled successfully.', 'wp-booking-simple' ) ) );
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to cancel booking.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to cancel booking.', 'wp-booking-simple' ) ) );
 		}
 	}
 
@@ -268,16 +268,16 @@ class WP_Booking_System_Luca_Ajax {
 	 * Get bookings for calendar (admin).
 	 */
 	public function get_bookings() {
-		check_ajax_referer( 'wp-booking-system-luca-admin', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-simple' ) ) );
 		}
 
 		$start = isset( $_GET['start'] ) ? sanitize_text_field( wp_unslash( $_GET['start'] ) ) : '';
 		$end   = isset( $_GET['end'] ) ? sanitize_text_field( wp_unslash( $_GET['end'] ) ) : '';
 
-		$bookings = wp_booking_system_luca()->database->get_bookings_for_calendar( $start, $end );
+		$bookings = wp_booking_simple()->database->get_bookings_for_calendar( $start, $end );
 
 		$events = array();
 		foreach ( $bookings as $booking ) {
@@ -307,28 +307,28 @@ class WP_Booking_System_Luca_Ajax {
 	 * Get single booking (admin).
 	 */
 	public function get_booking() {
-		check_ajax_referer( 'wp-booking-system-luca-admin', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-simple' ) ) );
 		}
 
 		$id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
 
 		if ( ! $id ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid booking ID.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid booking ID.', 'wp-booking-simple' ) ) );
 		}
 
-		$booking = wp_booking_system_luca()->database->get_booking( $id );
+		$booking = wp_booking_simple()->database->get_booking( $id );
 
 		if ( ! $booking ) {
-			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-simple' ) ) );
 		}
 
 		wp_send_json_success(
 			array(
 				'booking' => $booking,
-				'history' => $this->format_history( wp_booking_system_luca()->database->get_history( $id ) ),
+				'history' => $this->format_history( wp_booking_simple()->database->get_history( $id ) ),
 			)
 		);
 	}
@@ -338,17 +338,17 @@ class WP_Booking_System_Luca_Ajax {
 	 * history. All editable fields are tracked.
 	 */
 	public function update_booking() {
-		check_ajax_referer( 'wp-booking-system-luca-admin', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-simple' ) ) );
 		}
 
 		$id      = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
-		$booking = $id ? wp_booking_system_luca()->database->get_booking( $id ) : null;
+		$booking = $id ? wp_booking_simple()->database->get_booking( $id ) : null;
 
 		if ( ! $booking ) {
-			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-simple' ) ) );
 		}
 
 		$post = wp_unslash( $_POST );
@@ -356,25 +356,25 @@ class WP_Booking_System_Luca_Ajax {
 		$check_in  = isset( $post['check_in'] ) ? sanitize_text_field( $post['check_in'] ) : $booking->check_in;
 		$check_out = isset( $post['check_out'] ) ? sanitize_text_field( $post['check_out'] ) : $booking->check_out;
 
-		if ( ! WP_Booking_System_Luca_Helpers::is_valid_range( $check_in, $check_out ) ) {
-			wp_send_json_error( array( 'message' => __( 'Check-out must be after check-in.', 'wp-booking-system-luca' ) ) );
+		if ( ! WP_Booking_Simple_Helpers::is_valid_range( $check_in, $check_out ) ) {
+			wp_send_json_error( array( 'message' => __( 'Check-out must be after check-in.', 'wp-booking-simple' ) ) );
 		}
 
 		// Admins may override booking rules, but never double-book the chalet.
-		if ( ! wp_booking_system_luca()->database->is_available( $check_in, $check_out, $id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Those dates overlap another booking.', 'wp-booking-system-luca' ) ) );
+		if ( ! wp_booking_simple()->database->is_available( $check_in, $check_out, $id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Those dates overlap another booking.', 'wp-booking-simple' ) ) );
 		}
 
 		$email = isset( $post['email'] ) ? sanitize_email( $post['email'] ) : $booking->email;
 		if ( ! is_email( $email ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'wp-booking-simple' ) ) );
 		}
 
 		$status         = isset( $post['status'] ) ? sanitize_text_field( $post['status'] ) : $booking->status;
 		$payment_status = isset( $post['payment_status'] ) ? sanitize_text_field( $post['payment_status'] ) : 'unpaid';
 		$payment_method = isset( $post['payment_method'] ) ? sanitize_text_field( $post['payment_method'] ) : '';
 		$owner          = isset( $post['owner'] ) ? sanitize_text_field( $post['owner'] ) : '';
-		$allowed_owners = WP_Booking_System_Luca_Helpers::parse_owners( get_option( 'wpbsl_owners', '' ) );
+		$allowed_owners = WP_Booking_Simple_Helpers::parse_owners( get_option( 'wpbsl_owners', '' ) );
 
 		$new = array(
 			'first_name'       => isset( $post['first_name'] ) ? sanitize_text_field( $post['first_name'] ) : $booking->first_name,
@@ -388,31 +388,31 @@ class WP_Booking_System_Luca_Ajax {
 			'owner'            => in_array( $owner, $allowed_owners, true ) ? $owner : '',
 			'visitors_welcome' => ( isset( $post['visitors_welcome'] ) && '1' === (string) $post['visitors_welcome'] ) ? 1 : 0,
 			'total_price'      => isset( $post['total_price'] ) ? max( 0, floatval( $post['total_price'] ) ) : (float) $booking->total_price,
-			'status'           => WP_Booking_System_Luca_Helpers::is_valid_status( $status ) ? $status : $booking->status,
-			'payment_status'   => array_key_exists( $payment_status, WP_Booking_System_Luca_Helpers::payment_statuses() ) ? $payment_status : 'unpaid',
-			'payment_method'   => array_key_exists( $payment_method, WP_Booking_System_Luca_Helpers::payment_methods() ) ? $payment_method : '',
+			'status'           => WP_Booking_Simple_Helpers::is_valid_status( $status ) ? $status : $booking->status,
+			'payment_status'   => array_key_exists( $payment_status, WP_Booking_Simple_Helpers::payment_statuses() ) ? $payment_status : 'unpaid',
+			'payment_method'   => array_key_exists( $payment_method, WP_Booking_Simple_Helpers::payment_methods() ) ? $payment_method : '',
 			'amount_paid'      => isset( $post['amount_paid'] ) ? max( 0, floatval( $post['amount_paid'] ) ) : (float) $booking->amount_paid,
 			'notes'            => isset( $post['notes'] ) ? sanitize_textarea_field( $post['notes'] ) : $booking->notes,
 		);
 
-		$changes = WP_Booking_System_Luca_Helpers::compute_changes( $booking, $new );
+		$changes = WP_Booking_Simple_Helpers::compute_changes( $booking, $new );
 
-		wp_booking_system_luca()->database->update_booking( $id, $new );
+		wp_booking_simple()->database->update_booking( $id, $new );
 
 		if ( ! empty( $changes ) ) {
-			wp_booking_system_luca()->database->insert_history( $id, $changes, $this->current_actor() );
+			wp_booking_simple()->database->insert_history( $id, $changes, $this->current_actor() );
 		}
 
 		// Email the guest if an admin edit cancelled the booking.
 		if ( 'cancelled' === $new['status'] && 'cancelled' !== $booking->status ) {
-			wp_booking_system_luca()->email->send_booking_cancellation( wp_booking_system_luca()->database->get_booking( $id ) );
+			wp_booking_simple()->email->send_booking_cancellation( wp_booking_simple()->database->get_booking( $id ) );
 		}
 
 		wp_send_json_success(
 			array(
-				'message' => empty( $changes ) ? __( 'No changes to save.', 'wp-booking-system-luca' ) : __( 'Booking updated.', 'wp-booking-system-luca' ),
-				'booking' => wp_booking_system_luca()->database->get_booking( $id ),
-				'history' => $this->format_history( wp_booking_system_luca()->database->get_history( $id ) ),
+				'message' => empty( $changes ) ? __( 'No changes to save.', 'wp-booking-simple' ) : __( 'Booking updated.', 'wp-booking-simple' ),
+				'booking' => wp_booking_simple()->database->get_booking( $id ),
+				'history' => $this->format_history( wp_booking_simple()->database->get_history( $id ) ),
 			)
 		);
 	}
@@ -421,30 +421,30 @@ class WP_Booking_System_Luca_Ajax {
 	 * Send a payment-reminder email to the guest (admin).
 	 */
 	public function send_payment_reminder() {
-		check_ajax_referer( 'wp-booking-system-luca-admin', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-simple' ) ) );
 		}
 
 		$id      = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
-		$booking = $id ? wp_booking_system_luca()->database->get_booking( $id ) : null;
+		$booking = $id ? wp_booking_simple()->database->get_booking( $id ) : null;
 
 		if ( ! $booking ) {
-			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-simple' ) ) );
 		}
 
 		if ( ! is_email( $booking->email ) ) {
-			wp_send_json_error( array( 'message' => __( 'This booking has no valid email address.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'This booking has no valid email address.', 'wp-booking-simple' ) ) );
 		}
 
-		$sent = wp_booking_system_luca()->email->send_payment_reminder( $booking );
+		$sent = wp_booking_simple()->email->send_payment_reminder( $booking );
 
 		if ( $sent ) {
-			wp_send_json_success( array( 'message' => __( 'Payment reminder sent.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_success( array( 'message' => __( 'Payment reminder sent.', 'wp-booking-simple' ) ) );
 		}
 
-		wp_send_json_error( array( 'message' => __( 'The reminder could not be sent. Check your email settings.', 'wp-booking-system-luca' ) ) );
+		wp_send_json_error( array( 'message' => __( 'The reminder could not be sent. Check your email settings.', 'wp-booking-simple' ) ) );
 	}
 
 	/**
@@ -454,7 +454,7 @@ class WP_Booking_System_Luca_Ajax {
 	 */
 	private function current_actor() {
 		$user = wp_get_current_user();
-		return ( $user && $user->exists() ) ? $user->display_name : __( 'System', 'wp-booking-system-luca' );
+		return ( $user && $user->exists() ) ? $user->display_name : __( 'System', 'wp-booking-simple' );
 	}
 
 	/**
@@ -464,7 +464,7 @@ class WP_Booking_System_Luca_Ajax {
 	 * @return array
 	 */
 	private function format_history( $rows ) {
-		$labels = WP_Booking_System_Luca_Helpers::tracked_fields();
+		$labels = WP_Booking_Simple_Helpers::tracked_fields();
 		$out    = array();
 
 		foreach ( (array) $rows as $row ) {
@@ -484,7 +484,7 @@ class WP_Booking_System_Luca_Ajax {
 
 			$out[] = array(
 				'changed_at' => date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $row->changed_at ) ),
-				'changed_by' => $row->changed_by ? $row->changed_by : __( 'System', 'wp-booking-system-luca' ),
+				'changed_by' => $row->changed_by ? $row->changed_by : __( 'System', 'wp-booking-simple' ),
 				'items'      => $items,
 			);
 		}
@@ -506,13 +506,13 @@ class WP_Booking_System_Luca_Ajax {
 			case 'status':
 				return ucfirst( (string) $value );
 			case 'payment_status':
-				$map = WP_Booking_System_Luca_Helpers::payment_statuses();
+				$map = WP_Booking_Simple_Helpers::payment_statuses();
 				return isset( $map[ $value ] ) ? $map[ $value ] : (string) $value;
 			case 'payment_method':
-				$map = WP_Booking_System_Luca_Helpers::payment_methods();
+				$map = WP_Booking_Simple_Helpers::payment_methods();
 				return isset( $map[ $value ] ) ? $map[ $value ] : '—';
 			case 'visitors_welcome':
-				return $value ? __( 'Yes', 'wp-booking-system-luca' ) : __( 'No', 'wp-booking-system-luca' );
+				return $value ? __( 'Yes', 'wp-booking-simple' ) : __( 'No', 'wp-booking-simple' );
 			case 'total_price':
 			case 'amount_paid':
 				return number_format( (float) $value, 2 ) . ' ' . $currency;
@@ -528,24 +528,24 @@ class WP_Booking_System_Luca_Ajax {
 	 * Delete booking (admin).
 	 */
 	public function delete_booking() {
-		check_ajax_referer( 'wp-booking-system-luca-admin', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-simple' ) ) );
 		}
 
 		$id = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
 
 		if ( ! $id ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid booking ID.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid booking ID.', 'wp-booking-simple' ) ) );
 		}
 
-		$result = wp_booking_system_luca()->database->delete_booking( $id );
+		$result = wp_booking_simple()->database->delete_booking( $id );
 
 		if ( $result ) {
-			wp_send_json_success( array( 'message' => __( 'Booking deleted successfully.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_success( array( 'message' => __( 'Booking deleted successfully.', 'wp-booking-simple' ) ) );
 		} else {
-			wp_send_json_error( array( 'message' => __( 'Failed to delete booking.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to delete booking.', 'wp-booking-simple' ) ) );
 		}
 	}
 
@@ -562,12 +562,12 @@ class WP_Booking_System_Luca_Ajax {
 		$min_advance_days = absint( get_option( 'wpbsl_min_advance_days', 0 ) );
 		$max_advance_days = absint( get_option( 'wpbsl_max_advance_days', 0 ) );
 
-		$nights = WP_Booking_System_Luca_Helpers::calculate_nights( $check_in, $check_out );
+		$nights = WP_Booking_Simple_Helpers::calculate_nights( $check_in, $check_out );
 
 		if ( $nights < $min_nights ) {
 			return sprintf(
 				/* translators: %d: Minimum number of nights */
-				_n( 'A minimum stay of %d night is required.', 'A minimum stay of %d nights is required.', $min_nights, 'wp-booking-system-luca' ),
+				_n( 'A minimum stay of %d night is required.', 'A minimum stay of %d nights is required.', $min_nights, 'wp-booking-simple' ),
 				$min_nights
 			);
 		}
@@ -575,23 +575,23 @@ class WP_Booking_System_Luca_Ajax {
 		if ( $max_nights > 0 && $nights > $max_nights ) {
 			return sprintf(
 				/* translators: %d: Maximum number of nights */
-				_n( 'The maximum stay is %d night.', 'The maximum stay is %d nights.', $max_nights, 'wp-booking-system-luca' ),
+				_n( 'The maximum stay is %d night.', 'The maximum stay is %d nights.', $max_nights, 'wp-booking-simple' ),
 				$max_nights
 			);
 		}
 
-		if ( ! WP_Booking_System_Luca_Helpers::is_within_booking_window( $check_in, $min_advance_days, $max_advance_days ) ) {
-			if ( $min_advance_days > 0 && WP_Booking_System_Luca_Helpers::days_until( $check_in ) < $min_advance_days ) {
+		if ( ! WP_Booking_Simple_Helpers::is_within_booking_window( $check_in, $min_advance_days, $max_advance_days ) ) {
+			if ( $min_advance_days > 0 && WP_Booking_Simple_Helpers::days_until( $check_in ) < $min_advance_days ) {
 				return sprintf(
 					/* translators: %d: Minimum advance days */
-					_n( 'Bookings must be made at least %d day in advance.', 'Bookings must be made at least %d days in advance.', $min_advance_days, 'wp-booking-system-luca' ),
+					_n( 'Bookings must be made at least %d day in advance.', 'Bookings must be made at least %d days in advance.', $min_advance_days, 'wp-booking-simple' ),
 					$min_advance_days
 				);
 			}
 
 			return sprintf(
 				/* translators: %d: Maximum advance days */
-				__( 'Bookings can only be made up to %d days ahead.', 'wp-booking-system-luca' ),
+				__( 'Bookings can only be made up to %d days ahead.', 'wp-booking-simple' ),
 				$max_advance_days
 			);
 		}
@@ -609,7 +609,7 @@ class WP_Booking_System_Luca_Ajax {
 	 * @return float
 	 */
 	private function calculate_booking_price( $check_in, $check_out, $adults, $kids ) {
-		return WP_Booking_System_Luca_Helpers::calculate_price(
+		return WP_Booking_Simple_Helpers::calculate_price(
 			$check_in,
 			$check_out,
 			$adults,
@@ -623,33 +623,33 @@ class WP_Booking_System_Luca_Ajax {
 	 * Update a booking status (admin).
 	 */
 	public function update_status() {
-		check_ajax_referer( 'wp-booking-system-luca-admin', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-simple' ) ) );
 		}
 
 		$id     = isset( $_POST['id'] ) ? absint( $_POST['id'] ) : 0;
 		$status = isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '';
 
-		if ( ! $id || ! WP_Booking_System_Luca_Helpers::is_valid_status( $status ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid request.', 'wp-booking-system-luca' ) ) );
+		if ( ! $id || ! WP_Booking_Simple_Helpers::is_valid_status( $status ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid request.', 'wp-booking-simple' ) ) );
 		}
 
-		$booking = wp_booking_system_luca()->database->get_booking( $id );
+		$booking = wp_booking_simple()->database->get_booking( $id );
 
 		if ( ! $booking ) {
-			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Booking not found.', 'wp-booking-simple' ) ) );
 		}
 
-		$result = wp_booking_system_luca()->database->update_booking( $id, array( 'status' => $status ) );
+		$result = wp_booking_simple()->database->update_booking( $id, array( 'status' => $status ) );
 
 		if ( false === $result ) {
-			wp_send_json_error( array( 'message' => __( 'Failed to update booking status.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Failed to update booking status.', 'wp-booking-simple' ) ) );
 		}
 
 		if ( $status !== $booking->status ) {
-			wp_booking_system_luca()->database->insert_history(
+			wp_booking_simple()->database->insert_history(
 				$id,
 				array( 'status' => array( 'from' => (string) $booking->status, 'to' => $status ) ),
 				$this->current_actor()
@@ -658,12 +658,12 @@ class WP_Booking_System_Luca_Ajax {
 
 		// Notify the guest when their booking is cancelled by an admin.
 		if ( 'cancelled' === $status && 'cancelled' !== $booking->status ) {
-			wp_booking_system_luca()->email->send_booking_cancellation( $booking );
+			wp_booking_simple()->email->send_booking_cancellation( $booking );
 		}
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Booking status updated.', 'wp-booking-system-luca' ),
+				'message' => __( 'Booking status updated.', 'wp-booking-simple' ),
 				'status'  => $status,
 			)
 		);
@@ -673,15 +673,15 @@ class WP_Booking_System_Luca_Ajax {
 	 * Send a test email so the admin can verify delivery (e.g. Gmail SMTP).
 	 */
 	public function send_test_email() {
-		check_ajax_referer( 'wp-booking-system-luca-admin', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-admin', 'nonce' );
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Unauthorized.', 'wp-booking-simple' ) ) );
 		}
 
 		$to = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : get_option( 'admin_email' );
 
-		$result = wp_booking_system_luca()->email->send_test_email( $to );
+		$result = wp_booking_simple()->email->send_test_email( $to );
 
 		if ( ! empty( $result['success'] ) ) {
 			wp_send_json_success( array( 'message' => $result['message'] ) );
@@ -694,22 +694,22 @@ class WP_Booking_System_Luca_Ajax {
 	 * Get calendar availability for frontend widget.
 	 */
 	public function get_calendar_availability() {
-		check_ajax_referer( 'wp-booking-system-luca-frontend', 'nonce' );
+		check_ajax_referer( 'wp-booking-simple-frontend', 'nonce' );
 
 		$start = isset( $_GET['start'] ) ? sanitize_text_field( wp_unslash( $_GET['start'] ) ) : '';
 		$end   = isset( $_GET['end'] ) ? sanitize_text_field( wp_unslash( $_GET['end'] ) ) : '';
 
 		if ( empty( $start ) || empty( $end ) ) {
-			wp_send_json_error( array( 'message' => __( 'Invalid date range.', 'wp-booking-system-luca' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Invalid date range.', 'wp-booking-simple' ) ) );
 		}
 
-		$bookings = wp_booking_system_luca()->database->get_bookings_for_calendar( $start, $end );
+		$bookings = wp_booking_simple()->database->get_bookings_for_calendar( $start, $end );
 
 		$events = array();
 		foreach ( $bookings as $booking ) {
 			$events[] = array(
 				'id'    => $booking->id,
-				'title' => __( 'Booked', 'wp-booking-system-luca' ),
+				'title' => __( 'Booked', 'wp-booking-simple' ),
 				'start' => $booking->check_in,
 				'end'   => date( 'Y-m-d', strtotime( $booking->check_out . ' +1 day' ) ),
 				'display' => 'background',

@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------
 //
-// WP booking Luca adapter (added by this plugin, not part of upstream).
+// WP Booking Simple adapter (added by this plugin, not part of upstream).
 //
 // Exposes the library under the plugin-prefixed global `WPBSLQRCode` so it
 // cannot collide with another plugin or theme shipping its own `qrcode`.

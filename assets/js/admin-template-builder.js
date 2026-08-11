@@ -1,13 +1,13 @@
 /**
  * Email template block builder.
  *
- * Turns each `.wpbsl-builder` container into a drag-and-drop list of content
+ * Turns each `.wpbs-builder` container into a drag-and-drop list of content
  * blocks, serialising to a sibling hidden input as JSON on every change.
  */
 ( function () {
 	'use strict';
 
-	var cfg = window.wpbslBuilder || { mergeTags: [], i18n: {} };
+	var cfg = window.wpbsBuilder || { mergeTags: [], i18n: {} };
 	var t = cfg.i18n || {};
 
 	var BLOCK_TYPES = [
@@ -45,7 +45,7 @@
 	}
 
 	function mergeTagSelect( onInsert ) {
-		var sel = el( 'select', { class: 'wpbsl-tag-select' } );
+		var sel = el( 'select', { class: 'wpbs-tag-select' } );
 		sel.appendChild( el( 'option', { value: '', text: t.insertTag || 'Insert tag' } ) );
 		( cfg.mergeTags || [] ).forEach( function ( tag ) {
 			sel.appendChild( el( 'option', { value: tag, text: tag } ) );
@@ -65,13 +65,13 @@
 	}
 
 	function Builder( container ) {
-		var hidden = container.parentElement.querySelector( '.wpbsl-builder-data' );
+		var hidden = container.parentElement.querySelector( '.wpbs-builder-data' );
 		var blocks;
 		try { blocks = JSON.parse( hidden.value || '[]' ); } catch ( e ) { blocks = []; }
 		if ( ! Array.isArray( blocks ) ) { blocks = []; }
 
-		var list = el( 'div', { class: 'wpbsl-builder-list' } );
-		var palette = el( 'div', { class: 'wpbsl-builder-palette' } );
+		var list = el( 'div', { class: 'wpbs-builder-list' } );
+		var palette = el( 'div', { class: 'wpbs-builder-palette' } );
 
 		BLOCK_TYPES.forEach( function ( bt ) {
 			var btn = el( 'button', { type: 'button', class: 'button', text: '+ ' + bt.label } );
@@ -97,7 +97,7 @@
 		}
 
 		function blockEditor( block ) {
-			var body = el( 'div', { class: 'wpbsl-block-body' } );
+			var body = el( 'div', { class: 'wpbs-block-body' } );
 
 			if ( block.type === 'heading' || block.type === 'text' ) {
 				var field = block.type === 'heading'
@@ -147,23 +147,23 @@
 			list.innerHTML = '';
 
 			if ( ! blocks.length ) {
-				list.appendChild( el( 'p', { class: 'description wpbsl-builder-empty', text: t.empty || 'No blocks yet.' } ) );
+				list.appendChild( el( 'p', { class: 'description wpbs-builder-empty', text: t.empty || 'No blocks yet.' } ) );
 				return;
 			}
 
 			blocks.forEach( function ( block, index ) {
-				var row = el( 'div', { class: 'wpbsl-block', draggable: 'true' } );
+				var row = el( 'div', { class: 'wpbs-block', draggable: 'true' } );
 				row.dataset.index = index;
 
-				var handle = el( 'span', { class: 'wpbsl-block-handle', title: t.drag || 'Drag', text: '⠿' } );
-				var title = el( 'span', { class: 'wpbsl-block-title', text: typeLabel( block.type ) } );
-				var remove = el( 'button', { type: 'button', class: 'button-link wpbsl-block-remove', text: t.remove || 'Remove' } );
+				var handle = el( 'span', { class: 'wpbs-block-handle', title: t.drag || 'Drag', text: '⠿' } );
+				var title = el( 'span', { class: 'wpbs-block-title', text: typeLabel( block.type ) } );
+				var remove = el( 'button', { type: 'button', class: 'button-link wpbs-block-remove', text: t.remove || 'Remove' } );
 				remove.addEventListener( 'click', function () {
 					blocks.splice( index, 1 );
 					render();
 				} );
 
-				var head = el( 'div', { class: 'wpbsl-block-head' }, [ handle, title, remove ] );
+				var head = el( 'div', { class: 'wpbs-block-head' }, [ handle, title, remove ] );
 				row.appendChild( head );
 				row.appendChild( blockEditor( block ) );
 
@@ -194,7 +194,7 @@
 	}
 
 	function init() {
-		var builders = document.querySelectorAll( '.wpbsl-builder' );
+		var builders = document.querySelectorAll( '.wpbs-builder' );
 		Array.prototype.forEach.call( builders, function ( c ) { new Builder( c ); } );
 	}
 

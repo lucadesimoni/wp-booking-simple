@@ -5,19 +5,19 @@
  * Runs against a real (test) WordPress database, exercising the database
  * layer, availability logic, magic-link page provisioning and email sending.
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  */
 
 class Test_WPBSL_Booking_Flow extends WP_UnitTestCase {
 
 	/**
-	 * @var WP_Booking_System_Luca_Database
+	 * @var WP_Booking_Simple_Database
 	 */
 	protected $db;
 
 	public function set_up() {
 		parent::set_up();
-		$this->db = wp_booking_system_luca()->database;
+		$this->db = wp_booking_simple()->database;
 		$this->db->create_tables();
 	}
 
@@ -41,7 +41,7 @@ class Test_WPBSL_Booking_Flow extends WP_UnitTestCase {
 		$booking = $this->db->get_booking( $id );
 		$this->assertSame( 'Ada', $booking->first_name );
 		$this->assertSame( 'pending', $booking->status );
-		$this->assertTrue( WP_Booking_System_Luca_Helpers::is_valid_token( $booking->booking_token ) );
+		$this->assertTrue( WP_Booking_Simple_Helpers::is_valid_token( $booking->booking_token ) );
 
 		// Token lookup powers the magic link.
 		$by_token = $this->db->get_booking_by_token( $booking->booking_token );
@@ -87,7 +87,7 @@ class Test_WPBSL_Booking_Flow extends WP_UnitTestCase {
 	}
 
 	public function test_activation_creates_pages() {
-		WP_Booking_System_Luca::create_pages();
+		WP_Booking_Simple::create_pages();
 
 		$booking_page = (int) get_option( 'wpbsl_booking_page_id' );
 		$manage_page  = (int) get_option( 'wpbsl_manage_page_id' );
@@ -95,11 +95,11 @@ class Test_WPBSL_Booking_Flow extends WP_UnitTestCase {
 		$this->assertGreaterThan( 0, $booking_page );
 		$this->assertGreaterThan( 0, $manage_page );
 		$this->assertSame( 'publish', get_post_status( $booking_page ) );
-		$this->assertStringContainsString( '[wp_booking_form_luca]', get_post( $booking_page )->post_content );
-		$this->assertStringContainsString( '[wp_booking_manage_luca]', get_post( $manage_page )->post_content );
+		$this->assertStringContainsString( '[wp_booking_form_simple]', get_post( $booking_page )->post_content );
+		$this->assertStringContainsString( '[wp_booking_manage_simple]', get_post( $manage_page )->post_content );
 
 		// Re-running must not create duplicates.
-		WP_Booking_System_Luca::create_pages();
+		WP_Booking_Simple::create_pages();
 		$this->assertSame( $manage_page, (int) get_option( 'wpbsl_manage_page_id' ) );
 	}
 
@@ -120,7 +120,7 @@ class Test_WPBSL_Booking_Flow extends WP_UnitTestCase {
 		$mailer = tests_retrieve_phpmailer_instance();
 		reset_phpmailer_instance();
 
-		$sent = wp_booking_system_luca()->email->send_booking_confirmation( $booking );
+		$sent = wp_booking_simple()->email->send_booking_confirmation( $booking );
 		$this->assertTrue( $sent );
 
 		$mailer = tests_retrieve_phpmailer_instance();

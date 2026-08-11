@@ -1,7 +1,7 @@
 <?php
 // Token-based extractor for WP i18n calls.
 $funcs = ['__','_e','esc_html__','esc_html_e','esc_attr__','esc_attr_e','_x','_ex','esc_attr_x','esc_html_x','_n','_nx'];
-$files = array_merge(glob('includes/*.php'), ['wp-booking-system.php']);
+$files = array_merge(glob('includes/*.php'), ['wp-booking-simple.php']);
 $entries = []; // key => ['msgid'=>, 'plural'=>, 'context'=>]
 foreach ($files as $f) {
 	$tokens = token_get_all(file_get_contents($f));

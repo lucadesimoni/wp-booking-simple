@@ -2,7 +2,7 @@
 /**
  * Frontend Calendar Widget Class
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  * @since 1.0.0
  */
 
@@ -11,19 +11,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WP_Booking_System_Luca_Widget Class
+ * WP_Booking_Simple_Widget Class
  */
-class WP_Booking_System_Luca_Widget extends WP_Widget {
+class WP_Booking_Simple_Widget extends WP_Widget {
 
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		parent::__construct(
-			'WP_Booking_System_Luca_widget',
-			__( 'Booking Calendar', 'wp-booking-system-luca' ),
+			'WP_Booking_Simple_widget',
+			__( 'Booking Calendar', 'wp-booking-simple' ),
 			array(
-				'description' => __( 'Display a monthly calendar showing booking availability and allowing date selection.', 'wp-booking-system-luca' ),
+				'description' => __( 'Display a monthly calendar showing booking availability and allowing date selection.', 'wp-booking-simple' ),
 			)
 		);
 	}
@@ -37,7 +37,7 @@ class WP_Booking_System_Luca_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
-		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Booking Calendar', 'wp-booking-system-luca' );
+		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Booking Calendar', 'wp-booking-simple' );
 		$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
 
 		if ( $title ) {
@@ -47,7 +47,7 @@ class WP_Booking_System_Luca_Widget extends WP_Widget {
 		// Reuse the shared, interactive calendar renderer (static enqueued JS,
 		// range selection, tooltips) so the widget behaves exactly like the
 		// shortcode and block. The title is emitted above, so render without one.
-		echo wp_booking_system_luca()->frontend->render_booking_calendar( array( 'title' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo wp_booking_simple()->frontend->render_booking_calendar( array( 'title' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
@@ -58,11 +58,11 @@ class WP_Booking_System_Luca_Widget extends WP_Widget {
 	 * @param array $instance Current settings.
 	 */
 	public function form( $instance ) {
-		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Booking Calendar', 'wp-booking-system-luca' );
+		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Booking Calendar', 'wp-booking-simple' );
 		?>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
-				<?php esc_html_e( 'Title:', 'wp-booking-system-luca' ); ?>
+				<?php esc_html_e( 'Title:', 'wp-booking-simple' ); ?>
 			</label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>

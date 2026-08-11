@@ -1,6 +1,6 @@
-# WP booking Luca - Testing Guide
+# WP Booking Simple - Testing Guide
 
-This guide will help you test all features of the WP booking Luca plugin.
+This guide will help you test all features of the WP Booking Simple plugin.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ This guide will help you test all features of the WP booking Luca plugin.
 **Option A: Manual Installation**
 1. Copy the entire plugin folder to `/wp-content/plugins/wp-booking-system/`
 2. Go to WordPress Admin → Plugins
-3. Find "WP booking Luca" and click "Activate"
+3. Find "WP Booking Simple" and click "Activate"
 
 **Option B: ZIP Installation**
 1. Create a ZIP file of the plugin folder
@@ -42,7 +42,7 @@ After activation, you should see:
 ### Phase 1: Admin Configuration
 
 #### Test 1: Settings Page
-1. Go to **WP booking Luca → Settings**
+1. Go to **WP Booking Simple → Settings**
 2. Configure the following:
    - Price per Adult: `50` (or your preferred amount)
    - Price per Kid: `25` (or your preferred amount)
@@ -55,20 +55,20 @@ After activation, you should see:
 4. ✅ **Expected**: Success message appears, settings are saved
 
 #### Test 2: Admin Calendar View
-1. Go to **WP booking Luca → Booking Calendar**
+1. Go to **WP Booking Simple → Booking Calendar**
 2. ✅ **Expected**: FullCalendar loads with navigation buttons and calendar is visible
 3. Try navigating between months
 4. ✅ **Expected**: Calendar displays correctly (should be empty initially)
 
 #### Test 3: All Bookings List
-1. Go to **WP booking Luca → All Bookings**
+1. Go to **WP Booking Simple → All Bookings**
 2. ✅ **Expected**: Empty table with message "No bookings found"
 
 ### Phase 2: Frontend Booking Form
 
 #### Test 4: Booking Form Shortcode
 1. Create a new page (Pages → Add New)
-2. Add the shortcode: `[wp_booking_form_luca]`
+2. Add the shortcode: `[wp_booking_form_simple]`
 3. Publish the page
 4. View the page on the frontend
 5. ✅ **Expected**: 
@@ -120,7 +120,7 @@ After activation, you should see:
    - Form resets
    - Confirmation email sent to guest (check email inbox)
    - Admin notification email sent (if configured)
-   - Booking appears in admin (WP booking Luca → All Bookings)
+   - Booking appears in admin (WP Booking Simple → All Bookings)
 
 ### Phase 3: Calendar Widget
 
@@ -149,7 +149,7 @@ After activation, you should see:
 
 #### Test 12: Calendar Shortcode
 1. Create a new page
-2. Add shortcode: `[wp_booking_calendar_luca title="Check Availability"]`
+2. Add shortcode: `[wp_booking_calendar_simple title="Check Availability"]`
 3. Publish and view the page
 4. ✅ **Expected**: Calendar displays with custom title
 
@@ -173,7 +173,7 @@ After activation, you should see:
 
 #### Test 14: Booking Management Page
 1. Create a new page: "Manage Booking"
-2. Add shortcode: `[wp_booking_manage_luca]`
+2. Add shortcode: `[wp_booking_manage_simple]`
 3. Publish the page
 4. Copy the management link from the confirmation email
 5. Open the link in a browser
@@ -275,7 +275,7 @@ For rapid testing, use this sequence:
 1. **Setup** (2 min)
    - Activate plugin
    - Configure settings (Bookings → Settings)
-   - Create a page with `[wp_booking_form_luca]`
+   - Create a page with `[wp_booking_form_simple]`
 
 2. **Create Booking** (1 min)
    - Fill form with test data

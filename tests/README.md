@@ -25,7 +25,7 @@ Provide the WordPress test library and run PHPUnit. The simplest setup uses
 ```bash
 npm -g i @wordpress/env
 wp-env start
-wp-env run tests-cli --env-cwd=wp-content/plugins/wp-booking-luca phpunit
+wp-env run tests-cli --env-cwd=wp-content/plugins/wp-booking-simple phpunit
 ```
 
 Or, with a manual test-lib install:

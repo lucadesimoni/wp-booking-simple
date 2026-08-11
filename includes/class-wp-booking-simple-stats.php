@@ -5,7 +5,7 @@
  * Pure aggregation logic kept separate so it can be unit-tested without a
  * running WordPress instance.
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  * @since 1.8.0
  */
 
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WP_Booking_System_Luca_Stats Class
+ * WP_Booking_Simple_Stats Class
  */
-class WP_Booking_System_Luca_Stats {
+class WP_Booking_Simple_Stats {
 
 	/**
 	 * Summarise a set of bookings into dashboard metrics.
@@ -59,7 +59,7 @@ class WP_Booking_System_Luca_Stats {
 				continue;
 			}
 
-			$nights = WP_Booking_System_Luca_Helpers::calculate_nights( $b->check_in, $b->check_out );
+			$nights = WP_Booking_Simple_Helpers::calculate_nights( $b->check_in, $b->check_out );
 			$adults = (int) $b->adults;
 			$kids   = (int) $b->kids;
 			$guests = $adults + $kids;

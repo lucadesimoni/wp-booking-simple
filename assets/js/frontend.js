@@ -1,5 +1,5 @@
 /**
- * Frontend JavaScript for WP Booking System
+ * Frontend JavaScript for WP Booking Simple
  */
 
 (function($) {
@@ -50,7 +50,7 @@
 		const unavailableDates = getUnavailableDates();
 
 		// Booking rules from the server (with safe fallbacks).
-		const cfg = (wpbslFrontend && wpbslFrontend.config) || {};
+		const cfg = (wpbsFrontend && wpbsFrontend.config) || {};
 		const minNights = parseInt(cfg.minNights, 10) || 1;
 		const maxNights = parseInt(cfg.maxNights, 10) || 0;
 		const minAdvanceDays = parseInt(cfg.minAdvanceDays, 10) || 0;
@@ -172,7 +172,7 @@
 	 * pay link) from the payment context returned by the booking submission.
 	 */
 	function buildPaymentPanel(p) {
-		const i18n = (wpbslFrontend && wpbslFrontend.i18n) || {};
+		const i18n = (wpbsFrontend && wpbsFrontend.i18n) || {};
 		const infoLi = function (label, value) {
 			const li = $('<li></li>');
 			if (label) { li.append($('<strong></strong>').text(label)); li.append(document.createTextNode(' ')); }
@@ -207,7 +207,7 @@
 	 * Booked dates (Y-m-d) provided by the server, disabled in the picker.
 	 */
 	function getUnavailableDates() {
-		return (wpbslFrontend && wpbslFrontend.unavailableDates) || [];
+		return (wpbsFrontend && wpbsFrontend.unavailableDates) || [];
 	}
 
 	/**
@@ -232,7 +232,7 @@
 		}
 
 		const unavailableDates = getUnavailableDates();
-		const cfg = (wpbslFrontend && wpbslFrontend.config) || {};
+		const cfg = (wpbsFrontend && wpbsFrontend.config) || {};
 		const minNights = parseInt(cfg.minNights, 10) || 1;
 		const todayStr = new Date().toISOString().split('T')[0];
 
@@ -276,11 +276,11 @@
 			height: 'auto',
 			events: function(fetchInfo, successCallback, failureCallback) {
 				$.ajax({
-					url: wpbslFrontend.ajaxUrl,
+					url: wpbsFrontend.ajaxUrl,
 					type: 'GET',
 					data: {
 						action: 'wpbsl_get_calendar_availability',
-						nonce: wpbslFrontend.nonce,
+						nonce: wpbsFrontend.nonce,
 						start: fetchInfo.startStr,
 						end: fetchInfo.endStr
 					},
@@ -301,7 +301,7 @@
 			dayCellDidMount: function(arg) {
 				if (!arg.el) { return; }
 				const dateStr = ymd(arg.date);
-				const i18n = (wpbslFrontend && wpbslFrontend.i18n) || {};
+				const i18n = (wpbsFrontend && wpbsFrontend.i18n) || {};
 				let tip;
 				if (dateStr < todayStr) {
 					tip = i18n.tipPast || 'Not available';
@@ -350,7 +350,7 @@
 		if (checkIn && checkOut) {
 			// Validate dates
 			if (new Date(checkOut) <= new Date(checkIn)) {
-				showMessage('error', wpbslFrontend.i18n.invalidDates);
+				showMessage('error', wpbsFrontend.i18n.invalidDates);
 				$('#wpbs-price-summary').hide();
 				return;
 			}
@@ -370,18 +370,18 @@
 	 */
 	function checkAvailability(checkIn, checkOut) {
 		$.ajax({
-			url: wpbslFrontend.ajaxUrl,
+			url: wpbsFrontend.ajaxUrl,
 			type: 'POST',
 			data: {
 				action: 'wpbsl_check_availability',
-				nonce: wpbslFrontend.nonce,
+				nonce: wpbsFrontend.nonce,
 				check_in: checkIn,
 				check_out: checkOut
 			},
 			success: function(response) {
 				if (response.success) {
 					if (!response.data.available) {
-						showMessage('error', wpbslFrontend.i18n.unavailable);
+						showMessage('error', wpbsFrontend.i18n.unavailable);
 					}
 				}
 			}
@@ -408,18 +408,18 @@
 		}
 
 		$.ajax({
-			url: wpbslFrontend.ajaxUrl,
+			url: wpbsFrontend.ajaxUrl,
 			type: 'POST',
 			data: {
 				action: 'wpbsl_calculate_price',
-				nonce: wpbslFrontend.nonce,
+				nonce: wpbsFrontend.nonce,
 				check_in: checkIn,
 				check_out: checkOut,
 				adults: adults,
 				kids: kids
 			},
 			beforeSend: function() {
-				$('#wpbs-total-price').text(wpbslFrontend.i18n.calculating);
+				$('#wpbs-total-price').text(wpbsFrontend.i18n.calculating);
 				$('#wpbs-price-summary').show();
 			},
 			success: function(response) {
@@ -453,12 +453,12 @@
 			submitButton.data('original-text', submitButton.text());
 		}
 
-		submitButton.prop('disabled', true).text(wpbslFrontend.i18n.submitting || 'Submitting...');
+		submitButton.prop('disabled', true).text(wpbsFrontend.i18n.submitting || 'Submitting...');
 
 		$.ajax({
-			url: wpbslFrontend.ajaxUrl,
+			url: wpbsFrontend.ajaxUrl,
 			type: 'POST',
-			data: formData + '&action=wpbsl_submit_booking&nonce=' + wpbslFrontend.nonce,
+			data: formData + '&action=wpbsl_submit_booking&nonce=' + wpbsFrontend.nonce,
 			success: function(response) {
 				if (response.success) {
 					showBookingSuccess(response.data.message, response.data.payment);
@@ -483,7 +483,7 @@
 	 */
 	function showBookingSuccess(message, payment) {
 		const form = $('#wpbs-booking-form');
-		const note = wpbslFrontend.i18n.submittedNote || '';
+		const note = wpbsFrontend.i18n.submittedNote || '';
 
 		const panel = $('<div class="wpbs-booking-confirmation wpbs-success" role="status" tabindex="-1"></div>');
 		panel.append($('<div class="wpbs-confirmation-icon" aria-hidden="true">✓</div>'));
@@ -500,7 +500,7 @@
 		}
 
 		const again = $('<button type="button" class="wpbs-book-another"></button>')
-			.text(wpbslFrontend.i18n.bookAnother || 'Book another stay')
+			.text(wpbsFrontend.i18n.bookAnother || 'Book another stay')
 			.on('click', function() { window.location.reload(); });
 		panel.append(again);
 
@@ -520,7 +520,7 @@
 	function handleCancelBooking(e) {
 		e.preventDefault();
 
-		if (!confirm(wpbslFrontend.i18n.confirmCancel || 'Are you sure you want to cancel this booking?')) {
+		if (!confirm(wpbsFrontend.i18n.confirmCancel || 'Are you sure you want to cancel this booking?')) {
 			return;
 		}
 
@@ -530,18 +530,18 @@
 		button.prop('disabled', true);
 
 		$.ajax({
-			url: wpbslFrontend.ajaxUrl,
+			url: wpbsFrontend.ajaxUrl,
 			type: 'POST',
 			data: {
 				action: 'wpbsl_cancel_booking',
-				nonce: wpbslFrontend.nonce,
+				nonce: wpbsFrontend.nonce,
 				token: token
 			},
 			success: function(response) {
 				if (response.success) {
 					showMessage('success', response.data.message, '#wpbs-manage-messages');
 					button.closest('.wpbs-booking-actions').fadeOut();
-					$('.wpbs-status').removeClass('wpbs-status-confirmed wpbs-status-pending').addClass('wpbs-status-cancelled').text(wpbslFrontend.i18n.cancelled || 'Cancelled');
+					$('.wpbs-status').removeClass('wpbs-status-confirmed wpbs-status-pending').addClass('wpbs-status-cancelled').text(wpbsFrontend.i18n.cancelled || 'Cancelled');
 				} else {
 					showMessage('error', response.data.message || 'Failed to cancel booking.', '#wpbs-manage-messages');
 				}

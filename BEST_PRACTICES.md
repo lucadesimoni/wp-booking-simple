@@ -1,6 +1,6 @@
 # WordPress Plugin Best Practices Implementation
 
-This document outlines the WordPress best practices that have been implemented in the WP Booking System plugin.
+This document outlines the WordPress best practices that have been implemented in the WP Booking Simple plugin.
 
 ## Security Best Practices
 

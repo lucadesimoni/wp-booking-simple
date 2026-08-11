@@ -1,27 +1,27 @@
-# Refactoring Plan: Rename to wp_booking_system_luca
+# Refactoring Plan: Rename to wp_booking_simple
 
 ## Naming Convention Changes
 
 ### Classes
-- `WP_Booking_System` → `WP_Booking_System_Luca`
-- `WP_Booking_System_Database` → `WP_Booking_System_Luca_Database`
-- `WP_Booking_System_Admin` → `WP_Booking_System_Luca_Admin`
-- `WP_Booking_System_Frontend` → `WP_Booking_System_Luca_Frontend`
-- `WP_Booking_System_Ajax` → `WP_Booking_System_Luca_Ajax`
-- `WP_Booking_System_Email` → `WP_Booking_System_Luca_Email`
-- `WP_Booking_System_Widget` → `WP_Booking_System_Luca_Widget`
-- `WP_Booking_System_Block` → `WP_Booking_System_Luca_Block`
+- `WP_Booking_System` → `WP_Booking_Simple`
+- `WP_Booking_System_Database` → `WP_Booking_Simple_Database`
+- `WP_Booking_System_Admin` → `WP_Booking_Simple_Admin`
+- `WP_Booking_System_Frontend` → `WP_Booking_Simple_Frontend`
+- `WP_Booking_System_Ajax` → `WP_Booking_Simple_Ajax`
+- `WP_Booking_System_Email` → `WP_Booking_Simple_Email`
+- `WP_Booking_System_Widget` → `WP_Booking_Simple_Widget`
+- `WP_Booking_System_Block` → `WP_Booking_Simple_Block`
 
 ### Functions
-- `wp_booking_system()` → `wp_booking_system_luca()`
+- `wp_booking_system()` → `wp_booking_simple()`
 
 ### Constants
-- `WP_BOOKING_SYSTEM_VERSION` → `WP_BOOKING_SYSTEM_LUCA_VERSION`
-- `WP_BOOKING_SYSTEM_PLUGIN_DIR` → `WP_BOOKING_SYSTEM_LUCA_PLUGIN_DIR`
-- `WP_BOOKING_SYSTEM_PLUGIN_URL` → `WP_BOOKING_SYSTEM_LUCA_PLUGIN_URL`
+- `WP_BOOKING_SYSTEM_VERSION` → `WP_BOOKING_SIMPLE_VERSION`
+- `WP_BOOKING_SYSTEM_PLUGIN_DIR` → `WP_BOOKING_SIMPLE_PLUGIN_DIR`
+- `WP_BOOKING_SYSTEM_PLUGIN_URL` → `WP_BOOKING_SIMPLE_PLUGIN_URL`
 
 ### Text Domain
-- `wp-booking-system` → `wp-booking-system-luca`
+- `wp-booking-system` → `wp-booking-simple`
 
 ### Options (wp_options table)
 - `wpbs_price_adult` → `wpbsl_price_adult`
@@ -43,12 +43,12 @@
 - `wpbs_get_calendar_availability` → `wpbsl_get_calendar_availability`
 
 ### Nonces
-- `wp-booking-system-admin` → `wp-booking-system-luca-admin`
-- `wp-booking-system-frontend` → `wp-booking-system-luca-frontend`
+- `wp-booking-system-admin` → `wp-booking-simple-admin`
+- `wp-booking-system-frontend` → `wp-booking-simple-frontend`
 
 ### JavaScript Variables
-- `wpbsAdmin` → `wpbslAdmin`
-- `wpbsFrontend` → `wpbslFrontend`
+- `wpbsAdmin` → `wpbsAdmin`
+- `wpbsFrontend` → `wpbsFrontend`
 
 ### Database Table
 - `wp_wpbs_bookings` → `wp_wpbsl_bookings`
@@ -56,7 +56,7 @@
 ### Files to Create/Update
 1. Rename class files (or create new ones)
 2. Update all references in existing files
-3. Update wp-booking-system.php
+3. Update wp-booking-simple.php
 4. Update all includes/class-*.php files
 5. Update assets/js/*.js files
 6. Update assets/css/*.css (comments only)

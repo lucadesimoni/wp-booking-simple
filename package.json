@@ -1,22 +1,14 @@
 {
-	"name": "wordpress-plugin-template",
-	"title": "WordPress Plugin Template",
-	"version": "1.0.0",
-	"homepage": "https://github.com/hlashbrooke/WordPress-Plugin-Template",
-	"main": "Gruntfile.js",
+	"name": "wp-booking-simple",
+	"title": "WP Booking Simple",
+	"version": "1.21.0",
+	"description": "A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.",
+	"homepage": "https://github.com/lucadesimoni/wp-booking-simple",
+	"license": "GPL-2.0-or-later",
+	"private": true,
 	"scripts": {
-		"build": "grunt build",
-		"package": "grunt package",
-		"build:zip": "node -e \"require('child_process').exec(process.platform === 'win32' ? 'powershell -ExecutionPolicy Bypass -File build-plugin.ps1' : 'bash build-plugin-unix.sh', (err, stdout, stderr) => { if (err) { console.error(err); process.exit(1); } console.log(stdout); })\"",
-		"build:zip:clean": "node -e \"require('child_process').exec(process.platform === 'win32' ? 'powershell -ExecutionPolicy Bypass -File build-plugin.ps1 -Cleanup' : 'bash build-plugin-unix.sh --cleanup', (err, stdout, stderr) => { if (err) { console.error(err); process.exit(1); } console.log(stdout); })\""
-	},
-	"devDependencies": {
-		"grunt": "^1.0.3",
-		"grunt-contrib-compress": "^1.6.0",
-		"grunt-contrib-cssmin": "~0.9.0",
-		"grunt-contrib-less": "^2.0.0",
-		"grunt-contrib-uglify": "~0.4.0",
-		"grunt-contrib-watch": "^1.1.0",
-		"grunt-shell": "^3.0.1"
+		"build": "bash build.sh",
+		"vendor": "bash tools/fetch-vendor.sh",
+		"test": "php tests/standalone/run.php"
 	}
 }

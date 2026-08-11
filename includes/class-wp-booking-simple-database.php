@@ -2,7 +2,7 @@
 /**
  * Database class for handling booking data
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  * @since 1.0.0
  */
 
@@ -11,9 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WP_Booking_System_Luca_Database Class
+ * WP_Booking_Simple_Database Class
  */
-class WP_Booking_System_Luca_Database {
+class WP_Booking_Simple_Database {
 
 	/**
 	 * Table name for bookings.

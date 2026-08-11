@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WP booking Luca\n"
+"Project-Id-Version: WP Booking Simple\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -732,7 +732,7 @@ msgstr ""
 msgid "This booking has no valid email address."
 msgstr ""
 
-msgid "This is a test email from WP booking Luca. If you received it, your booking notifications are being delivered correctly (%s)."
+msgid "This is a test email from WP Booking Simple. If you received it, your booking notifications are being delivered correctly (%s)."
 msgstr ""
 
 msgid "Those dates overlap another booking."
@@ -798,10 +798,10 @@ msgstr ""
 msgid "Visitors welcome?"
 msgstr ""
 
-msgid "WP booking Luca"
+msgid "WP Booking Simple"
 msgstr ""
 
-msgid "WP booking Luca is using your server's default mailer, which can fail to deliver booking emails. For reliable delivery (e.g. through Gmail), enable SMTP in"
+msgid "WP Booking Simple is using your server's default mailer, which can fail to deliver booking emails. For reliable delivery (e.g. through Gmail), enable SMTP in"
 msgstr ""
 
 msgid "Width (px, optional)"
@@ -810,7 +810,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-msgid "[%s] Test email from WP booking Luca"
+msgid "[%s] Test email from WP Booking Simple"
 msgstr ""
 
 msgid "adults"

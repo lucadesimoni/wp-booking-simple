@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Tag to create and release (e.g. v1.20.1). Must match the plugin's Version header, WP_BOOKING_SYSTEM_LUCA_VERSION constant and readme.txt Stable tag."
+        description: "Tag to create and release (e.g. v1.20.1). Must match the plugin's Version header, WP_BOOKING_SIMPLE_VERSION constant and readme.txt Stable tag."
         required: true
         type: string
 
@@ -39,8 +39,8 @@ jobs:
       - name: Verify plugin version matches tag
         run: |
           version="${{ steps.resolve.outputs.version }}"
-          header_version=$(grep -E "^\s*\*\s*Version:" wp-booking-system.php | head -1 | sed -E 's/.*Version:\s*//')
-          constant_version=$(grep -E "WP_BOOKING_SYSTEM_LUCA_VERSION" wp-booking-system.php | head -1 | sed -E "s/.*'([0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
+          header_version=$(grep -E "^\s*\*\s*Version:" wp-booking-simple.php | head -1 | sed -E 's/.*Version:\s*//')
+          constant_version=$(grep -E "WP_BOOKING_SIMPLE_VERSION" wp-booking-simple.php | head -1 | sed -E "s/.*'([0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
           readme_stable=$(grep -E "^Stable tag:" readme.txt | head -1 | sed -E 's/Stable tag:\s*//')
           echo "version=$version header=$header_version constant=$constant_version readme=$readme_stable"
           if [ "$version" != "$header_version" ] || [ "$version" != "$constant_version" ] || [ "$version" != "$readme_stable" ]; then
@@ -73,15 +73,15 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.resolve.outputs.tag }}
-          name: "WP booking Luca ${{ steps.resolve.outputs.tag }}"
+          name: "WP Booking Simple ${{ steps.resolve.outputs.tag }}"
           body: |
-            **Install:** download `wp-booking-luca.zip` below and upload it via
+            **Install:** download `wp-booking-simple.zip` below and upload it via
             *WordPress → Plugins → Add New → Upload Plugin*.
 
             ## Changes
 
             ${{ steps.changelog.outputs.notes }}
-          files: dist/wp-booking-luca.zip
+          files: dist/wp-booking-simple.zip
           fail_on_unmatched_files: true
           draft: false
           prerelease: false

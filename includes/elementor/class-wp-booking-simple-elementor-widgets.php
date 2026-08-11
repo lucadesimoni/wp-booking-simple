@@ -1,12 +1,12 @@
 <?php
 /**
- * Elementor widget classes for WP booking Luca.
+ * Elementor widget classes for WP Booking Simple.
  *
  * This file is only required from within the
  * `elementor/widgets/register` hook, so \Elementor\Widget_Base is guaranteed
  * to exist when these classes are declared.
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  * @since 1.15.0
  */
 
@@ -21,7 +21,7 @@ if ( ! class_exists( '\Elementor\Widget_Base' ) ) {
 /**
  * Booking Form Elementor widget.
  */
-class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Base {
+class WP_Booking_Simple_Elementor_Form_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Widget machine name.
@@ -29,7 +29,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 	 * @return string
 	 */
 	public function get_name() {
-		return 'wpbsl-booking-form';
+		return 'wpbs-booking-form';
 	}
 
 	/**
@@ -38,7 +38,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 	 * @return string
 	 */
 	public function get_title() {
-		return __( 'Booking Form', 'wp-booking-system-luca' );
+		return __( 'Booking Form', 'wp-booking-simple' );
 	}
 
 	/**
@@ -56,7 +56,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 	 * @return array
 	 */
 	public function get_categories() {
-		return array( 'wp-booking-luca' );
+		return array( 'wp-booking-simple' );
 	}
 
 	/**
@@ -77,7 +77,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->start_controls_section(
 			'wpbsl_content',
 			array(
-				'label' => __( 'Booking Form', 'wp-booking-system-luca' ),
+				'label' => __( 'Booking Form', 'wp-booking-simple' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
 			)
 		);
@@ -85,9 +85,9 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->add_control(
 			'wpbsl_title',
 			array(
-				'label'   => __( 'Title', 'wp-booking-system-luca' ),
+				'label'   => __( 'Title', 'wp-booking-simple' ),
 				'type'    => \Elementor\Controls_Manager::TEXT,
-				'default' => __( 'Book Your Stay', 'wp-booking-system-luca' ),
+				'default' => __( 'Book Your Stay', 'wp-booking-simple' ),
 			)
 		);
 
@@ -95,7 +95,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 			'wpbsl_note',
 			array(
 				'type'            => \Elementor\Controls_Manager::RAW_HTML,
-				'raw'             => __( 'Pricing, fields and booking rules are configured under WP booking Luca → Settings.', 'wp-booking-system-luca' ),
+				'raw'             => __( 'Pricing, fields and booking rules are configured under WP Booking Simple → Settings.', 'wp-booking-simple' ),
 				'content_classes' => 'elementor-descriptor',
 			)
 		);
@@ -106,7 +106,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->start_controls_section(
 			'wpbsl_style',
 			array(
-				'label' => __( 'Style', 'wp-booking-system-luca' ),
+				'label' => __( 'Style', 'wp-booking-simple' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 			)
 		);
@@ -114,7 +114,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->add_control(
 			'wpbsl_accent',
 			array(
-				'label'     => __( 'Accent color', 'wp-booking-system-luca' ),
+				'label'     => __( 'Accent color', 'wp-booking-simple' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .wpbs-price-value'                  => 'color: {{VALUE}};',
@@ -129,7 +129,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->add_control(
 			'wpbsl_button_bg',
 			array(
-				'label'     => __( 'Button background', 'wp-booking-system-luca' ),
+				'label'     => __( 'Button background', 'wp-booking-simple' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .wpbs-booking-form .wpbs-submit-button' => 'background-color: {{VALUE}};',
@@ -140,7 +140,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->add_control(
 			'wpbsl_button_color',
 			array(
-				'label'     => __( 'Button text color', 'wp-booking-system-luca' ),
+				'label'     => __( 'Button text color', 'wp-booking-simple' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .wpbs-booking-form .wpbs-submit-button' => 'color: {{VALUE}};',
@@ -151,7 +151,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->add_control(
 			'wpbsl_button_hover_bg',
 			array(
-				'label'     => __( 'Button hover background', 'wp-booking-system-luca' ),
+				'label'     => __( 'Button hover background', 'wp-booking-simple' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .wpbs-booking-form .wpbs-submit-button:hover' => 'background-color: {{VALUE}};',
@@ -162,7 +162,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->add_control(
 			'wpbsl_button_font_size',
 			array(
-				'label'      => __( 'Button font size', 'wp-booking-system-luca' ),
+				'label'      => __( 'Button font size', 'wp-booking-simple' ),
 				'type'       => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => array( 'px', 'em', 'rem' ),
 				'range'      => array(
@@ -177,7 +177,7 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$this->add_control(
 			'wpbsl_button_radius',
 			array(
-				'label'      => __( 'Button corner radius', 'wp-booking-system-luca' ),
+				'label'      => __( 'Button corner radius', 'wp-booking-simple' ),
 				'type'       => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => array( 'px' ),
 				'range'      => array(
@@ -202,14 +202,14 @@ class WP_Booking_System_Luca_Elementor_Form_Widget extends \Elementor\Widget_Bas
 		$title    = isset( $settings['wpbsl_title'] ) ? $settings['wpbsl_title'] : '';
 
 		// Output is pre-built, escaped markup from the frontend renderer.
-		echo wp_booking_system_luca()->frontend->render_booking_form( array( 'title' => $title ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo wp_booking_simple()->frontend->render_booking_form( array( 'title' => $title ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 
 /**
  * Booking Calendar Elementor widget.
  */
-class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget_Base {
+class WP_Booking_Simple_Elementor_Calendar_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Widget machine name.
@@ -217,7 +217,7 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 	 * @return string
 	 */
 	public function get_name() {
-		return 'wpbsl-booking-calendar';
+		return 'wpbs-booking-calendar';
 	}
 
 	/**
@@ -226,7 +226,7 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 	 * @return string
 	 */
 	public function get_title() {
-		return __( 'Booking Calendar', 'wp-booking-system-luca' );
+		return __( 'Booking Calendar', 'wp-booking-simple' );
 	}
 
 	/**
@@ -244,7 +244,7 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 	 * @return array
 	 */
 	public function get_categories() {
-		return array( 'wp-booking-luca' );
+		return array( 'wp-booking-simple' );
 	}
 
 	/**
@@ -265,7 +265,7 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 		$this->start_controls_section(
 			'wpbsl_content',
 			array(
-				'label' => __( 'Booking Calendar', 'wp-booking-system-luca' ),
+				'label' => __( 'Booking Calendar', 'wp-booking-simple' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
 			)
 		);
@@ -273,9 +273,9 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 		$this->add_control(
 			'wpbsl_title',
 			array(
-				'label'   => __( 'Title', 'wp-booking-system-luca' ),
+				'label'   => __( 'Title', 'wp-booking-simple' ),
 				'type'    => \Elementor\Controls_Manager::TEXT,
-				'default' => __( 'Booking Calendar', 'wp-booking-system-luca' ),
+				'default' => __( 'Booking Calendar', 'wp-booking-simple' ),
 			)
 		);
 
@@ -285,7 +285,7 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 		$this->start_controls_section(
 			'wpbsl_style',
 			array(
-				'label' => __( 'Style', 'wp-booking-system-luca' ),
+				'label' => __( 'Style', 'wp-booking-simple' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 			)
 		);
@@ -293,7 +293,7 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 		$this->add_control(
 			'wpbsl_accent',
 			array(
-				'label'     => __( 'Accent color', 'wp-booking-system-luca' ),
+				'label'     => __( 'Accent color', 'wp-booking-simple' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .wpbs-calendar-shortcode .fc-button'                            => 'background-color: {{VALUE}}; border-color: {{VALUE}};',
@@ -308,7 +308,7 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 		$this->add_control(
 			'wpbsl_booked_color',
 			array(
-				'label'     => __( 'Booked color', 'wp-booking-system-luca' ),
+				'label'     => __( 'Booked color', 'wp-booking-simple' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .wpbs-calendar-shortcode .wpbs-unavailable-date' => 'background-color: {{VALUE}} !important;',
@@ -320,7 +320,7 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 		$this->add_control(
 			'wpbsl_cell_height',
 			array(
-				'label'      => __( 'Day cell height', 'wp-booking-system-luca' ),
+				'label'      => __( 'Day cell height', 'wp-booking-simple' ),
 				'type'       => \Elementor\Controls_Manager::SLIDER,
 				'size_units' => array( 'px' ),
 				'range'      => array(
@@ -345,6 +345,6 @@ class WP_Booking_System_Luca_Elementor_Calendar_Widget extends \Elementor\Widget
 		$title    = isset( $settings['wpbsl_title'] ) ? $settings['wpbsl_title'] : '';
 
 		// Output is pre-built, escaped markup from the frontend renderer.
-		echo wp_booking_system_luca()->frontend->render_booking_calendar( array( 'title' => $title ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo wp_booking_simple()->frontend->render_booking_calendar( array( 'title' => $title ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

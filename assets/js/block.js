@@ -19,7 +19,7 @@
 		return el(
 			'div',
 			{
-				className: 'wp-booking-system-block-preview',
+				className: 'wp-booking-simple-block-preview',
 				style: { padding: '24px', border: '1px dashed #ccc', borderRadius: '6px', textAlign: 'center' }
 			},
 			el('span', {
@@ -48,7 +48,7 @@
 					PanelBody,
 					{ title: panelTitle, initialOpen: true, key: 'content' },
 					el(TextControl, {
-						label: __('Title', 'wp-booking-system-luca'),
+						label: __('Title', 'wp-booking-simple'),
 						value: attributes.title,
 						onChange: function (value) {
 							setAttributes({ title: value });
@@ -75,7 +75,7 @@
 				panels.push(
 					el(
 						PanelBody,
-						{ title: __('Colors', 'wp-booking-system-luca'), initialOpen: false, key: 'colors' },
+						{ title: __('Colors', 'wp-booking-simple'), initialOpen: false, key: 'colors' },
 						colorChildren
 					)
 				);
@@ -90,24 +90,24 @@
 		};
 	}
 
-	registerBlockType('wp-booking-system/calendar', {
-		title: __('Booking Calendar', 'wp-booking-system-luca'),
-		description: __('Show a monthly availability calendar.', 'wp-booking-system-luca'),
+	registerBlockType('wp-booking-simple/calendar', {
+		title: __('Booking Calendar', 'wp-booking-simple'),
+		description: __('Show a monthly availability calendar.', 'wp-booking-simple'),
 		icon: 'calendar-alt',
-		category: 'wp-booking-luca',
-		keywords: [__('booking', 'wp-booking-system-luca'), __('calendar', 'wp-booking-system-luca'), __('availability', 'wp-booking-system-luca')],
+		category: 'wp-booking-simple',
+		keywords: [__('booking', 'wp-booking-simple'), __('calendar', 'wp-booking-simple'), __('availability', 'wp-booking-simple')],
 		attributes: {
-			title: { type: 'string', default: __('Booking Calendar', 'wp-booking-system-luca') },
+			title: { type: 'string', default: __('Booking Calendar', 'wp-booking-simple') },
 			accentColor: { type: 'string', default: '' },
 			bookedColor: { type: 'string', default: '' }
 		},
 		edit: makeEdit(
 			'calendar-alt',
-			__('Calendar Settings', 'wp-booking-system-luca'),
-			__('The availability calendar will appear here on the frontend.', 'wp-booking-system-luca'),
+			__('Calendar Settings', 'wp-booking-simple'),
+			__('The availability calendar will appear here on the frontend.', 'wp-booking-simple'),
 			[
-				{ attr: 'accentColor', label: __('Accent color', 'wp-booking-system-luca') },
-				{ attr: 'bookedColor', label: __('Booked color', 'wp-booking-system-luca') }
+				{ attr: 'accentColor', label: __('Accent color', 'wp-booking-simple') },
+				{ attr: 'bookedColor', label: __('Booked color', 'wp-booking-simple') }
 			]
 		),
 		save: function () {
@@ -115,14 +115,14 @@
 		}
 	});
 
-	registerBlockType('wp-booking-system/form', {
-		title: __('Booking Form', 'wp-booking-system-luca'),
-		description: __('Show the booking form with live price and availability.', 'wp-booking-system-luca'),
+	registerBlockType('wp-booking-simple/form', {
+		title: __('Booking Form', 'wp-booking-simple'),
+		description: __('Show the booking form with live price and availability.', 'wp-booking-simple'),
 		icon: 'calendar',
-		category: 'wp-booking-luca',
-		keywords: [__('booking', 'wp-booking-system-luca'), __('reservation', 'wp-booking-system-luca'), __('form', 'wp-booking-system-luca')],
+		category: 'wp-booking-simple',
+		keywords: [__('booking', 'wp-booking-simple'), __('reservation', 'wp-booking-simple'), __('form', 'wp-booking-simple')],
 		attributes: {
-			title: { type: 'string', default: __('Book Your Stay', 'wp-booking-system-luca') },
+			title: { type: 'string', default: __('Book Your Stay', 'wp-booking-simple') },
 			accentColor: { type: 'string', default: '' },
 			buttonBg: { type: 'string', default: '' },
 			buttonColor: { type: 'string', default: '' },
@@ -130,13 +130,13 @@
 		},
 		edit: makeEdit(
 			'calendar',
-			__('Form Settings', 'wp-booking-system-luca'),
-			__('The booking form will appear here on the frontend.', 'wp-booking-system-luca'),
+			__('Form Settings', 'wp-booking-simple'),
+			__('The booking form will appear here on the frontend.', 'wp-booking-simple'),
 			[
-				{ attr: 'accentColor', label: __('Accent color', 'wp-booking-system-luca') },
-				{ attr: 'buttonBg', label: __('Button background', 'wp-booking-system-luca') },
-				{ attr: 'buttonColor', label: __('Button text', 'wp-booking-system-luca') },
-				{ attr: 'buttonHoverBg', label: __('Button hover background', 'wp-booking-system-luca') }
+				{ attr: 'accentColor', label: __('Accent color', 'wp-booking-simple') },
+				{ attr: 'buttonBg', label: __('Button background', 'wp-booking-simple') },
+				{ attr: 'buttonColor', label: __('Button text', 'wp-booking-simple') },
+				{ attr: 'buttonHoverBg', label: __('Button hover background', 'wp-booking-simple') }
 			]
 		),
 		save: function () {

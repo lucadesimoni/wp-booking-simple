@@ -2,14 +2,14 @@
 /**
  * Minimal .po -> .mo compiler (no gettext tooling required).
  *
- * Usage: php tools/i18n/po2mo.php lang/wp-booking-system-luca-de_DE.po
+ * Usage: php tools/i18n/po2mo.php lang/wp-booking-simple-de_DE.po
  *        (writes the matching .mo next to it)
  *
  * Supports msgctxt, msgid, msgid_plural and msgstr[N], with the standard
  * multi-line "..." continuation syntax. This is the canonical way to rebuild
  * the .mo files after editing a .po translation.
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  */
 
 if ( $argc < 2 ) {

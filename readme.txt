@@ -1,10 +1,10 @@
-=== WP booking Luca ===
+=== WP Booking Simple ===
 Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 1.20.1
+Stable tag: 1.21.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ A simple and modern booking system for WordPress with calendar management, email
 
 == Description ==
 
-WP booking Luca is a clean and modern booking solution for WordPress. It provides a simple interface for managing bookings with the following features:
+WP Booking Simple is a clean and modern booking solution for WordPress. It provides a simple interface for managing bookings with the following features:
 
 * Admin calendar overview: see every booking at a glance, colour-coded by status, with summary cards
 * Insights dashboard: bookings per guest, owner usage, nights, revenue and payment breakdowns
@@ -28,7 +28,7 @@ WP booking Luca is a clean and modern booking solution for WordPress. It provide
 * Built-in SMTP delivery (e.g. Gmail / Google Workspace) with a test-email button for reliable sending
 * Customizable email templates (subject and body) with merge tags
 * Drag-and-drop email builder: arrange content blocks (text, heading, booking details, button, image, divider)
-* Native Elementor widgets and Gutenberg blocks (also work in Spectra) under a "WP booking Luca" category, plus shortcodes
+* Native Elementor widgets and Gutenberg blocks (also work in Spectra) under a "WP Booking Simple" category, plus shortcodes
 * Configurable booking-form fields, including an Owner dropdown and a "Visitors welcome?" field
 * Calendar (.ics) invite attached to confirmation emails so guests can add the stay to their calendar
 * Unique links for guests to manage or cancel their bookings
@@ -43,8 +43,8 @@ Perfect for vacation rentals, hotels, or any accommodation booking needs.
 
 1. Upload the plugin ZIP through Plugins > Add New > Upload Plugin, or extract it to `/wp-content/plugins/`
 2. Activate the plugin through the 'Plugins' menu in WordPress. On activation it automatically creates a "Book Now" page and a "Manage Booking" page, so everything works immediately.
-3. Go to WP booking Luca > Settings to configure pricing, email settings, and chalet capacity
-4. To embed elsewhere, use the shortcode `[wp_booking_form_luca]` (form), `[wp_booking_calendar_luca]` (availability calendar) or `[wp_booking_manage_luca]` (management page), or add the "Booking Form" / "Booking Calendar" blocks when editing a page
+3. Go to WP Booking Simple > Settings to configure pricing, email settings, and chalet capacity
+4. To embed elsewhere, use the shortcode `[wp_booking_form_simple]` (form), `[wp_booking_calendar_simple]` (availability calendar) or `[wp_booking_manage_simple]` (management page), or add the "Booking Form" / "Booking Calendar" blocks when editing a page
 5. Guests receive a confirmation email containing a unique magic link to the "Manage Booking" page where they can view or cancel their reservation
 
 == Screenshots ==
@@ -57,19 +57,19 @@ Perfect for vacation rentals, hotels, or any accommodation booking needs.
 
 = How do I display the booking form? =
 
-Activation creates a "Book Now" page for you. To place the form elsewhere, use the shortcode `[wp_booking_form_luca]` or the "Booking Form" block on any page or post.
+Activation creates a "Book Now" page for you. To place the form elsewhere, use the shortcode `[wp_booking_form_simple]` or the "Booking Form" block on any page or post.
 
 = Can I embed the form on an existing page (e.g. my Chalet page)? =
 
-Yes. You have three options: (1) drag the native "Booking Form" / "Booking Calendar" widgets onto the page in Elementor (look under the "WP booking Luca" category); (2) add the "Booking Form" / "Booking Calendar" blocks in the WordPress block editor or Spectra (also under a "WP booking Luca" category); or (3) use the shortcodes `[wp_booking_form_luca]` and `[wp_booking_calendar_luca]` anywhere, including a page builder's shortcode element (Divi, WPBakery, etc.). The required styles and scripts load automatically wherever the form or calendar is rendered. You can pass a custom heading, e.g. `[wp_booking_form_luca title="Reserve Your Stay"]`.
+Yes. You have three options: (1) drag the native "Booking Form" / "Booking Calendar" widgets onto the page in Elementor (look under the "WP Booking Simple" category); (2) add the "Booking Form" / "Booking Calendar" blocks in the WordPress block editor or Spectra (also under a "WP Booking Simple" category); or (3) use the shortcodes `[wp_booking_form_simple]` and `[wp_booking_calendar_simple]` anywhere, including a page builder's shortcode element (Divi, WPBakery, etc.). The required styles and scripts load automatically wherever the form or calendar is rendered. You can pass a custom heading, e.g. `[wp_booking_form_simple title="Reserve Your Stay"]`.
 
 = Does it work with Elementor, Gutenberg and Spectra? =
 
-Yes. The plugin registers native Elementor widgets ("Booking Form" and "Booking Calendar") and Gutenberg blocks of the same names, both grouped under a "WP booking Luca" category so they are easy to find. Spectra (Ultimate Addons for Gutenberg) uses the standard block inserter, so the blocks appear there too. Each widget/block has a "Title" option. Both the Elementor widgets (Style tab) and the Gutenberg blocks (Colors panel) let you set the accent and button colours (form) or the accent and booked colours (calendar); the Elementor widgets also expose sizing controls (button font size/radius, calendar day-cell height). Everything else is configured under WP booking Luca → Settings.
+Yes. The plugin registers native Elementor widgets ("Booking Form" and "Booking Calendar") and Gutenberg blocks of the same names, both grouped under a "WP Booking Simple" category so they are easy to find. Spectra (Ultimate Addons for Gutenberg) uses the standard block inserter, so the blocks appear there too. Each widget/block has a "Title" option. Both the Elementor widgets (Style tab) and the Gutenberg blocks (Colors panel) let you set the accent and button colours (form) or the accent and booked colours (calendar); the Elementor widgets also expose sizing controls (button font size/radius, calendar day-cell height). Everything else is configured under WP Booking Simple → Settings.
 
 = How do guests manage their bookings? =
 
-Guests receive an email with a unique magic link to the auto-created "Manage Booking" page (which uses the `[wp_booking_manage_luca]` shortcode), where they can view or cancel their booking.
+Guests receive an email with a unique magic link to the auto-created "Manage Booking" page (which uses the `[wp_booking_manage_simple]` shortcode), where they can view or cancel their booking.
 
 = How do I set pricing? =
 
@@ -77,11 +77,11 @@ Go to Bookings > Settings in your WordPress admin and configure the price per ad
 
 = Can I set booking rules like a minimum stay? =
 
-Yes. Under WP booking Luca > Settings you can configure the minimum and maximum stay (nights), the minimum advance notice and how far ahead guests may book, the default number of adults/kids on the form, whether the phone number is required, whether the notes field is shown, and whether new bookings are confirmed automatically. These rules are applied in the date picker and enforced again on the server.
+Yes. Under WP Booking Simple > Settings you can configure the minimum and maximum stay (nights), the minimum advance notice and how far ahead guests may book, the default number of adults/kids on the form, whether the phone number is required, whether the notes field is shown, and whether new bookings are confirmed automatically. These rules are applied in the date picker and enforced again on the server.
 
 = Do booking emails send automatically, and can I use Gmail? =
 
-Yes. Confirmation and admin-notification emails are sent automatically when a booking is made (and a cancellation email when a booking is cancelled). By default they go through WordPress's standard mailer, which uses your server's mail and can be unreliable. Under WP booking Luca > Settings you can enable SMTP and enter your mail server details to send through a real mailbox such as Gmail / Google Workspace. For Gmail use host smtp.gmail.com, port 587 (TLS), your full address as the username, and a Google "App Password" as the password. Use the "Send Test Email" button to confirm delivery.
+Yes. Confirmation and admin-notification emails are sent automatically when a booking is made (and a cancellation email when a booking is cancelled). By default they go through WordPress's standard mailer, which uses your server's mail and can be unreliable. Under WP Booking Simple > Settings you can enable SMTP and enter your mail server details to send through a real mailbox such as Gmail / Google Workspace. For Gmail use host smtp.gmail.com, port 587 (TLS), your full address as the username, and a Google "App Password" as the password. Use the "Send Test Email" button to confirm delivery.
 
 = Does the confirmation email include a calendar invite? =
 
@@ -89,7 +89,7 @@ Yes. The booking confirmation (and the admin notification) include an .ics calen
 
 = Can I customize the email templates? =
 
-Yes. Under WP booking Luca > Settings > Email Templates you can either edit the plain-text subject and body, or use the drag-and-drop builder to arrange content blocks (Text, Heading, Booking details, Button, Image, Divider). Drag a block by its handle to reorder it. Use merge tags such as {guest_name}, {check_in}, {check_out}, {guests}, {total_price}, {owner}, {visitors_welcome}, {booking_details} and {manage_link}, which are replaced with each booking's details. When a template has blocks, they are used; otherwise the plain-text body applies (clear it to restore the default).
+Yes. Under WP Booking Simple > Settings > Email Templates you can either edit the plain-text subject and body, or use the drag-and-drop builder to arrange content blocks (Text, Heading, Booking details, Button, Image, Divider). Drag a block by its handle to reorder it. Use merge tags such as {guest_name}, {check_in}, {check_out}, {guests}, {total_price}, {owner}, {visitors_welcome}, {booking_details} and {manage_link}, which are replaced with each booking's details. When a template has blocks, they are used; otherwise the plain-text body applies (clear it to restore the default).
 
 = Can guests pay with TWINT? =
 
@@ -101,15 +101,15 @@ Yes. The booking form, buttons, dropdowns and the availability calendar are styl
 
 = Can I add an Owner or other custom fields to the booking form? =
 
-Yes. Under WP booking Luca > Settings > Booking Form you can show an "Owner" dropdown (populated from a list of names you enter) and a "Visitors welcome?" yes/no field. Both are saved with the booking and available in emails as {owner} and {visitors_welcome}.
+Yes. Under WP Booking Simple > Settings > Booking Form you can show an "Owner" dropdown (populated from a list of names you enter) and a "Visitors welcome?" yes/no field. Both are saved with the booking and available in emails as {owner} and {visitors_welcome}.
 
 = Can I record payments and edit a booking after it is made? =
 
-Yes. On WP booking Luca > All Bookings, click "View / Edit" on any booking to open the editor. You can change every field — guest details, dates, guests, owner, price, status and notes — and record the payment status (Unpaid/Partial/Paid), the method (Bank, TWINT or Cash) and the amount paid. Availability is re-checked so you cannot create an overlap, and a "Recalc" button recomputes the price from the dates and guests. Every change is saved to a per-booking change history shown at the bottom of the editor, recording who changed what and when.
+Yes. On WP Booking Simple > All Bookings, click "View / Edit" on any booking to open the editor. You can change every field — guest details, dates, guests, owner, price, status and notes — and record the payment status (Unpaid/Partial/Paid), the method (Bank, TWINT or Cash) and the amount paid. Availability is re-checked so you cannot create an overlap, and a "Recalc" button recomputes the price from the dates and guests. Every change is saved to a per-booking change history shown at the bottom of the editor, recording who changed what and when.
 
 = Where can I see statistics about my bookings? =
 
-Open WP booking Luca > Dashboard for insights across all non-cancelled bookings: totals (bookings, nights, guests, revenue, collected and outstanding amounts), bookings per guest, owner usage, payments by method and bookings by month. Use the From/To filter to restrict everything to a check-in date range.
+Open WP Booking Simple > Dashboard for insights across all non-cancelled bookings: totals (bookings, nights, guests, revenue, collected and outstanding amounts), bookings per guest, owner usage, payments by method and bookings by month. Use the From/To filter to restrict everything to a check-in date range.
 
 = Can I export my bookings, or send a payment reminder? =
 

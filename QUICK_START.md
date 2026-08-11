@@ -4,10 +4,10 @@
 
 ### Step 1: Install Plugin (1 minute)
 1. Upload plugin to `/wp-content/plugins/wp-booking-system/`
-2. Go to **Plugins** → Activate "WP booking Luca"
+2. Go to **Plugins** → Activate "WP Booking Simple"
 
 ### Step 2: Configure Settings (1 minute)
-1. Go to **WP booking Luca → Settings**
+1. Go to **WP Booking Simple → Settings**
 2. Set prices:
    - Price per Adult: `50`
    - Price per Kid: `25`
@@ -19,7 +19,7 @@
 ### Step 3: Create Booking Page (1 minute)
 1. Go to **Pages → Add New**
 2. Title: "Book Now"
-3. Option A: Add shortcode: `[wp_booking_form_luca]`
+3. Option A: Add shortcode: `[wp_booking_form_simple]`
    Option B: Use Gutenberg editor and add "Booking Calendar" block
 4. Click **Publish**
 5. View the page
@@ -35,10 +35,10 @@
 3. ✅ Check your email for confirmation
 
 ### Step 5: Verify in Admin (1 minute)
-1. Go to **WP booking Luca → All Bookings**
+1. Go to **WP Booking Simple → All Bookings**
 2. ✅ See your test booking
 3. Check your admin email for notification (if configured)
-4. Go to **WP booking Luca → Booking Calendar**
+4. Go to **WP Booking Simple → Booking Calendar**
 5. ✅ See booking on calendar
 
 ## Test Widget (Optional - 2 minutes)

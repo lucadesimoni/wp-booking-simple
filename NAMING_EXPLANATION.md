@@ -3,11 +3,11 @@
 ## Current Naming Status
 
 ### ✅ Changed (User-Facing Display Names)
-- Plugin header name: **"WP booking Luca"** ✅
-- Admin menu title: **"WP booking Luca"** ✅  
+- Plugin header name: **"WP Booking Simple"** ✅
+- Admin menu title: **"WP Booking Simple"** ✅  
 - Documentation: All references updated ✅
 
-### ⚠️ Still Using "WP Booking System" (Internal Technical Identifiers)
+### ⚠️ Still Using "WP Booking Simple" (Internal Technical Identifiers)
 
 These are the **internal technical identifiers** that still use the old name:
 
@@ -33,7 +33,7 @@ These are the **internal technical identifiers** that still use the old name:
 - `wp-booking-system`
 
 #### 5. **File Names**
-- `wp-booking-system.php`
+- `wp-booking-simple.php`
 - `class-wp-booking-system-*.php`
 
 #### 6. **Database Table Names**
@@ -72,7 +72,7 @@ These are the **internal technical identifiers** that still use the old name:
 In WordPress development, there's a clear distinction:
 
 1. **Display Names** = What users see (menus, titles, descriptions)
-   - ✅ Changed to "WP booking Luca"
+   - ✅ Changed to "WP Booking Simple"
 
 2. **Technical Identifiers** = Internal code references (classes, functions, constants)
    - ⚠️ Typically kept unchanged for compatibility
@@ -128,8 +128,8 @@ In WordPress development, there's a clear distinction:
 ## What Users Actually See
 
 Users only see:
-- ✅ Plugin name in Plugins list: **"WP booking Luca"**
-- ✅ Admin menu: **"WP booking Luca"**
+- ✅ Plugin name in Plugins list: **"WP Booking Simple"**
+- ✅ Admin menu: **"WP Booking Simple"**
 - ✅ Settings page titles
 - ✅ Documentation
 
@@ -149,7 +149,7 @@ Users **never see**:
 3. Changing would be a major breaking change
 4. The display name is what matters for branding
 
-The plugin is already properly branded for users with "WP booking Luca" everywhere they see it.
+The plugin is already properly branded for users with "WP Booking Simple" everywhere they see it.
 
 ## If You Still Want to Change
 
@@ -170,7 +170,7 @@ This is a **major undertaking** and would require testing everything from scratc
 
 ## Current Status
 
-- ✅ **User-facing**: All showing "WP booking Luca"
+- ✅ **User-facing**: All showing "WP Booking Simple"
 - ⚠️ **Technical/internal**: Still using "wp-booking-system" identifiers
 - ✅ **Functionality**: Fully working
 - ✅ **Branding**: Correct for end users

@@ -1,14 +1,14 @@
 # Translations (i18n)
 
-The plugin's translatable strings use the text domain `wp-booking-system-luca`
+The plugin's translatable strings use the text domain `wp-booking-simple`
 and are loaded from `lang/` (see the `Domain Path` header and
 `load_plugin_textdomain()` call).
 
 ## Files in `lang/`
 
-- `wp-booking-system-luca.pot` — template with every source string.
-- `wp-booking-system-luca-de_DE.po` / `.mo` — German (Germany).
-- `wp-booking-system-luca-de_CH.po` / `.mo` — German (Switzerland), same content.
+- `wp-booking-simple.pot` — template with every source string.
+- `wp-booking-simple-de_DE.po` / `.mo` — German (Germany).
+- `wp-booking-simple-de_CH.po` / `.mo` — German (Switzerland), same content.
 
 WordPress loads the `.mo` matching the site language (Settings → General →
 Site Language). Set it to *Deutsch* (`de_DE`) or *Deutsch (Schweiz)* (`de_CH`)
@@ -20,13 +20,13 @@ The `.po` files are the source of truth. Edit the `msgstr` lines, then
 recompile the `.mo` (no gettext tooling required):
 
 ```
-php tools/i18n/po2mo.php lang/wp-booking-system-luca-de_DE.po
+php tools/i18n/po2mo.php lang/wp-booking-simple-de_DE.po
 ```
 
 ## Adding a new language
 
-Copy `wp-booking-system-luca.pot` to
-`lang/wp-booking-system-luca-<locale>.po`, translate the `msgstr` entries,
+Copy `wp-booking-simple.pot` to
+`lang/wp-booking-simple-<locale>.po`, translate the `msgstr` entries,
 then run `po2mo.php` on it.
 
 ## Regenerating the template after code changes

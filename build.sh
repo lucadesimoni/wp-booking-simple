@@ -2,22 +2,22 @@
 #
 # Build a distributable WordPress plugin ZIP.
 #
-# Produces dist/wp-booking-luca.zip containing only the runtime files, laid out
-# inside a `wp-booking-luca/` folder so it installs cleanly via
+# Produces dist/wp-booking-simple.zip containing only the runtime files, laid out
+# inside a `wp-booking-simple/` folder so it installs cleanly via
 # Plugins → Add New → Upload Plugin.
 #
 # Usage: ./build.sh
 
 set -euo pipefail
 
-SLUG="wp-booking-luca"
+SLUG="wp-booking-simple"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIST="${ROOT}/dist"
 STAGE="${DIST}/${SLUG}"
 
 # Files/folders that make up the shippable plugin.
 INCLUDE=(
-	"wp-booking-system.php"
+	"wp-booking-simple.php"
 	"uninstall.php"
 	"index.php"
 	"readme.txt"

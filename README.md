@@ -1,4 +1,4 @@
-# WP booking Luca
+# WP Booking Simple
 
 A simple, modern booking system for WordPress — built for a single property (a
 Swiss chalet), with an availability calendar, a live-priced booking form, Swiss
@@ -7,7 +7,7 @@ booking through a secure magic link — **no WordPress account required**.
 
 Current version: **1.20.1** · Requires WordPress 5.0+ and PHP 7.4+.
 
-Grab the latest `wp-booking-luca.zip` from the
+Grab the latest `wp-booking-simple.zip` from the
 [**Releases page**](https://github.com/lucadesimoni/wp-booking-simple/releases/latest).
 
 ## Features
@@ -37,10 +37,10 @@ Grab the latest `wp-booking-luca.zip` from the
 
 ## Installation
 
-1. Download `wp-booking-luca.zip` (or build it with `./build.sh`).
+1. Download `wp-booking-simple.zip` (or build it with `./build.sh`).
 2. In WordPress, go to **Plugins → Add New → Upload Plugin**, choose the zip, and
    activate.
-3. Go to **WP booking Luca → Settings** to configure:
+3. Go to **WP Booking Simple → Settings** to configure:
    - Price per adult and per kid (per night)
    - Currency (e.g. CHF, EUR)
    - Maximum capacity
@@ -52,7 +52,7 @@ Grab the latest `wp-booking-luca.zip` from the
 The calendar is available three ways — pick whichever suits your theme:
 
 **1. Gutenberg block (recommended)**
-Edit a page, click **+**, search the **WP booking Luca** category for
+Edit a page, click **+**, search the **WP Booking Simple** category for
 **Booking Calendar** or **Booking Form**. Colours are configurable in the block
 sidebar.
 
@@ -64,18 +64,18 @@ multiple calendars can coexist on one page.
 **3. Shortcodes**
 
 ```
-[wp_booking_form_luca]                 Booking form
-[wp_booking_form_luca title="Book Your Stay"]
+[wp_booking_form_simple]                 Booking form
+[wp_booking_form_simple title="Book Your Stay"]
 
-[wp_booking_calendar_luca]             Availability calendar
-[wp_booking_calendar_luca title="Check Availability"]
+[wp_booking_calendar_simple]             Availability calendar
+[wp_booking_calendar_simple title="Check Availability"]
 
-[wp_booking_manage_luca]              Guest booking-management page (see below)
+[wp_booking_manage_simple]              Guest booking-management page (see below)
 ```
 
 ## Guest booking management (magic link)
 
-Create a page and add the `[wp_booking_manage_luca]` shortcode. Guests reach it
+Create a page and add the `[wp_booking_manage_simple]` shortcode. Guests reach it
 through the tokenised link in their confirmation email:
 
 ```
@@ -87,7 +87,7 @@ QR payment option, and a cancel button — no login required.
 
 ## Email templates
 
-Under **WP booking Luca → Settings → Email Templates** you can edit the
+Under **WP Booking Simple → Settings → Email Templates** you can edit the
 confirmation, cancellation, and reminder emails with a visual builder. Available
 merge tags include `{booking_details}`, `{payment_info}`, `{manage_link}`,
 `{site_name}`, and granular payment tags (`{payment_iban}`, `{payment_twint}`,
@@ -108,22 +108,22 @@ German copy.
 ## Development
 
 - **Tests:** `php tests/standalone/run.php` (standalone, no WP install needed).
-- **Build:** `./build.sh` → `dist/wp-booking-luca.zip`.
+- **Build:** `./build.sh` → `dist/wp-booking-simple.zip`.
 - **Translations:** edit `lang/*.po`, then compile with `php tools/i18n/po2mo.php`.
-- Text domain: `wp-booking-system-luca`. Bookings are stored in a custom table.
+- Text domain: `wp-booking-simple`. Bookings are stored in a custom table.
 
 ## Releasing a new version
 
 1. Bump the version in three places (they must match):
-   - `wp-booking-system.php` — `Version:` header **and**
-     `WP_BOOKING_SYSTEM_LUCA_VERSION` constant
+   - `wp-booking-simple.php` — `Version:` header **and**
+     `WP_BOOKING_SIMPLE_VERSION` constant
    - `readme.txt` — `Stable tag:` line
    - `changelog.txt` — new leading entry
 2. Merge to `main`.
 3. Tag the commit: `git tag v1.X.Y && git push origin v1.X.Y`.
 4. The `Release` workflow verifies the version matches, runs `./build.sh`,
    extracts the matching `changelog.txt` entry, and publishes a GitHub
-   Release with `wp-booking-luca.zip` attached.
+   Release with `wp-booking-simple.zip` attached.
 
 ## License
 

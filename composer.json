@@ -1,18 +1,23 @@
 {
-	"name": "hlashbrooke/wordpress-plugin-template",
+	"name": "lucadesimoni/wp-booking-simple",
+	"description": "A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.",
+	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
-	"description": "A robust code template for creating a standards-compliant WordPress plugin.",
 	"keywords": [
-		"wordpress", "wp", "plugin template"
+		"wordpress",
+		"wp",
+		"booking",
+		"calendar",
+		"reservation"
 	],
 	"support": {
-		"issues": "https://github.com/hlashbrooke/WordPress-Plugin-Template"
+		"issues": "https://github.com/lucadesimoni/wp-booking-simple/issues"
 	},
 	"require": {
-		"php": ">=5.4",
-		"squizlabs/php_codesniffer": "^3.3.1"
-    },
+		"php": ">=7.2"
+	},
 	"require-dev": {
-        "wp-coding-standards/wpcs": "2.1.*"
-    }
+		"squizlabs/php_codesniffer": "^3.7",
+		"wp-coding-standards/wpcs": "^3.0"
+	}
 }

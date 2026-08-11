@@ -5,14 +5,14 @@
 ### Method 1: WordPress Admin Upload (Recommended)
 
 1. **Download the Plugin**
-   - File: `wp-booking-luca.zip`
+   - File: `wp-booking-simple.zip`
    - This is the ready-to-upload package
 
 2. **Upload to WordPress**
    - Log in to your WordPress admin panel
    - Navigate to **Plugins → Add New**
    - Click **Upload Plugin** button at the top
-   - Click **Choose File** and select `wp-booking-luca.zip`
+   - Click **Choose File** and select `wp-booking-simple.zip`
    - Click **Install Now**
 
 3. **Activate the Plugin**
@@ -28,7 +28,7 @@
 
 5. **Create Booking Page**
    - Go to **Pages → Add New**
-   - Add the shortcode: `[wp_booking_form_luca]`
+   - Add the shortcode: `[wp_booking_form_simple]`
    - Publish the page
 
 6. **Add Calendar Widget (Optional)**
@@ -40,7 +40,7 @@
 ### Method 2: FTP Upload
 
 1. **Extract the ZIP file**
-   - Extract `wp-booking-luca.zip` to a folder
+   - Extract `wp-booking-simple.zip` to a folder
    - You should see a `wp-booking-system` folder
 
 2. **Upload via FTP**
@@ -50,7 +50,7 @@
 
 3. **Activate**
    - Go to WordPress Admin → Plugins
-   - Find **WP booking Luca**
+   - Find **WP Booking Simple**
    - Click **Activate**
 
 ## System Requirements
@@ -66,13 +66,13 @@ The plugin includes:
 
 ```
 wp-booking-system/
-├── wp-booking-system.php    (Main plugin file)
+├── wp-booking-simple.php    (Main plugin file)
 ├── index.php                 (Security file)
 ├── uninstall.php            (Cleanup on uninstall)
 ├── LICENSE                  (GPL-2.0 license)
 ├── readme.txt               (Plugin readme)
 ├── includes/                (Core classes)
-│   ├── class-wp-booking-system.php
+│   ├── class-wp-booking-simple.php
 │   ├── class-wp-booking-system-admin.php
 │   ├── class-wp-booking-system-ajax.php
 │   ├── class-wp-booking-system-database.php
@@ -95,9 +95,9 @@ wp-booking-system/
 After installation, verify:
 
 - [ ] Plugin appears in Plugins list
-- [ ] "WP booking Luca" menu appears in admin sidebar
-- [ ] Settings page is accessible (WP booking Luca → Settings)
-- [ ] Calendar page loads (WP booking Luca → Booking Calendar)
+- [ ] "WP Booking Simple" menu appears in admin sidebar
+- [ ] Settings page is accessible (WP Booking Simple → Settings)
+- [ ] Calendar page loads (WP Booking Simple → Booking Calendar)
 - [ ] Booking form shortcode works on frontend
 - [ ] Calendar widget appears in Widgets list
 - [ ] No PHP errors in error log

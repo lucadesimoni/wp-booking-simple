@@ -1,5 +1,5 @@
 /**
- * Admin Styles for WP Booking System
+ * Admin Styles for WP Booking Simple
  */
 
 .wpbs-admin-wrap {
@@ -157,32 +157,32 @@
 
 
 /* Email template block builder */
-.wpbsl-builder-palette {
+.wpbs-builder-palette {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 6px;
 	margin-bottom: 12px;
 }
-.wpbsl-builder-list {
+.wpbs-builder-list {
 	max-width: 720px;
 }
-.wpbsl-builder-empty {
+.wpbs-builder-empty {
 	padding: 16px;
 	border: 1px dashed #c3c4c7;
 	border-radius: 4px;
 	text-align: center;
 	background: #fff;
 }
-.wpbsl-block {
+.wpbs-block {
 	border: 1px solid #c3c4c7;
 	border-radius: 4px;
 	background: #fff;
 	margin-bottom: 10px;
 	padding: 0 12px 12px;
 }
-.wpbsl-block.is-dragging { opacity: 0.5; }
-.wpbsl-block.is-over { border-color: #2271b1; box-shadow: 0 -2px 0 #2271b1 inset; }
-.wpbsl-block-head {
+.wpbs-block.is-dragging { opacity: 0.5; }
+.wpbs-block.is-over { border-color: #2271b1; box-shadow: 0 -2px 0 #2271b1 inset; }
+.wpbs-block-head {
 	display: flex;
 	align-items: center;
 	gap: 8px;
@@ -190,22 +190,22 @@
 	border-bottom: 1px solid #f0f0f1;
 	margin-bottom: 10px;
 }
-.wpbsl-block-handle {
+.wpbs-block-handle {
 	cursor: grab;
 	color: #787c82;
 	font-size: 16px;
 	line-height: 1;
 	user-select: none;
 }
-.wpbsl-block-title {
+.wpbs-block-title {
 	font-weight: 600;
 	flex: 1;
 }
-.wpbsl-block-remove { color: #b32d2e; text-decoration: none; }
-.wpbsl-block-body > * { margin-bottom: 8px; }
-.wpbsl-block-body input,
-.wpbsl-block-body textarea { display: block; }
-.wpbsl-tag-select { margin-top: 4px; }
+.wpbs-block-remove { color: #b32d2e; text-decoration: none; }
+.wpbs-block-body > * { margin-bottom: 8px; }
+.wpbs-block-body input,
+.wpbs-block-body textarea { display: block; }
+.wpbs-tag-select { margin-top: 4px; }
 
 /* Calendar overview: summary cards + legend */
 .wpbs-stat-cards {

@@ -5,13 +5,13 @@
  * Runs without PHPUnit or a WordPress install by stubbing the small slice of
  * the WordPress API the plugin touches at load time. It verifies:
  *
- *   1. The pure booking logic in WP_Booking_System_Luca_Helpers.
+ *   1. The pure booking logic in WP_Booking_Simple_Helpers.
  *   2. That the whole plugin boots with no fatal errors and registers its
  *      shortcodes, blocks and AJAX handlers.
  *
  * Usage: php tests/standalone/run.php
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  */
 
 error_reporting( E_ALL );
@@ -137,70 +137,70 @@ $GLOBALS['wpdb'] = new wpdb_stub();
 /* --------------------------------------------------------------------------
  * 1. Helper unit tests (pure logic — the heart of the booking system).
  * ------------------------------------------------------------------------ */
-require $plugin_dir . '/includes/class-wp-booking-system-luca-helpers.php';
-require $plugin_dir . '/includes/class-wp-booking-system-luca-stats.php';
+require $plugin_dir . '/includes/class-wp-booking-simple-helpers.php';
+require $plugin_dir . '/includes/class-wp-booking-simple-stats.php';
 
 echo "\nHelpers: nights & pricing\n";
-check_equals( 1, WP_Booking_System_Luca_Helpers::calculate_nights( '2026-06-01', '2026-06-02' ), 'one night between consecutive days' );
-check_equals( 7, WP_Booking_System_Luca_Helpers::calculate_nights( '2026-06-01', '2026-06-08' ), 'seven nights for a week' );
-check_equals( 1, WP_Booking_System_Luca_Helpers::calculate_nights( '2026-06-08', '2026-06-01' ), 'reversed dates floor to one night' );
-check_equals( 1, WP_Booking_System_Luca_Helpers::calculate_nights( 'garbage', 'also-bad' ), 'invalid dates floor to one night' );
+check_equals( 1, WP_Booking_Simple_Helpers::calculate_nights( '2026-06-01', '2026-06-02' ), 'one night between consecutive days' );
+check_equals( 7, WP_Booking_Simple_Helpers::calculate_nights( '2026-06-01', '2026-06-08' ), 'seven nights for a week' );
+check_equals( 1, WP_Booking_Simple_Helpers::calculate_nights( '2026-06-08', '2026-06-01' ), 'reversed dates floor to one night' );
+check_equals( 1, WP_Booking_Simple_Helpers::calculate_nights( 'garbage', 'also-bad' ), 'invalid dates floor to one night' );
 
 // 2 adults @50 + 1 kid @25 over 3 nights = (100 + 25) * 3 = 375.
-check_equals( 375.0, WP_Booking_System_Luca_Helpers::calculate_price( '2026-06-01', '2026-06-04', 2, 1, 50, 25 ), '2 adults + 1 kid x 3 nights = 375.00' );
+check_equals( 375.0, WP_Booking_Simple_Helpers::calculate_price( '2026-06-01', '2026-06-04', 2, 1, 50, 25 ), '2 adults + 1 kid x 3 nights = 375.00' );
 // 1 adult @120.5 over 2 nights = 241.0.
-check_equals( 241.0, WP_Booking_System_Luca_Helpers::calculate_price( '2026-06-01', '2026-06-03', 1, 0, 120.5, 60 ), 'fractional nightly rate rounds correctly' );
-check_equals( 0.0, WP_Booking_System_Luca_Helpers::calculate_price( '2026-06-01', '2026-06-04', 0, 0, 50, 25 ), 'zero guests cost nothing' );
+check_equals( 241.0, WP_Booking_Simple_Helpers::calculate_price( '2026-06-01', '2026-06-03', 1, 0, 120.5, 60 ), 'fractional nightly rate rounds correctly' );
+check_equals( 0.0, WP_Booking_Simple_Helpers::calculate_price( '2026-06-01', '2026-06-04', 0, 0, 50, 25 ), 'zero guests cost nothing' );
 
 echo "\nHelpers: date & range validation\n";
-check( WP_Booking_System_Luca_Helpers::is_valid_date( '2026-06-11' ), 'valid Y-m-d date accepted' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_date( '2026-13-40' ), 'impossible date rejected' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_date( '11-06-2026' ), 'wrong format rejected' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_date( '' ), 'empty date rejected' );
-check( WP_Booking_System_Luca_Helpers::is_valid_range( '2026-06-01', '2026-06-05' ), 'check-out after check-in is a valid range' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_range( '2026-06-05', '2026-06-05' ), 'same day is not a valid range' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_range( '2026-06-05', '2026-06-01' ), 'check-out before check-in rejected' );
+check( WP_Booking_Simple_Helpers::is_valid_date( '2026-06-11' ), 'valid Y-m-d date accepted' );
+check( ! WP_Booking_Simple_Helpers::is_valid_date( '2026-13-40' ), 'impossible date rejected' );
+check( ! WP_Booking_Simple_Helpers::is_valid_date( '11-06-2026' ), 'wrong format rejected' );
+check( ! WP_Booking_Simple_Helpers::is_valid_date( '' ), 'empty date rejected' );
+check( WP_Booking_Simple_Helpers::is_valid_range( '2026-06-01', '2026-06-05' ), 'check-out after check-in is a valid range' );
+check( ! WP_Booking_Simple_Helpers::is_valid_range( '2026-06-05', '2026-06-05' ), 'same day is not a valid range' );
+check( ! WP_Booking_Simple_Helpers::is_valid_range( '2026-06-05', '2026-06-01' ), 'check-out before check-in rejected' );
 
 echo "\nHelpers: token, capacity & status\n";
-check( WP_Booking_System_Luca_Helpers::is_valid_token( str_repeat( 'a', 64 ) ), '64-char hex token accepted' );
-check( WP_Booking_System_Luca_Helpers::is_valid_token( bin2hex( random_bytes( 32 ) ) ), 'generated token shape accepted' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_token( str_repeat( 'a', 63 ) ), 'too-short token rejected' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_token( str_repeat( 'z', 64 ) ), 'non-hex token rejected' );
-check( WP_Booking_System_Luca_Helpers::exceeds_capacity( 8, 3, 10 ), '11 guests exceed capacity of 10' );
-check( ! WP_Booking_System_Luca_Helpers::exceeds_capacity( 6, 4, 10 ), 'exactly 10 guests are within capacity' );
-check( WP_Booking_System_Luca_Helpers::is_valid_status( 'confirmed' ), 'confirmed is a valid status' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_status( 'deleted' ), 'unknown status rejected' );
+check( WP_Booking_Simple_Helpers::is_valid_token( str_repeat( 'a', 64 ) ), '64-char hex token accepted' );
+check( WP_Booking_Simple_Helpers::is_valid_token( bin2hex( random_bytes( 32 ) ) ), 'generated token shape accepted' );
+check( ! WP_Booking_Simple_Helpers::is_valid_token( str_repeat( 'a', 63 ) ), 'too-short token rejected' );
+check( ! WP_Booking_Simple_Helpers::is_valid_token( str_repeat( 'z', 64 ) ), 'non-hex token rejected' );
+check( WP_Booking_Simple_Helpers::exceeds_capacity( 8, 3, 10 ), '11 guests exceed capacity of 10' );
+check( ! WP_Booking_Simple_Helpers::exceeds_capacity( 6, 4, 10 ), 'exactly 10 guests are within capacity' );
+check( WP_Booking_Simple_Helpers::is_valid_status( 'confirmed' ), 'confirmed is a valid status' );
+check( ! WP_Booking_Simple_Helpers::is_valid_status( 'deleted' ), 'unknown status rejected' );
 
 echo "\nHelpers: stay length & booking window (entry options)\n";
 // Use a fixed reference date so the window tests are deterministic.
 $ref = strtotime( '2026-06-01' );
-check_equals( 9, WP_Booking_System_Luca_Helpers::days_until( '2026-06-10', $ref ), 'days_until counts whole days ahead' );
-check_equals( -1, WP_Booking_System_Luca_Helpers::days_until( '2026-05-31', $ref ), 'days_until is negative for past dates' );
-check( WP_Booking_System_Luca_Helpers::meets_stay_length( '2026-06-01', '2026-06-04', 2, 7 ), '3 nights satisfies min 2 / max 7' );
-check( ! WP_Booking_System_Luca_Helpers::meets_stay_length( '2026-06-01', '2026-06-02', 2, 7 ), '1 night fails a 2-night minimum' );
-check( ! WP_Booking_System_Luca_Helpers::meets_stay_length( '2026-06-01', '2026-06-15', 2, 7 ), '14 nights fails a 7-night maximum' );
-check( WP_Booking_System_Luca_Helpers::meets_stay_length( '2026-06-01', '2026-06-30', 2, 0 ), 'max 0 means no upper limit on nights' );
-check( WP_Booking_System_Luca_Helpers::is_within_booking_window( '2026-06-08', 7, 365, $ref ), '7 days out meets a 7-day minimum notice' );
-check( ! WP_Booking_System_Luca_Helpers::is_within_booking_window( '2026-06-03', 7, 365, $ref ), '2 days out fails a 7-day minimum notice' );
-check( ! WP_Booking_System_Luca_Helpers::is_within_booking_window( '2027-06-01', 0, 90, $ref ), 'a year out fails a 90-day booking window' );
-check( WP_Booking_System_Luca_Helpers::is_within_booking_window( '2026-12-01', 0, 0, $ref ), 'max 0 means no upper bound on the window' );
+check_equals( 9, WP_Booking_Simple_Helpers::days_until( '2026-06-10', $ref ), 'days_until counts whole days ahead' );
+check_equals( -1, WP_Booking_Simple_Helpers::days_until( '2026-05-31', $ref ), 'days_until is negative for past dates' );
+check( WP_Booking_Simple_Helpers::meets_stay_length( '2026-06-01', '2026-06-04', 2, 7 ), '3 nights satisfies min 2 / max 7' );
+check( ! WP_Booking_Simple_Helpers::meets_stay_length( '2026-06-01', '2026-06-02', 2, 7 ), '1 night fails a 2-night minimum' );
+check( ! WP_Booking_Simple_Helpers::meets_stay_length( '2026-06-01', '2026-06-15', 2, 7 ), '14 nights fails a 7-night maximum' );
+check( WP_Booking_Simple_Helpers::meets_stay_length( '2026-06-01', '2026-06-30', 2, 0 ), 'max 0 means no upper limit on nights' );
+check( WP_Booking_Simple_Helpers::is_within_booking_window( '2026-06-08', 7, 365, $ref ), '7 days out meets a 7-day minimum notice' );
+check( ! WP_Booking_Simple_Helpers::is_within_booking_window( '2026-06-03', 7, 365, $ref ), '2 days out fails a 7-day minimum notice' );
+check( ! WP_Booking_Simple_Helpers::is_within_booking_window( '2027-06-01', 0, 90, $ref ), 'a year out fails a 90-day booking window' );
+check( WP_Booking_Simple_Helpers::is_within_booking_window( '2026-12-01', 0, 0, $ref ), 'max 0 means no upper bound on the window' );
 
 /* --------------------------------------------------------------------------
  * 2. Boot smoke test — load the full plugin and assert registrations.
  * ------------------------------------------------------------------------ */
 echo "\nPlugin boot & registration\n";
-require $plugin_dir . '/wp-booking-system.php';
-$instance = wp_booking_system_luca();
+require $plugin_dir . '/wp-booking-simple.php';
+$instance = wp_booking_simple();
 
-check( $instance instanceof WP_Booking_System_Luca, 'main instance constructed without fatal errors' );
-check( $instance->database instanceof WP_Booking_System_Luca_Database, 'database subsystem initialised' );
-check( $instance->frontend instanceof WP_Booking_System_Luca_Frontend, 'frontend subsystem initialised' );
-check( $instance->email instanceof WP_Booking_System_Luca_Email, 'email subsystem initialised' );
+check( $instance instanceof WP_Booking_Simple, 'main instance constructed without fatal errors' );
+check( $instance->database instanceof WP_Booking_Simple_Database, 'database subsystem initialised' );
+check( $instance->frontend instanceof WP_Booking_Simple_Frontend, 'frontend subsystem initialised' );
+check( $instance->email instanceof WP_Booking_Simple_Email, 'email subsystem initialised' );
 
 $shortcodes = $GLOBALS['_wpbsl_test']['shortcodes'];
-check( isset( $shortcodes['wp_booking_form_luca'] ), 'booking form shortcode registered' );
-check( isset( $shortcodes['wp_booking_manage_luca'] ), 'manage booking shortcode registered' );
-check( isset( $shortcodes['wp_booking_calendar_luca'] ), 'calendar shortcode registered' );
+check( isset( $shortcodes['wp_booking_form_simple'] ), 'booking form shortcode registered' );
+check( isset( $shortcodes['wp_booking_manage_simple'] ), 'manage booking shortcode registered' );
+check( isset( $shortcodes['wp_booking_calendar_simple'] ), 'calendar shortcode registered' );
 
 $actions = $GLOBALS['_wpbsl_test']['actions'];
 foreach ( array( 'wp_ajax_wpbsl_submit_booking', 'wp_ajax_nopriv_wpbsl_submit_booking', 'wp_ajax_wpbsl_cancel_booking', 'wp_ajax_wpbsl_update_status' ) as $hook ) {
@@ -212,8 +212,8 @@ if ( isset( $actions['init'] ) ) {
 	call_user_func( $actions['init'] );
 }
 $blocks = $GLOBALS['_wpbsl_test']['blocks'];
-check( isset( $blocks['wp-booking-system/calendar'] ), 'calendar block registered' );
-check( isset( $blocks['wp-booking-system/form'] ), 'booking form block registered' );
+check( isset( $blocks['wp-booking-simple/calendar'] ), 'calendar block registered' );
+check( isset( $blocks['wp-booking-simple/form'] ), 'booking form block registered' );
 
 check( isset( $actions['phpmailer_init'] ), 'phpmailer_init hooked for SMTP support' );
 check( isset( $actions['wp_ajax_wpbsl_send_test_email'] ), 'test-email AJAX handler hooked' );
@@ -296,13 +296,13 @@ $vars = array(
 	'{site_name}'   => 'Chalet De Simoni',
 );
 $tpl = "Dear {guest_name}, your stay from {check_in} costs {total_price}. — {site_name}";
-$out = WP_Booking_System_Luca_Email::replace_merge_tags( $tpl, $vars );
+$out = WP_Booking_Simple_Email::replace_merge_tags( $tpl, $vars );
 check_equals( 'Dear Anna Rossi, your stay from 01 Jul 2026 costs 375.00 CHF. — Chalet De Simoni', $out, 'all merge tags substituted' );
 check( false === strpos( $out, '{' ), 'no unreplaced tags remain' );
-check_equals( '', WP_Booking_System_Luca_Email::replace_merge_tags( '', $vars ), 'empty template yields empty string' );
-check_equals( 'No tags here', WP_Booking_System_Luca_Email::replace_merge_tags( 'No tags here', $vars ), 'plain text passes through unchanged' );
+check_equals( '', WP_Booking_Simple_Email::replace_merge_tags( '', $vars ), 'empty template yields empty string' );
+check_equals( 'No tags here', WP_Booking_Simple_Email::replace_merge_tags( 'No tags here', $vars ), 'plain text passes through unchanged' );
 // Unknown tags are left intact (so typos are visible rather than silently dropped).
-check_equals( 'Hi {unknown}', WP_Booking_System_Luca_Email::replace_merge_tags( 'Hi {unknown}', $vars ), 'unknown tags are left untouched' );
+check_equals( 'Hi {unknown}', WP_Booking_Simple_Email::replace_merge_tags( 'Hi {unknown}', $vars ), 'unknown tags are left untouched' );
 
 // Defaults are non-empty and reference the key tags they rely on.
 $email_obj = $instance->email;
@@ -325,15 +325,15 @@ $ics = $email_obj->generate_ics( $ics_booking );
 check( 0 === strpos( $ics, "BEGIN:VCALENDAR\r\n" ), 'ICS starts with VCALENDAR + CRLF' );
 check( false !== strpos( $ics, 'DTSTART;VALUE=DATE:20260803' ), 'ICS DTSTART is the check-in date' );
 check( false !== strpos( $ics, 'DTEND;VALUE=DATE:20260808' ), 'ICS DTEND is the check-out date' );
-check( false !== strpos( $ics, 'UID:wpbsl-213@example.test' ), 'ICS UID embeds booking id and host' );
+check( false !== strpos( $ics, 'UID:wpbs-213@example.test' ), 'ICS UID embeds booking id and host' );
 check( false !== strpos( $ics, '#213' ), 'ICS summary includes the booking number' );
 check( false !== strpos( $ics, 'END:VCALENDAR' ), 'ICS terminates with VCALENDAR' );
 check( substr_count( $ics, "\r\n" ) >= 14, 'ICS uses CRLF line endings throughout' );
 
 echo "\nHelpers: owner list parsing\n";
-$owners = WP_Booking_System_Luca_Helpers::parse_owners( "Alberto\nLuca, Anna\n\nLuca" );
+$owners = WP_Booking_Simple_Helpers::parse_owners( "Alberto\nLuca, Anna\n\nLuca" );
 check_equals( array( 'Alberto', 'Luca', 'Anna' ), $owners, 'owners split on newlines/commas, trimmed and de-duplicated' );
-check_equals( array(), WP_Booking_System_Luca_Helpers::parse_owners( '   ' ), 'blank owners list yields empty array' );
+check_equals( array(), WP_Booking_Simple_Helpers::parse_owners( '   ' ), 'blank owners list yields empty array' );
 
 echo "\nEmail: visual block builder rendering\n";
 $block_booking = (object) array(
@@ -353,7 +353,7 @@ $block_booking = (object) array(
 	'notes'      => '',
 	'booking_token' => str_repeat( 'a', 64 ),
 );
-$render = new ReflectionMethod( 'WP_Booking_System_Luca_Email', 'render_blocks' );
+$render = new ReflectionMethod( 'WP_Booking_Simple_Email', 'render_blocks' );
 $render->setAccessible( true );
 $blocks = array(
 	array( 'type' => 'heading', 'text' => 'Hallo {first_name}' ),
@@ -384,22 +384,22 @@ $new_vals = array(
 	'owner' => 'Luca', 'visitors_welcome' => 1, 'total_price' => 500.00, 'status' => 'confirmed',
 	'payment_status' => 'paid', 'payment_method' => 'twint', 'amount_paid' => 500.0, 'notes' => '',
 );
-$diff = WP_Booking_System_Luca_Helpers::compute_changes( $old_booking, $new_vals );
+$diff = WP_Booking_Simple_Helpers::compute_changes( $old_booking, $new_vals );
 check_equals( array( 'check_out', 'owner', 'visitors_welcome', 'status', 'payment_status', 'payment_method', 'amount_paid' ), array_keys( $diff ), 'compute_changes detects exactly the changed fields' );
 check_equals( array( 'from' => 'Alberto', 'to' => 'Luca' ), $diff['owner'], 'owner change captures from/to' );
 check( ! isset( $diff['total_price'] ), 'numeric 500.0 vs 500.00 is not a change' );
 check( ! isset( $diff['first_name'] ), 'unchanged fields are excluded' );
 
 echo "\nHelpers: Swiss IBAN validation\n";
-check( WP_Booking_System_Luca_Helpers::is_valid_ch_iban( 'CH9300762011623852957' ), 'valid CH IBAN accepted' );
-check( WP_Booking_System_Luca_Helpers::is_valid_ch_iban( 'CH93 0076 2011 6238 5295 7' ), 'spaced CH IBAN accepted' );
-check( WP_Booking_System_Luca_Helpers::is_valid_ch_iban( 'LI21088100002324013AA' ), 'valid LI IBAN accepted' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_ch_iban( 'CH9300762011623852958' ), 'wrong check digits rejected' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_ch_iban( 'DE89370400440532013000' ), 'non-CH/LI IBAN rejected' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_ch_iban( 'CH12' ), 'too-short IBAN rejected' );
+check( WP_Booking_Simple_Helpers::is_valid_ch_iban( 'CH9300762011623852957' ), 'valid CH IBAN accepted' );
+check( WP_Booking_Simple_Helpers::is_valid_ch_iban( 'CH93 0076 2011 6238 5295 7' ), 'spaced CH IBAN accepted' );
+check( WP_Booking_Simple_Helpers::is_valid_ch_iban( 'LI21088100002324013AA' ), 'valid LI IBAN accepted' );
+check( ! WP_Booking_Simple_Helpers::is_valid_ch_iban( 'CH9300762011623852958' ), 'wrong check digits rejected' );
+check( ! WP_Booking_Simple_Helpers::is_valid_ch_iban( 'DE89370400440532013000' ), 'non-CH/LI IBAN rejected' );
+check( ! WP_Booking_Simple_Helpers::is_valid_ch_iban( 'CH12' ), 'too-short IBAN rejected' );
 
 echo "\nHelpers: Swiss QR-bill payload\n";
-$qr = WP_Booking_System_Luca_Helpers::build_swiss_qr_payload( array(
+$qr = WP_Booking_Simple_Helpers::build_swiss_qr_payload( array(
 	'iban'    => 'CH93 0076 2011 6238 5295 7',
 	'name'    => 'Chalet Desimoni',
 	'address' => 'Musterstrasse 1',
@@ -420,10 +420,10 @@ check_equals( 'EPD', $rows[30], 'payload ends with EPD trailer' );
 check_equals( 31, count( $rows ), 'payload has the 31 Swiss QR elements' );
 
 echo "\nHelpers: outstanding balance\n";
-check_equals( 200.0, WP_Booking_System_Luca_Helpers::amount_due( (object) array( 'total_price' => 500, 'amount_paid' => 300 ) ), 'due = total - paid' );
-check_equals( 0.0, WP_Booking_System_Luca_Helpers::amount_due( (object) array( 'total_price' => 500, 'amount_paid' => 500 ) ), 'fully paid is zero due' );
-check_equals( 0.0, WP_Booking_System_Luca_Helpers::amount_due( (object) array( 'total_price' => 100, 'amount_paid' => 150 ) ), 'overpaid clamps to zero' );
-check_equals( 80.0, WP_Booking_System_Luca_Helpers::amount_due( array( 'total_price' => 80 ) ), 'missing amount_paid treats as unpaid (array input)' );
+check_equals( 200.0, WP_Booking_Simple_Helpers::amount_due( (object) array( 'total_price' => 500, 'amount_paid' => 300 ) ), 'due = total - paid' );
+check_equals( 0.0, WP_Booking_Simple_Helpers::amount_due( (object) array( 'total_price' => 500, 'amount_paid' => 500 ) ), 'fully paid is zero due' );
+check_equals( 0.0, WP_Booking_Simple_Helpers::amount_due( (object) array( 'total_price' => 100, 'amount_paid' => 150 ) ), 'overpaid clamps to zero' );
+check_equals( 80.0, WP_Booking_Simple_Helpers::amount_due( array( 'total_price' => 80 ) ), 'missing amount_paid treats as unpaid (array input)' );
 
 echo "\nHelpers: date-range filter\n";
 $range_set = array(
@@ -431,10 +431,10 @@ $range_set = array(
 	(object) array( 'check_in' => '2026-08-01' ),
 	(object) array( 'check_in' => '2026-09-30' ),
 );
-check_equals( 3, count( WP_Booking_System_Luca_Helpers::filter_by_date_range( $range_set, '', '' ) ), 'empty bounds return everything' );
-check_equals( 1, count( WP_Booking_System_Luca_Helpers::filter_by_date_range( $range_set, '2026-08-01', '2026-08-31' ) ), 'August window keeps only the August check-in' );
-check_equals( 2, count( WP_Booking_System_Luca_Helpers::filter_by_date_range( $range_set, '2026-08-01', '' ) ), 'open-ended from-bound is inclusive' );
-check_equals( 2, count( WP_Booking_System_Luca_Helpers::filter_by_date_range( $range_set, '', '2026-08-01' ) ), 'open-ended to-bound is inclusive' );
+check_equals( 3, count( WP_Booking_Simple_Helpers::filter_by_date_range( $range_set, '', '' ) ), 'empty bounds return everything' );
+check_equals( 1, count( WP_Booking_Simple_Helpers::filter_by_date_range( $range_set, '2026-08-01', '2026-08-31' ) ), 'August window keeps only the August check-in' );
+check_equals( 2, count( WP_Booking_Simple_Helpers::filter_by_date_range( $range_set, '2026-08-01', '' ) ), 'open-ended from-bound is inclusive' );
+check_equals( 2, count( WP_Booking_Simple_Helpers::filter_by_date_range( $range_set, '', '2026-08-01' ) ), 'open-ended to-bound is inclusive' );
 
 echo "\nStats: dashboard aggregation\n";
 $sample = array(
@@ -443,7 +443,7 @@ $sample = array(
 	(object) array( 'first_name' => 'Bob', 'last_name' => 'Neri', 'email' => 'b@x.com', 'check_in' => '2026-09-10', 'check_out' => '2026-09-12', 'adults' => 4, 'kids' => 0, 'owner' => 'Alberto', 'visitors_welcome' => 0, 'total_price' => 400.0, 'amount_paid' => 0.0, 'payment_method' => '', 'status' => 'confirmed' ),
 	(object) array( 'first_name' => 'Cara', 'last_name' => 'X', 'email' => 'c@x.com', 'check_in' => '2026-09-20', 'check_out' => '2026-09-25', 'adults' => 1, 'kids' => 0, 'owner' => '', 'visitors_welcome' => 0, 'total_price' => 250.0, 'amount_paid' => 0.0, 'payment_method' => '', 'status' => 'cancelled' ),
 );
-$s = WP_Booking_System_Luca_Stats::summarize( $sample );
+$s = WP_Booking_Simple_Stats::summarize( $sample );
 check_equals( 3, $s['totals']['bookings'], 'cancelled bookings excluded from totals (3 of 4)' );
 check_equals( 1, $s['totals']['cancelled'], 'cancelled tally counts the cancelled booking' );
 check_equals( 9, $s['totals']['nights'], 'nights summed across non-cancelled (5+2+2)' );
@@ -458,32 +458,32 @@ check_equals( 7, $s['by_owner'][0]['nights'], 'Alberto owner nights total' );
 check_equals( 1, $s['totals']['visitors'], 'one booking welcomes visitors' );
 
 echo "\nHelpers: status & payment maps\n";
-check_equals( array( 'pending', 'confirmed', 'cancelled' ), WP_Booking_System_Luca_Helpers::allowed_statuses(), 'allowed booking statuses' );
-$ps = WP_Booking_System_Luca_Helpers::payment_statuses();
+check_equals( array( 'pending', 'confirmed', 'cancelled' ), WP_Booking_Simple_Helpers::allowed_statuses(), 'allowed booking statuses' );
+$ps = WP_Booking_Simple_Helpers::payment_statuses();
 check_equals( array( 'unpaid', 'partial', 'paid', 'refunded' ), array_keys( $ps ), 'payment statuses incl. refunded' );
-$pm = WP_Booking_System_Luca_Helpers::payment_methods();
+$pm = WP_Booking_Simple_Helpers::payment_methods();
 check_equals( array( 'bank', 'twint', 'bar' ), array_keys( $pm ), 'payment methods (bank/twint/cash)' );
-check( WP_Booking_System_Luca_Helpers::is_valid_status( 'confirmed' ), 'confirmed is a valid status' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_status( 'refunded' ), 'payment status is not a booking status' );
+check( WP_Booking_Simple_Helpers::is_valid_status( 'confirmed' ), 'confirmed is a valid status' );
+check( ! WP_Booking_Simple_Helpers::is_valid_status( 'refunded' ), 'payment status is not a booking status' );
 
 echo "\nHelpers: IBAN normalization\n";
-check_equals( 'CH2080808007270588572', WP_Booking_System_Luca_Helpers::normalize_iban( ' ch20 8080 8007 2705 8857 2 ' ), 'normalize strips spaces and uppercases' );
-check_equals( '', WP_Booking_System_Luca_Helpers::normalize_iban( '' ), 'empty IBAN normalizes to empty' );
+check_equals( 'CH2080808007270588572', WP_Booking_Simple_Helpers::normalize_iban( ' ch20 8080 8007 2705 8857 2 ' ), 'normalize strips spaces and uppercases' );
+check_equals( '', WP_Booking_Simple_Helpers::normalize_iban( '' ), 'empty IBAN normalizes to empty' );
 
 echo "\nHelpers: tracked fields\n";
-$tf = WP_Booking_System_Luca_Helpers::tracked_fields();
+$tf = WP_Booking_Simple_Helpers::tracked_fields();
 check( isset( $tf['payment_status'], $tf['total_price'], $tf['check_in'], $tf['status'] ), 'tracked fields include the key booking fields' );
 check( is_string( $tf['payment_status'] ) && '' !== $tf['payment_status'], 'each tracked field has a human label' );
 
 echo "\nHelpers: owners parsing edge cases\n";
-check_equals( array( 'Alberto', 'Luca' ), WP_Booking_System_Luca_Helpers::parse_owners( "  Alberto \n\n Luca \n" ), 'owners trimmed and blank lines dropped' );
-check_equals( array(), WP_Booking_System_Luca_Helpers::parse_owners( "\n \n" ), 'all-blank owners list yields empty array' );
+check_equals( array( 'Alberto', 'Luca' ), WP_Booking_Simple_Helpers::parse_owners( "  Alberto \n\n Luca \n" ), 'owners trimmed and blank lines dropped' );
+check_equals( array(), WP_Booking_Simple_Helpers::parse_owners( "\n \n" ), 'all-blank owners list yields empty array' );
 
 echo "\nHelpers: capacity & range edge cases\n";
-check( WP_Booking_System_Luca_Helpers::exceeds_capacity( 8, 3, 10 ), '11 guests exceeds capacity of 10' );
-check( ! WP_Booking_System_Luca_Helpers::exceeds_capacity( 6, 4, 10 ), 'exactly at capacity is allowed' );
-check( ! WP_Booking_System_Luca_Helpers::is_valid_range( '2026-08-05', '2026-08-05' ), 'same-day range is invalid (needs a night)' );
-check( WP_Booking_System_Luca_Helpers::is_valid_range( '2026-08-05', '2026-08-06' ), 'one-night range is valid' );
+check( WP_Booking_Simple_Helpers::exceeds_capacity( 8, 3, 10 ), '11 guests exceeds capacity of 10' );
+check( ! WP_Booking_Simple_Helpers::exceeds_capacity( 6, 4, 10 ), 'exactly at capacity is allowed' );
+check( ! WP_Booking_Simple_Helpers::is_valid_range( '2026-08-05', '2026-08-05' ), 'same-day range is invalid (needs a night)' );
+check( WP_Booking_Simple_Helpers::is_valid_range( '2026-08-05', '2026-08-06' ), 'one-night range is valid' );
 
 /* --------------------------------------------------------------------------
  * Summary.

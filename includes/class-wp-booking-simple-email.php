@@ -2,7 +2,7 @@
 /**
  * Email class for sending booking notifications
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  * @since 1.0.0
  */
 
@@ -11,9 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WP_Booking_System_Luca_Email Class
+ * WP_Booking_Simple_Email Class
  */
-class WP_Booking_System_Luca_Email {
+class WP_Booking_Simple_Email {
 
 	/**
 	 * Constructor.
@@ -101,7 +101,7 @@ class WP_Booking_System_Luca_Email {
 		if ( ! is_email( $to ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Please enter a valid email address to send the test to.', 'wp-booking-system-luca' ),
+				'message' => __( 'Please enter a valid email address to send the test to.', 'wp-booking-simple' ),
 			);
 		}
 
@@ -115,15 +115,15 @@ class WP_Booking_System_Luca_Email {
 
 		$subject = sprintf(
 			/* translators: %s: Site name */
-			__( '[%s] Test email from WP booking Luca', 'wp-booking-system-luca' ),
+			__( '[%s] Test email from WP Booking Simple', 'wp-booking-simple' ),
 			get_bloginfo( 'name' )
 		);
 
 		$smtp_on = (int) get_option( 'wpbsl_smtp_enabled', 0 );
 		$message = sprintf(
 			/* translators: %s: delivery method description */
-			__( 'This is a test email from WP booking Luca. If you received it, your booking notifications are being delivered correctly (%s).', 'wp-booking-system-luca' ),
-			$smtp_on ? sprintf( __( 'via SMTP host %s', 'wp-booking-system-luca' ), get_option( 'wpbsl_smtp_host', '' ) ) : __( 'via the default WordPress mailer', 'wp-booking-system-luca' )
+			__( 'This is a test email from WP Booking Simple. If you received it, your booking notifications are being delivered correctly (%s).', 'wp-booking-simple' ),
+			$smtp_on ? sprintf( __( 'via SMTP host %s', 'wp-booking-simple' ), get_option( 'wpbsl_smtp_host', '' ) ) : __( 'via the default WordPress mailer', 'wp-booking-simple' )
 		);
 
 		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
@@ -135,15 +135,15 @@ class WP_Booking_System_Luca_Email {
 			return array(
 				'success' => true,
 				/* translators: %s: recipient email address */
-				'message' => sprintf( __( 'Test email sent to %s. Please check the inbox (and spam folder).', 'wp-booking-system-luca' ), $to ),
+				'message' => sprintf( __( 'Test email sent to %s. Please check the inbox (and spam folder).', 'wp-booking-simple' ), $to ),
 			);
 		}
 
 		return array(
 			'success' => false,
 			'message' => $error_holder->message
-				? sprintf( __( 'Sending failed: %s', 'wp-booking-system-luca' ), $error_holder->message )
-				: __( 'Sending failed. Check your SMTP settings or install an SMTP plugin.', 'wp-booking-system-luca' ),
+				? sprintf( __( 'Sending failed: %s', 'wp-booking-simple' ), $error_holder->message )
+				: __( 'Sending failed. Check your SMTP settings or install an SMTP plugin.', 'wp-booking-simple' ),
 		);
 	}
 
@@ -178,7 +178,7 @@ class WP_Booking_System_Luca_Email {
 		$to      = $booking->email;
 		$subject = $this->render_subject( 'wpbsl_email_confirmation_subject', $this->default_confirmation_subject(), $booking );
 		$body    = $this->compose_body( 'confirmation', $this->default_confirmation_body(), $booking );
-		$message = $this->wrap_email( __( 'Booking Confirmation', 'wp-booking-system-luca' ), $body );
+		$message = $this->wrap_email( __( 'Booking Confirmation', 'wp-booking-simple' ), $body );
 
 		$attachments = $this->build_ics_attachment( $booking );
 		$result      = wp_mail( $to, $subject, $message, $this->mail_headers(), $attachments );
@@ -206,7 +206,7 @@ class WP_Booking_System_Luca_Email {
 		$to      = $admin_email;
 		$subject = $this->render_subject( 'wpbsl_email_admin_subject', $this->default_admin_subject(), $booking );
 		$body    = $this->compose_body( 'admin', $this->default_admin_body(), $booking );
-		$message = $this->wrap_email( __( 'New Booking Received', 'wp-booking-system-luca' ), $body );
+		$message = $this->wrap_email( __( 'New Booking Received', 'wp-booking-simple' ), $body );
 
 		$attachments = $this->build_ics_attachment( $booking );
 		$result      = wp_mail( $to, $subject, $message, $this->mail_headers(), $attachments );
@@ -267,7 +267,7 @@ class WP_Booking_System_Luca_Email {
 	 * @return string
 	 */
 	private function payment_status_label( $key ) {
-		$map = WP_Booking_System_Luca_Helpers::payment_statuses();
+		$map = WP_Booking_Simple_Helpers::payment_statuses();
 		return isset( $map[ $key ] ) ? $map[ $key ] : ucfirst( (string) $key );
 	}
 
@@ -278,7 +278,7 @@ class WP_Booking_System_Luca_Email {
 	 * @return string
 	 */
 	private function payment_method_label( $key ) {
-		$map = WP_Booking_System_Luca_Helpers::payment_methods();
+		$map = WP_Booking_Simple_Helpers::payment_methods();
 		return isset( $map[ $key ] ) ? $map[ $key ] : '—';
 	}
 
@@ -288,7 +288,7 @@ class WP_Booking_System_Luca_Email {
 	 * @return string
 	 */
 	private function formatted_iban() {
-		$iban = WP_Booking_System_Luca_Helpers::normalize_iban( get_option( 'wpbsl_qr_creditor_iban', '' ) );
+		$iban = WP_Booking_Simple_Helpers::normalize_iban( get_option( 'wpbsl_qr_creditor_iban', '' ) );
 		return '' === $iban ? '' : trim( chunk_split( $iban, 4, ' ' ) );
 	}
 
@@ -305,7 +305,7 @@ class WP_Booking_System_Luca_Email {
 		}
 		$label = trim( (string) get_option( 'wpbsl_qr_twint_label', '' ) );
 		if ( '' === $label ) {
-			$label = __( 'Pay with TWINT', 'wp-booking-system-luca' );
+			$label = __( 'Pay with TWINT', 'wp-booking-simple' );
 		}
 		return '<a href="' . esc_url( $url ) . '" style="color:#8B0000; font-weight:bold;">' . esc_html( $label ) . '</a>';
 	}
@@ -314,11 +314,11 @@ class WP_Booking_System_Luca_Email {
 		$currency   = get_option( 'wpbsl_currency', 'CHF' );
 		$date_fmt   = get_option( 'date_format' );
 		$manage_url = $this->get_manage_url( $booking->booking_token );
-		$admin_url  = admin_url( 'admin.php?page=wp-booking-system-list' );
+		$admin_url  = admin_url( 'admin.php?page=wp-booking-simple-list' );
 
 		$guests = sprintf(
 			/* translators: 1: number of adults, 2: number of kids */
-			__( '%1$d adults, %2$d kids', 'wp-booking-system-luca' ),
+			__( '%1$d adults, %2$d kids', 'wp-booking-simple' ),
 			(int) $booking->adults,
 			(int) $booking->kids
 		);
@@ -329,7 +329,7 @@ class WP_Booking_System_Luca_Email {
 			'{last_name}'       => esc_html( $booking->last_name ),
 			'{guest_name}'      => esc_html( trim( $booking->first_name . ' ' . $booking->last_name ) ),
 			'{guest_email}'     => esc_html( $booking->email ),
-			'{guest_phone}'     => esc_html( $booking->phone ? $booking->phone : __( 'N/A', 'wp-booking-system-luca' ) ),
+			'{guest_phone}'     => esc_html( $booking->phone ? $booking->phone : __( 'N/A', 'wp-booking-simple' ) ),
 			'{check_in}'        => esc_html( date_i18n( $date_fmt, strtotime( $booking->check_in ) ) ),
 			'{check_out}'       => esc_html( date_i18n( $date_fmt, strtotime( $booking->check_out ) ) ),
 			'{adults}'          => (int) $booking->adults,
@@ -338,11 +338,11 @@ class WP_Booking_System_Luca_Email {
 			'{total_price}'     => esc_html( number_format( (float) $booking->total_price, 2 ) . ' ' . $currency ),
 			'{status}'          => esc_html( ucfirst( (string) $booking->status ) ),
 			'{owner}'           => esc_html( isset( $booking->owner ) ? (string) $booking->owner : '' ),
-			'{visitors_welcome}' => esc_html( ( isset( $booking->visitors_welcome ) && (int) $booking->visitors_welcome ) ? __( 'Yes', 'wp-booking-system-luca' ) : __( 'No', 'wp-booking-system-luca' ) ),
+			'{visitors_welcome}' => esc_html( ( isset( $booking->visitors_welcome ) && (int) $booking->visitors_welcome ) ? __( 'Yes', 'wp-booking-simple' ) : __( 'No', 'wp-booking-simple' ) ),
 			'{payment_status}'  => esc_html( $this->payment_status_label( isset( $booking->payment_status ) ? $booking->payment_status : 'unpaid' ) ),
 			'{payment_method}'  => esc_html( $this->payment_method_label( isset( $booking->payment_method ) ? $booking->payment_method : '' ) ),
 			'{amount_paid}'     => esc_html( number_format( isset( $booking->amount_paid ) ? (float) $booking->amount_paid : 0, 2 ) . ' ' . $currency ),
-			'{amount_due}'      => esc_html( number_format( WP_Booking_System_Luca_Helpers::amount_due( $booking ), 2 ) . ' ' . $currency ),
+			'{amount_due}'      => esc_html( number_format( WP_Booking_Simple_Helpers::amount_due( $booking ), 2 ) . ' ' . $currency ),
 			'{notes}'           => esc_html( (string) $booking->notes ),
 			'{payment_account}' => esc_html( (string) get_option( 'wpbsl_qr_creditor_name', '' ) ),
 			'{payment_bank}'    => esc_html( (string) get_option( 'wpbsl_qr_bank_name', '' ) ),
@@ -350,8 +350,8 @@ class WP_Booking_System_Luca_Email {
 			'{payment_twint}'   => $this->twint_paylink_html(),
 			'{payment_twint_url}' => esc_url( (string) get_option( 'wpbsl_qr_twint_paylink', '' ) ),
 			'{manage_url}'      => esc_url( $manage_url ),
-			'{manage_link}'     => '<a href="' . esc_url( $manage_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'Manage Booking', 'wp-booking-system-luca' ) . '</a>',
-			'{admin_link}'      => '<a href="' . esc_url( $admin_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'View Booking', 'wp-booking-system-luca' ) . '</a>',
+			'{manage_link}'     => '<a href="' . esc_url( $manage_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'Manage Booking', 'wp-booking-simple' ) . '</a>',
+			'{admin_link}'      => '<a href="' . esc_url( $admin_url ) . '" class="button" style="display:inline-block; padding:12px 24px; background-color:#8B0000; color:#ffffff; text-decoration:none; border-radius:4px; margin-top:15px;">' . esc_html__( 'View Booking', 'wp-booking-simple' ) . '</a>',
 			'{booking_details}' => $this->render_booking_details( $booking ),
 			'{payment_info}'    => $this->render_payment_info( $booking ),
 		);
@@ -370,13 +370,13 @@ class WP_Booking_System_Luca_Email {
 		ob_start();
 		?>
 		<div class="booking-details" style="background-color:#f7f7f7; color:#333333; padding:15px; margin:15px 0; border-left:4px solid #8B0000;">
-			<h3 style="color:#333333; margin-top:0;"><?php esc_html_e( 'Booking Details', 'wp-booking-system-luca' ); ?></h3>
-			<p><strong><?php esc_html_e( 'Check-in:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( date_i18n( $date_fmt, strtotime( $booking->check_in ) ) ); ?></p>
-			<p><strong><?php esc_html_e( 'Check-out:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( date_i18n( $date_fmt, strtotime( $booking->check_out ) ) ); ?></p>
-			<p><strong><?php esc_html_e( 'Guests:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( $booking->adults . ' ' . __( 'adults', 'wp-booking-system-luca' ) . ', ' . $booking->kids . ' ' . __( 'kids', 'wp-booking-system-luca' ) ); ?></p>
-			<p><strong><?php esc_html_e( 'Total Price:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( number_format( (float) $booking->total_price, 2 ) . ' ' . $currency ); ?></p>
+			<h3 style="color:#333333; margin-top:0;"><?php esc_html_e( 'Booking Details', 'wp-booking-simple' ); ?></h3>
+			<p><strong><?php esc_html_e( 'Check-in:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( date_i18n( $date_fmt, strtotime( $booking->check_in ) ) ); ?></p>
+			<p><strong><?php esc_html_e( 'Check-out:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( date_i18n( $date_fmt, strtotime( $booking->check_out ) ) ); ?></p>
+			<p><strong><?php esc_html_e( 'Guests:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $booking->adults . ' ' . __( 'adults', 'wp-booking-simple' ) . ', ' . $booking->kids . ' ' . __( 'kids', 'wp-booking-simple' ) ); ?></p>
+			<p><strong><?php esc_html_e( 'Total Price:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( number_format( (float) $booking->total_price, 2 ) . ' ' . $currency ); ?></p>
 			<?php if ( ! empty( $booking->notes ) ) : ?>
-				<p><strong><?php esc_html_e( 'Notes:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( $booking->notes ); ?></p>
+				<p><strong><?php esc_html_e( 'Notes:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $booking->notes ); ?></p>
 			<?php endif; ?>
 		</div>
 		<?php
@@ -397,8 +397,8 @@ class WP_Booking_System_Luca_Email {
 			return null;
 		}
 
-		$iban = WP_Booking_System_Luca_Helpers::normalize_iban( get_option( 'wpbsl_qr_creditor_iban', '' ) );
-		if ( ! WP_Booking_System_Luca_Helpers::is_valid_ch_iban( $iban ) ) {
+		$iban = WP_Booking_Simple_Helpers::normalize_iban( get_option( 'wpbsl_qr_creditor_iban', '' ) );
+		if ( ! WP_Booking_Simple_Helpers::is_valid_ch_iban( $iban ) ) {
 			return null;
 		}
 
@@ -407,7 +407,7 @@ class WP_Booking_System_Luca_Email {
 			return null;
 		}
 
-		$due = WP_Booking_System_Luca_Helpers::amount_due( $booking );
+		$due = WP_Booking_Simple_Helpers::amount_due( $booking );
 		if ( $due <= 0 ) {
 			return null;
 		}
@@ -416,7 +416,7 @@ class WP_Booking_System_Luca_Email {
 		$cur = in_array( $cur, array( 'CHF', 'EUR' ), true ) ? $cur : 'CHF';
 		$ref = trim( sprintf( 'Booking #%d %s %s', (int) $booking->id, $booking->first_name, $booking->last_name ) );
 
-		$payload = WP_Booking_System_Luca_Helpers::build_swiss_qr_payload(
+		$payload = WP_Booking_Simple_Helpers::build_swiss_qr_payload(
 			array(
 				'iban'     => $iban,
 				'name'     => get_option( 'wpbsl_qr_creditor_name', '' ),
@@ -456,20 +456,20 @@ class WP_Booking_System_Luca_Email {
 		ob_start();
 		?>
 		<div class="payment-info" style="background-color:#f7f7f7; color:#333333; padding:15px; margin:15px 0; border-left:4px solid #8B0000;">
-			<h3 style="color:#333333; margin-top:0;"><?php esc_html_e( 'Payment Details', 'wp-booking-system-luca' ); ?></h3>
+			<h3 style="color:#333333; margin-top:0;"><?php esc_html_e( 'Payment Details', 'wp-booking-simple' ); ?></h3>
 			<p style="margin:8px 0;">
 				<?php if ( '' !== $ctx['name'] ) : ?><?php echo esc_html( $ctx['name'] ); ?><br /><?php endif; ?>
 				<?php if ( '' !== $ctx['bank'] ) : ?><?php echo esc_html( $ctx['bank'] ); ?><br /><?php endif; ?>
-				<strong><?php esc_html_e( 'IBAN:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( $ctx['iban'] ); ?>
+				<strong><?php esc_html_e( 'IBAN:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $ctx['iban'] ); ?>
 			</p>
 			<p style="margin:8px 0;">
-				<strong><?php esc_html_e( 'Amount:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( $ctx['amount'] ); ?><br />
-				<strong><?php esc_html_e( 'Reference:', 'wp-booking-system-luca' ); ?></strong> <?php echo esc_html( $ctx['reference'] ); ?>
+				<strong><?php esc_html_e( 'Amount:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $ctx['amount'] ); ?><br />
+				<strong><?php esc_html_e( 'Reference:', 'wp-booking-simple' ); ?></strong> <?php echo esc_html( $ctx['reference'] ); ?>
 			</p>
 			<?php if ( '' !== $ctx['paylink'] ) : ?>
-				<p style="margin:10px 0 0;"><?php esc_html_e( 'Or pay by TWINT:', 'wp-booking-system-luca' ); ?> <a href="<?php echo esc_url( $ctx['paylink'] ); ?>" style="color:#8B0000; font-weight:bold;"><?php esc_html_e( 'Pay with TWINT', 'wp-booking-system-luca' ); ?></a></p>
+				<p style="margin:10px 0 0;"><?php esc_html_e( 'Or pay by TWINT:', 'wp-booking-simple' ); ?> <a href="<?php echo esc_url( $ctx['paylink'] ); ?>" style="color:#8B0000; font-weight:bold;"><?php esc_html_e( 'Pay with TWINT', 'wp-booking-simple' ); ?></a></p>
 			<?php endif; ?>
-			<p style="margin:10px 0 0; font-size:13px; color:#666666;"><?php esc_html_e( 'You can also scan the Swiss QR code on your booking page.', 'wp-booking-system-luca' ); ?></p>
+			<p style="margin:10px 0 0; font-size:13px; color:#666666;"><?php esc_html_e( 'You can also scan the Swiss QR code on your booking page.', 'wp-booking-simple' ); ?></p>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -632,7 +632,7 @@ class WP_Booking_System_Luca_Email {
 	 * @return string
 	 */
 	public function default_confirmation_subject() {
-		return __( 'Booking Confirmation - {site_name}', 'wp-booking-system-luca' );
+		return __( 'Booking Confirmation - {site_name}', 'wp-booking-simple' );
 	}
 
 	/**
@@ -643,7 +643,7 @@ class WP_Booking_System_Luca_Email {
 	public function default_confirmation_body() {
 		return __(
 			"Dear {guest_name},\n\nThank you for your booking! We are pleased to confirm your reservation.\n\n{booking_details}\n\n{payment_info}\n\nYou can manage or cancel your booking using the link below:\n\n{manage_link}\n\nWe look forward to welcoming you!\n\nBest regards,\n{site_name}",
-			'wp-booking-system-luca'
+			'wp-booking-simple'
 		);
 	}
 
@@ -653,7 +653,7 @@ class WP_Booking_System_Luca_Email {
 	 * @return string
 	 */
 	public function default_cancellation_subject() {
-		return __( 'Booking Cancelled - {site_name}', 'wp-booking-system-luca' );
+		return __( 'Booking Cancelled - {site_name}', 'wp-booking-simple' );
 	}
 
 	/**
@@ -664,7 +664,7 @@ class WP_Booking_System_Luca_Email {
 	public function default_cancellation_body() {
 		return __(
 			"Dear {guest_name},\n\nYour booking has been cancelled as requested.\n\nWe hope to welcome you in the future!\n\nBest regards,\n{site_name}",
-			'wp-booking-system-luca'
+			'wp-booking-simple'
 		);
 	}
 
@@ -674,7 +674,7 @@ class WP_Booking_System_Luca_Email {
 	 * @return string
 	 */
 	public function default_reminder_subject() {
-		return __( 'Payment reminder - {site_name}', 'wp-booking-system-luca' );
+		return __( 'Payment reminder - {site_name}', 'wp-booking-simple' );
 	}
 
 	/**
@@ -685,7 +685,7 @@ class WP_Booking_System_Luca_Email {
 	public function default_reminder_body() {
 		return __(
 			"Dear {guest_name},\n\nThis is a friendly reminder about the balance for your booking.\n\n{booking_details}\n\nAmount paid: {amount_paid}\nOutstanding balance: {amount_due}\n\nYou can review your booking using the link below:\n\n{manage_link}\n\nThank you,\n{site_name}",
-			'wp-booking-system-luca'
+			'wp-booking-simple'
 		);
 	}
 
@@ -695,7 +695,7 @@ class WP_Booking_System_Luca_Email {
 	 * @return string
 	 */
 	public function default_admin_subject() {
-		return __( 'New Booking Received - {site_name}', 'wp-booking-system-luca' );
+		return __( 'New Booking Received - {site_name}', 'wp-booking-simple' );
 	}
 
 	/**
@@ -706,7 +706,7 @@ class WP_Booking_System_Luca_Email {
 	public function default_admin_body() {
 		return __(
 			"A new booking has been submitted.\n\nGuest: {guest_name}\nEmail: {guest_email}\nPhone: {guest_phone}\nOwner: {owner}\nVisitors welcome: {visitors_welcome}\nStatus: {status}\n\n{booking_details}\n\n{admin_link}",
-			'wp-booking-system-luca'
+			'wp-booking-simple'
 		);
 	}
 
@@ -741,14 +741,14 @@ class WP_Booking_System_Luca_Email {
 
 		$summary = sprintf(
 			/* translators: 1: site name, 2: booking id */
-			__( '%1$s - Booking #%2$d', 'wp-booking-system-luca' ),
+			__( '%1$s - Booking #%2$d', 'wp-booking-simple' ),
 			$site,
 			$id
 		);
 
 		$description = sprintf(
 			/* translators: 1: guest name, 2: number of guests */
-			__( 'Booking for %1$s (%2$d guests).', 'wp-booking-system-luca' ),
+			__( 'Booking for %1$s (%2$d guests).', 'wp-booking-simple' ),
 			trim( $booking->first_name . ' ' . $booking->last_name ),
 			(int) $booking->adults + (int) $booking->kids
 		);
@@ -756,11 +756,11 @@ class WP_Booking_System_Luca_Email {
 		$lines = array(
 			'BEGIN:VCALENDAR',
 			'VERSION:2.0',
-			'PRODID:-//WP booking Luca//EN',
+			'PRODID:-//WP Booking Simple//EN',
 			'CALSCALE:GREGORIAN',
 			'METHOD:PUBLISH',
 			'BEGIN:VEVENT',
-			'UID:wpbsl-' . $id . '@' . $host,
+			'UID:wpbs-' . $id . '@' . $host,
 			'DTSTAMP:' . gmdate( 'Ymd\THis\Z' ),
 			'DTSTART;VALUE=DATE:' . $start,
 			'DTEND;VALUE=DATE:' . $end,
@@ -820,7 +820,7 @@ class WP_Booking_System_Luca_Email {
 		$to      = $booking->email;
 		$subject = $this->render_subject( 'wpbsl_email_cancellation_subject', $this->default_cancellation_subject(), $booking );
 		$body    = $this->compose_body( 'cancellation', $this->default_cancellation_body(), $booking );
-		$message = $this->wrap_email( __( 'Booking Cancelled', 'wp-booking-system-luca' ), $body );
+		$message = $this->wrap_email( __( 'Booking Cancelled', 'wp-booking-simple' ), $body );
 
 		return wp_mail( $to, $subject, $message, $this->mail_headers() );
 	}
@@ -835,7 +835,7 @@ class WP_Booking_System_Luca_Email {
 		$to      = $booking->email;
 		$subject = $this->render_subject( 'wpbsl_email_reminder_subject', $this->default_reminder_subject(), $booking );
 		$body    = $this->compose_body( 'reminder', $this->default_reminder_body(), $booking );
-		$message = $this->wrap_email( __( 'Payment Reminder', 'wp-booking-system-luca' ), $body );
+		$message = $this->wrap_email( __( 'Payment Reminder', 'wp-booking-simple' ), $body );
 
 		return wp_mail( $to, $subject, $message, $this->mail_headers() );
 	}

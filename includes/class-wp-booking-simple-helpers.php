@@ -5,7 +5,7 @@
  * Pure logic (pricing, validation, formatting) lives here so it can be
  * unit-tested without a running WordPress instance.
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  * @since 1.0.0
  */
 
@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WP_Booking_System_Luca_Helpers Class
+ * WP_Booking_Simple_Helpers Class
  */
-class WP_Booking_System_Luca_Helpers {
+class WP_Booking_Simple_Helpers {
 
 	/**
 	 * Normalise an IBAN: strip spaces, uppercase.
@@ -124,10 +124,10 @@ class WP_Booking_System_Luca_Helpers {
 	 */
 	public static function payment_statuses() {
 		return array(
-			'unpaid'   => __( 'Unpaid', 'wp-booking-system-luca' ),
-			'partial'  => __( 'Partially paid', 'wp-booking-system-luca' ),
-			'paid'     => __( 'Paid', 'wp-booking-system-luca' ),
-			'refunded' => __( 'Refunded', 'wp-booking-system-luca' ),
+			'unpaid'   => __( 'Unpaid', 'wp-booking-simple' ),
+			'partial'  => __( 'Partially paid', 'wp-booking-simple' ),
+			'paid'     => __( 'Paid', 'wp-booking-simple' ),
+			'refunded' => __( 'Refunded', 'wp-booking-simple' ),
 		);
 	}
 
@@ -138,9 +138,9 @@ class WP_Booking_System_Luca_Helpers {
 	 */
 	public static function payment_methods() {
 		return array(
-			'bank'  => __( 'Bank', 'wp-booking-system-luca' ),
-			'twint' => __( 'TWINT', 'wp-booking-system-luca' ),
-			'bar'   => __( 'Cash (Bar)', 'wp-booking-system-luca' ),
+			'bank'  => __( 'Bank', 'wp-booking-simple' ),
+			'twint' => __( 'TWINT', 'wp-booking-simple' ),
+			'bar'   => __( 'Cash (Bar)', 'wp-booking-simple' ),
 		);
 	}
 
@@ -152,22 +152,22 @@ class WP_Booking_System_Luca_Helpers {
 	 */
 	public static function tracked_fields() {
 		return array(
-			'first_name'       => __( 'First name', 'wp-booking-system-luca' ),
-			'last_name'        => __( 'Last name', 'wp-booking-system-luca' ),
-			'email'            => __( 'Email', 'wp-booking-system-luca' ),
-			'phone'            => __( 'Phone', 'wp-booking-system-luca' ),
-			'check_in'         => __( 'Check-in', 'wp-booking-system-luca' ),
-			'check_out'        => __( 'Check-out', 'wp-booking-system-luca' ),
-			'adults'           => __( 'Adults', 'wp-booking-system-luca' ),
-			'kids'             => __( 'Kids', 'wp-booking-system-luca' ),
-			'owner'            => __( 'Owner', 'wp-booking-system-luca' ),
-			'visitors_welcome' => __( 'Visitors welcome', 'wp-booking-system-luca' ),
-			'total_price'      => __( 'Total price', 'wp-booking-system-luca' ),
-			'status'           => __( 'Status', 'wp-booking-system-luca' ),
-			'payment_status'   => __( 'Payment status', 'wp-booking-system-luca' ),
-			'payment_method'   => __( 'Payment method', 'wp-booking-system-luca' ),
-			'amount_paid'      => __( 'Amount paid', 'wp-booking-system-luca' ),
-			'notes'            => __( 'Notes', 'wp-booking-system-luca' ),
+			'first_name'       => __( 'First name', 'wp-booking-simple' ),
+			'last_name'        => __( 'Last name', 'wp-booking-simple' ),
+			'email'            => __( 'Email', 'wp-booking-simple' ),
+			'phone'            => __( 'Phone', 'wp-booking-simple' ),
+			'check_in'         => __( 'Check-in', 'wp-booking-simple' ),
+			'check_out'        => __( 'Check-out', 'wp-booking-simple' ),
+			'adults'           => __( 'Adults', 'wp-booking-simple' ),
+			'kids'             => __( 'Kids', 'wp-booking-simple' ),
+			'owner'            => __( 'Owner', 'wp-booking-simple' ),
+			'visitors_welcome' => __( 'Visitors welcome', 'wp-booking-simple' ),
+			'total_price'      => __( 'Total price', 'wp-booking-simple' ),
+			'status'           => __( 'Status', 'wp-booking-simple' ),
+			'payment_status'   => __( 'Payment status', 'wp-booking-simple' ),
+			'payment_method'   => __( 'Payment method', 'wp-booking-simple' ),
+			'amount_paid'      => __( 'Amount paid', 'wp-booking-simple' ),
+			'notes'            => __( 'Notes', 'wp-booking-simple' ),
 		);
 	}
 

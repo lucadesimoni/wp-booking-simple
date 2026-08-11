@@ -1,5 +1,5 @@
 /**
- * Admin JavaScript for WP Booking System
+ * Admin JavaScript for WP Booking Simple
  */
 
 (function($) {
@@ -35,7 +35,7 @@
 		}
 
 		// Insert German starter email templates
-		$('#wpbsl-insert-de').on('click', insertGermanTemplates);
+		$('#wpbs-insert-de').on('click', insertGermanTemplates);
 	});
 
 	/**
@@ -49,7 +49,7 @@
 		} catch (e) {
 			try { data = JSON.parse(window.atob(this.getAttribute('data-templates'))); } catch (e2) { return; }
 		}
-		var i18n = (window.wpbslAdmin && wpbslAdmin.i18n) || {};
+		var i18n = (window.wpbsAdmin && wpbsAdmin.i18n) || {};
 		if (!window.confirm(i18n.confirmInsertDe || 'Replace the confirmation, cancellation and reminder email text with the German starter?')) {
 			return;
 		}
@@ -59,7 +59,7 @@
 			if (subj) { subj.value = data[slug].subject; }
 			if (body) { body.value = data[slug].body; }
 		});
-		var msg = document.getElementById('wpbsl-insert-de-msg');
+		var msg = document.getElementById('wpbs-insert-de-msg');
 		if (msg) {
 			msg.style.color = '#0a7d28';
 			msg.textContent = i18n.insertedDe || 'Inserted — remember to click Save Settings.';
@@ -114,16 +114,16 @@
 		const status = link.data('status');
 		const row = link.closest('tr');
 
-		if (status === 'cancelled' && !confirm(wpbslAdmin.i18n.confirmCancel)) {
+		if (status === 'cancelled' && !confirm(wpbsAdmin.i18n.confirmCancel)) {
 			return;
 		}
 
 		$.ajax({
-			url: wpbslAdmin.ajaxUrl,
+			url: wpbsAdmin.ajaxUrl,
 			type: 'POST',
 			data: {
 				action: 'wpbsl_update_status',
-				nonce: wpbslAdmin.nonce,
+				nonce: wpbsAdmin.nonce,
 				id: bookingId,
 				status: status
 			},
@@ -142,11 +142,11 @@
 						row.find('.wpbs-set-status[data-status="cancelled"]').remove();
 					}
 				} else {
-					alert((response.data && response.data.message) || wpbslAdmin.i18n.genericError);
+					alert((response.data && response.data.message) || wpbsAdmin.i18n.genericError);
 				}
 			},
 			error: function() {
-				alert(wpbslAdmin.i18n.genericError);
+				alert(wpbsAdmin.i18n.genericError);
 			}
 		});
 	}
@@ -187,11 +187,11 @@
 			},
 			events: function(fetchInfo, successCallback, failureCallback) {
 				$.ajax({
-					url: wpbslAdmin.ajaxUrl,
+					url: wpbsAdmin.ajaxUrl,
 					type: 'GET',
 					data: {
 						action: 'wpbsl_get_bookings',
-						nonce: wpbslAdmin.nonce,
+						nonce: wpbsAdmin.nonce,
 						start: fetchInfo.startStr,
 						end: fetchInfo.endStr
 					},
@@ -228,12 +228,12 @@
 		}
 
 		$.ajax({
-			url: wpbslAdmin.ajaxUrl,
+			url: wpbsAdmin.ajaxUrl,
 			type: 'POST',
-			data: { action: 'wpbsl_get_booking', nonce: wpbslAdmin.nonce, id: bookingId },
+			data: { action: 'wpbsl_get_booking', nonce: wpbsAdmin.nonce, id: bookingId },
 			success: function(response) {
 				if (!response.success) {
-					alert((response.data && response.data.message) || wpbslAdmin.i18n.genericError);
+					alert((response.data && response.data.message) || wpbsAdmin.i18n.genericError);
 					return;
 				}
 				populateModal(response.data.booking);
@@ -241,7 +241,7 @@
 				$('#wpbs-edit-msg').text('');
 				openModal();
 			},
-			error: function() { alert(wpbslAdmin.i18n.genericError); }
+			error: function() { alert(wpbsAdmin.i18n.genericError); }
 		});
 	}
 
@@ -262,7 +262,7 @@
 		const $list = $('#wpbs-history-list');
 		$list.empty();
 		if (!history || !history.length) {
-			$list.append($('<p class="description"></p>').text(wpbslAdmin.i18n.noHistory));
+			$list.append($('<p class="description"></p>').text(wpbsAdmin.i18n.noHistory));
 			return;
 		}
 		history.forEach(function(rev) {
@@ -301,7 +301,7 @@
 			const diff = (new Date(co) - new Date(ci)) / 86400000;
 			nights = Math.max(1, Math.round(diff));
 		}
-		const price = (adults * (wpbslAdmin.priceAdult || 0) + kids * (wpbslAdmin.priceKid || 0)) * nights;
+		const price = (adults * (wpbsAdmin.priceAdult || 0) + kids * (wpbsAdmin.priceKid || 0)) * nights;
 		$('#wpbs-f-total_price').val(price.toFixed(2));
 	}
 
@@ -311,17 +311,17 @@
 		const $msg = $('#wpbs-edit-msg');
 		const $btn = $('#wpbs-send-reminder');
 		$btn.prop('disabled', true);
-		$msg.css('color', '#666').text(wpbslAdmin.i18n.sending);
+		$msg.css('color', '#666').text(wpbsAdmin.i18n.sending);
 		$.ajax({
-			url: wpbslAdmin.ajaxUrl,
+			url: wpbsAdmin.ajaxUrl,
 			type: 'POST',
-			data: { action: 'wpbsl_send_payment_reminder', nonce: wpbslAdmin.nonce, id: id },
+			data: { action: 'wpbsl_send_payment_reminder', nonce: wpbsAdmin.nonce, id: id },
 			success: function(response) {
 				const ok = response.success;
 				$msg.css('color', ok ? '#00a32a' : '#d63638')
-					.text((response.data && response.data.message) || wpbslAdmin.i18n.genericError);
+					.text((response.data && response.data.message) || wpbsAdmin.i18n.genericError);
 			},
-			error: function() { $msg.css('color', '#d63638').text(wpbslAdmin.i18n.genericError); },
+			error: function() { $msg.css('color', '#d63638').text(wpbsAdmin.i18n.genericError); },
 			complete: function() { $btn.prop('disabled', false); }
 		});
 	}
@@ -329,21 +329,21 @@
 	function saveBooking(e) {
 		e.preventDefault();
 		const $msg = $('#wpbs-edit-msg');
-		$msg.css('color', '#666').text(wpbslAdmin.i18n.saving);
+		$msg.css('color', '#666').text(wpbsAdmin.i18n.saving);
 		$.ajax({
-			url: wpbslAdmin.ajaxUrl,
+			url: wpbsAdmin.ajaxUrl,
 			type: 'POST',
-			data: $('#wpbs-edit-form').serialize() + '&action=wpbsl_update_booking&nonce=' + encodeURIComponent(wpbslAdmin.nonce),
+			data: $('#wpbs-edit-form').serialize() + '&action=wpbsl_update_booking&nonce=' + encodeURIComponent(wpbsAdmin.nonce),
 			success: function(response) {
 				if (response.success) {
 					$msg.css('color', '#00a32a').text(response.data.message);
 					renderHistory(response.data.history);
 					setTimeout(function() { window.location.reload(); }, 700);
 				} else {
-					$msg.css('color', '#d63638').text((response.data && response.data.message) || wpbslAdmin.i18n.genericError);
+					$msg.css('color', '#d63638').text((response.data && response.data.message) || wpbsAdmin.i18n.genericError);
 				}
 			},
-			error: function() { $msg.css('color', '#d63638').text(wpbslAdmin.i18n.genericError); }
+			error: function() { $msg.css('color', '#d63638').text(wpbsAdmin.i18n.genericError); }
 		});
 	}
 
@@ -353,7 +353,7 @@
 	function handleDeleteBooking(e) {
 		e.preventDefault();
 
-		if (!confirm(wpbslAdmin.i18n.confirmDelete)) {
+		if (!confirm(wpbsAdmin.i18n.confirmDelete)) {
 			return;
 		}
 
@@ -362,11 +362,11 @@
 		const row = link.closest('tr');
 
 		$.ajax({
-			url: wpbslAdmin.ajaxUrl,
+			url: wpbsAdmin.ajaxUrl,
 			type: 'POST',
 			data: {
 				action: 'wpbsl_delete_booking',
-				nonce: wpbslAdmin.nonce,
+				nonce: wpbsAdmin.nonce,
 				id: bookingId
 			},
 			success: function(response) {

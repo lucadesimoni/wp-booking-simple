@@ -5,10 +5,10 @@
 ## Issues Found and Fixed
 
 ### 1. ✅ Naming Inconsistencies - FIXED
-**Problem**: Plugin name "WP Booking System" appeared in multiple files instead of "WP booking Luca"
+**Problem**: Plugin name "WP Booking Simple" appeared in multiple files instead of "WP Booking Simple"
 
 **Files Fixed**:
-- `wp-booking-system.php` - Plugin header
+- `wp-booking-simple.php` - Plugin header
 - `includes/class-wp-booking-system-admin.php` - Admin menu title
 - `readme.txt` - Display name
 - `TESTING_GUIDE.md` - All references updated
@@ -141,7 +141,7 @@
 
 ## Files Modified
 
-1. `wp-booking-system.php` - Plugin name
+1. `wp-booking-simple.php` - Plugin name
 2. `includes/class-wp-booking-system-admin.php` - Menu title, settings
 3. `includes/class-wp-booking-system-ajax.php` - Capacity validation
 4. `includes/class-wp-booking-system-email.php` - Admin notifications

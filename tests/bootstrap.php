@@ -6,7 +6,7 @@
  * `wp-env` (https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/)
  * or the `install-wp-tests.sh` script. Set WP_TESTS_DIR to its location.
  *
- * @package WP_Booking_System_Luca
+ * @package WP_Booking_Simple
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
@@ -32,7 +32,7 @@ require_once "{$_tests_dir}/includes/functions.php";
  * Load the plugin under test.
  */
 function _manually_load_wpbsl_plugin() {
-	require dirname( __DIR__ ) . '/wp-booking-system.php';
+	require dirname( __DIR__ ) . '/wp-booking-simple.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_wpbsl_plugin' );
 
