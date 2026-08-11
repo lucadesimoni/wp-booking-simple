@@ -2,7 +2,16 @@
 /**
  * Consistency Check Script
  * Checks for naming inconsistencies in the plugin
+ *
+ * Development helper only. It is not part of the distributed plugin (see the
+ * INCLUDE list in build.sh), but a plugin installed by cloning the repository
+ * would expose it at a public URL, so refuse to run outside the command line.
  */
+
+if ( 'cli' !== PHP_SAPI ) {
+	header( 'HTTP/1.0 403 Forbidden' );
+	exit;
+}
 
 $baseDir = __DIR__;
 $issues = array();

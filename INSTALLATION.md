@@ -5,14 +5,14 @@
 ### Method 1: WordPress Admin Upload (Recommended)
 
 1. **Download the Plugin**
-   - File: `wp-booking-system-v1.0.0.zip`
+   - File: `wp-booking-luca.zip`
    - This is the ready-to-upload package
 
 2. **Upload to WordPress**
    - Log in to your WordPress admin panel
    - Navigate to **Plugins → Add New**
    - Click **Upload Plugin** button at the top
-   - Click **Choose File** and select `wp-booking-system-v1.0.0.zip`
+   - Click **Choose File** and select `wp-booking-luca.zip`
    - Click **Install Now**
 
 3. **Activate the Plugin**
@@ -28,7 +28,7 @@
 
 5. **Create Booking Page**
    - Go to **Pages → Add New**
-   - Add the shortcode: `[wp_booking_form]`
+   - Add the shortcode: `[wp_booking_form_luca]`
    - Publish the page
 
 6. **Add Calendar Widget (Optional)**
@@ -40,7 +40,7 @@
 ### Method 2: FTP Upload
 
 1. **Extract the ZIP file**
-   - Extract `wp-booking-system-v1.0.0.zip` to a folder
+   - Extract `wp-booking-luca.zip` to a folder
    - You should see a `wp-booking-system` folder
 
 2. **Upload via FTP**
