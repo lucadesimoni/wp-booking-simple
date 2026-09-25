@@ -92,9 +92,27 @@ class WP_Booking_Simple_Block {
 		wp_register_script(
 			'wp-booking-simple-block',
 			WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/js/block.js',
-			array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n' ),
+			array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-server-side-render' ),
 			WP_BOOKING_SIMPLE_VERSION,
 			true
+		);
+
+		// Shared by both blocks: API v3 (required by the iframed editor), the
+		// front-end stylesheet (so previews in the editor canvas are styled),
+		// and the layout tools of the block editor and Spectra.
+		$shared = array(
+			'api_version'   => 3,
+			'style'         => 'wp-booking-simple-frontend',
+			'editor_script' => 'wp-booking-simple-block',
+			'supports'      => array(
+				'html'    => false,
+				'align'   => array( 'wide', 'full' ),
+				'anchor'  => true,
+				'spacing' => array(
+					'margin'  => true,
+					'padding' => true,
+				),
+			),
 		);
 
 		// Booking calendar block.
@@ -104,9 +122,9 @@ class WP_Booking_Simple_Block {
 			'category'        => 'wp-booking-simple',
 			'icon'            => 'calendar-alt',
 			'keywords'        => array( 'booking', 'calendar', 'availability', 'chalet' ),
-			'editor_script'   => 'wp-booking-simple-block',
 			'render_callback' => array( $this, 'render_calendar_block' ),
 			'attributes'      => array(
+				'anchor'      => array( 'type' => 'string' ),
 				'title'       => array(
 					'type'    => 'string',
 					'default' => __( 'Booking Calendar', 'wp-booking-simple' ),
@@ -123,9 +141,9 @@ class WP_Booking_Simple_Block {
 			'category'        => 'wp-booking-simple',
 			'icon'            => 'calendar',
 			'keywords'        => array( 'booking', 'reservation', 'form', 'chalet' ),
-			'editor_script'   => 'wp-booking-simple-block',
 			'render_callback' => array( $this, 'render_form_block' ),
 			'attributes'      => array(
+				'anchor'        => array( 'type' => 'string' ),
 				'title'         => array(
 					'type'    => 'string',
 					'default' => __( 'Book Your Stay', 'wp-booking-simple' ),
@@ -137,13 +155,16 @@ class WP_Booking_Simple_Block {
 			),
 		);
 
+		$calendar_args = array_merge( $shared, $calendar_args );
+		$form_args     = array_merge( $shared, $form_args );
+
 		register_block_type( 'wp-booking-simple/calendar', $calendar_args );
 		register_block_type( 'wp-booking-simple/form', $form_args );
 
 		// Legacy names, kept renderable for content saved before the rename but
 		// hidden from the inserter so each block appears only once when adding.
-		$calendar_args['supports'] = array( 'inserter' => false );
-		$form_args['supports']     = array( 'inserter' => false );
+		$calendar_args['supports']['inserter'] = false;
+		$form_args['supports']['inserter']     = false;
 
 		register_block_type( 'wp-booking-system/calendar', $calendar_args );
 		register_block_type( 'wp-booking-system/form', $form_args );
@@ -175,7 +196,7 @@ class WP_Booking_Simple_Block {
 			$rules[] = '.wpbs-legend-booked{background-color:' . $booked . '}';
 		}
 
-		return $this->wrap_with_styles( $html, $rules );
+		return $this->wrap_with_styles( $html, $rules, $attributes );
 	}
 
 	/**
@@ -209,49 +230,57 @@ class WP_Booking_Simple_Block {
 			$rules[] = '.wpbs-booking-form .wpbs-submit-button:hover{background-color:' . $btn_hover . '}';
 		}
 
-		return $this->wrap_with_styles( $html, $rules );
+		return $this->wrap_with_styles( $html, $rules, $attributes );
 	}
 
 	/**
-	 * Validate a CSS colour string (hex or rgb/rgba); returns '' if invalid.
+	 * Validate a CSS colour. Palette variables such as
+	 * `var(--ast-global-color-0)` (Astra) are accepted as well - that is what
+	 * the block colour pickers hand out on Astra and block themes.
 	 *
 	 * @param string $color Raw colour value.
 	 * @return string
 	 */
 	private function sanitize_css_color( $color ) {
-		$color = trim( (string) $color );
-		if ( '' === $color ) {
-			return '';
-		}
-		if ( preg_match( '/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/', $color ) ) {
-			return $color;
-		}
-		if ( preg_match( '/^rgba?\(\s*[0-9.,%\s]+\)$/', $color ) ) {
-			return $color;
-		}
-		return '';
+		return WP_Booking_Simple_Theme::sanitize_color( $color );
 	}
 
 	/**
-	 * Wrap rendered block HTML in a uniquely-scoped container and prepend a
+	 * Wrap rendered block HTML in a uniquely-scoped container carrying the
+	 * block supports (alignment, spacing, anchor, custom class) and prepend a
 	 * <style> block so per-block colour choices apply without leaking to other
 	 * instances. Selectors are scoped under the unique wrapper class.
 	 *
-	 * @param string $html  Rendered HTML.
-	 * @param array  $rules CSS rule strings (without the wrapper prefix).
+	 * @param string $html       Rendered HTML.
+	 * @param array  $rules      CSS rule strings (without the wrapper prefix).
+	 * @param array  $attributes Block attributes.
 	 * @return string
 	 */
-	private function wrap_with_styles( $html, $rules ) {
-		if ( empty( $rules ) ) {
-			return $html;
-		}
-
+	private function wrap_with_styles( $html, $rules, $attributes = array() ) {
 		$id    = wp_unique_id( 'wpbs-block-' );
 		$style = '';
 		foreach ( $rules as $rule ) {
-			$style .= '.' . $id . ' ' . $rule;
+			// Scope every selector of a comma-separated list, not just the first.
+			list( $selectors, $body ) = explode( '{', $rule, 2 );
+			$scoped = array();
+			foreach ( explode( ',', $selectors ) as $selector ) {
+				$scoped[] = '.' . $id . ' ' . trim( $selector );
+			}
+			$style .= implode( ',', $scoped ) . '{' . $body;
 		}
 
-		return '<style>' . $style . '</style><div class="wpbs-block ' . esc_attr( $id ) . '">' . $html . '</div>';
+		$extra = array( 'class' => 'wpbs-block ' . $id );
+		if ( ! empty( $attributes['anchor'] ) ) {
+			$extra['id'] = sanitize_html_class( $attributes['anchor'] );
+		}
+
+		// Outside a block render (e.g. called directly) there are no supports.
+		if ( function_exists( 'get_block_wrapper_attributes' ) && class_exists( 'WP_Block_Supports' ) && ! empty( WP_Block_Supports::$block_to_render ) ) {
+			$wrapper = get_block_wrapper_attributes( $extra );
+		} else {
+			$wrapper = 'class="' . esc_attr( $extra['class'] ) . '"' . ( isset( $extra['id'] ) ? ' id="' . esc_attr( $extra['id'] ) . '"' : '' );
+		}
+
+		return ( '' !== $style ? '<style>' . $style . '</style>' : '' ) . '<div ' . $wrapper . '>' . $html . '</div>';
 	}
 }

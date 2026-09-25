@@ -3,6 +3,24 @@
  * Modern, clean design matching famiglia-desimoni.ch aesthetic
  */
 
+/*
+ * Design tokens. The defaults are the plugin's own dark-red palette; the
+ * "Theme colors" scheme (Settings > Booking Form) re-points them at the
+ * active theme: Astra's global palette, Elementor's global colors or the
+ * block theme's presets.
+ */
+:root {
+	--wpbs-primary: #8B0000;
+	--wpbs-primary-dark: #6B0000;
+	--wpbs-booked: var(--wpbs-primary);
+	--wpbs-button-bg: var(--wpbs-primary);
+	--wpbs-button-bg-hover: var(--wpbs-primary-dark);
+	--wpbs-button-color: #ffffff;
+	--wpbs-button-radius: 4px;
+	--wpbs-heading-color: #333;
+	--wpbs-heading-font: inherit;
+}
+
 .wpbs-booking-form-wrapper {
 	max-width: 800px;
 	margin: 40px auto;
@@ -13,9 +31,10 @@
 }
 
 .wpbs-form-title {
+	font-family: var(--wpbs-heading-font);
 	font-size: 2.5rem;
 	font-weight: 300;
-	color: #333;
+	color: var(--wpbs-heading-color);
 	margin-bottom: 30px;
 	text-align: center;
 	letter-spacing: -0.5px;
@@ -97,8 +116,8 @@
 .wpbs-booking-form select:focus,
 .wpbs-booking-form textarea:focus {
 	outline: none;
-	border-color: #8B0000;
-	box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+	border-color: var(--wpbs-primary);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--wpbs-primary) 10%, transparent);
 }
 
 .wpbs-date-input {
@@ -110,7 +129,7 @@
 	padding: 20px;
 	background: #f8f8f8;
 	border-radius: 4px;
-	border-left: 4px solid #8B0000;
+	border-left: 4px solid var(--wpbs-primary);
 }
 
 .wpbs-price-row {
@@ -128,15 +147,15 @@
 .wpbs-price-value {
 	font-size: 1.5rem;
 	font-weight: 600;
-	color: #8B0000;
+	color: var(--wpbs-primary);
 }
 
 .wpbs-submit-button {
 	padding: 16px 32px;
-	background: #8B0000;
-	color: #ffffff;
+	background: var(--wpbs-button-bg);
+	color: var(--wpbs-button-color);
 	border: none;
-	border-radius: 4px;
+	border-radius: var(--wpbs-button-radius);
 	font-size: 1rem;
 	font-weight: 500;
 	cursor: pointer;
@@ -147,9 +166,9 @@
 }
 
 .wpbs-submit-button:hover {
-	background: #6B0000;
+	background: var(--wpbs-button-bg-hover);
 	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+	box-shadow: 0 4px 12px color-mix(in srgb, var(--wpbs-button-bg) 30%, transparent);
 }
 
 .wpbs-submit-button:active {
@@ -218,14 +237,14 @@
 .wpbs-book-another {
 	display: inline-block;
 	padding: 10px 22px;
-	background: #8B0000;
-	color: #fff;
+	background: var(--wpbs-button-bg);
+	color: var(--wpbs-button-color);
 	border: none;
-	border-radius: 4px;
+	border-radius: var(--wpbs-button-radius);
 	font-size: 15px;
 	cursor: pointer;
 }
-.wpbs-book-another:hover { background: #6f0000; }
+.wpbs-book-another:hover { background: var(--wpbs-button-bg-hover); }
 
 /* Booking Management Page */
 .wpbs-booking-manage-wrapper {
@@ -339,20 +358,20 @@
 .flatpickr-day.selected,
 .flatpickr-day.startRange,
 .flatpickr-day.endRange {
-	background: #8B0000;
-	border-color: #8B0000;
+	background: var(--wpbs-primary);
+	border-color: var(--wpbs-primary);
 }
 
 .flatpickr-day.selected:hover,
 .flatpickr-day.startRange:hover,
 .flatpickr-day.endRange:hover {
-	background: #6B0000;
-	border-color: #6B0000;
+	background: var(--wpbs-primary-dark);
+	border-color: var(--wpbs-primary-dark);
 }
 
 .flatpickr-day.inRange {
-	background: rgba(139, 0, 0, 0.1);
-	border-color: rgba(139, 0, 0, 0.1);
+	background: color-mix(in srgb, var(--wpbs-primary) 10%, transparent);
+	border-color: color-mix(in srgb, var(--wpbs-primary) 10%, transparent);
 }
 
 /* Calendar Widget Styles */
@@ -371,9 +390,10 @@
 }
 
 .wpbs-calendar-title {
+	font-family: var(--wpbs-heading-font);
 	font-size: 1.5rem;
 	font-weight: 300;
-	color: #333;
+	color: var(--wpbs-heading-color);
 	margin-bottom: 15px;
 	text-align: center;
 }
@@ -405,16 +425,16 @@
 }
 
 .wpbs-legend-booked {
-	background: #8B0000;
+	background: var(--wpbs-booked);
 }
 
 .wpbs-unavailable-date {
-	background-color: rgba(139, 0, 0, 0.1) !important;
+	background-color: color-mix(in srgb, var(--wpbs-booked) 10%, transparent) !important;
 	cursor: not-allowed !important;
 }
 
 .wpbs-unavailable-date:hover {
-	background-color: rgba(139, 0, 0, 0.2) !important;
+	background-color: color-mix(in srgb, var(--wpbs-booked) 20%, transparent) !important;
 }
 
 /* Interactive date selection on the availability calendar */
@@ -434,10 +454,10 @@
 	cursor: not-allowed;
 }
 .wpbs-calendar-shortcode .wpbs-selected-range {
-	background-color: rgba(139, 0, 0, 0.12) !important;
+	background-color: color-mix(in srgb, var(--wpbs-primary) 12%, transparent) !important;
 }
 .wpbs-calendar-shortcode .wpbs-selected-edge {
-	background-color: #8B0000 !important;
+	background-color: var(--wpbs-primary) !important;
 }
 .wpbs-calendar-shortcode .wpbs-selected-edge .fc-daygrid-day-number {
 	color: #fff !important;
@@ -484,7 +504,7 @@
 	font-size: 0.72rem;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
-	color: #8B0000 !important;
+	color: var(--wpbs-primary) !important;
 }
 
 /* Compact, even day cells */
@@ -497,7 +517,7 @@
 	font-size: 0.85rem;
 }
 .wpbs-calendar-shortcode .fc-daygrid-day:not(.wpbs-unavailable-date):not(.wpbs-past-date):not(.wpbs-selected-edge):hover {
-	background: rgba(139, 0, 0, 0.06);
+	background: color-mix(in srgb, var(--wpbs-primary) 6%, transparent);
 }
 .wpbs-calendar-shortcode .wpbs-past-date .fc-daygrid-day-number {
 	color: #c4c4c4 !important;
@@ -515,8 +535,8 @@
 
 .wpbs-widget-calendar .fc-button,
 .wpbs-calendar-shortcode .fc-button {
-	background: #8B0000;
-	border-color: #8B0000;
+	background: var(--wpbs-primary);
+	border-color: var(--wpbs-primary);
 	color: #fff;
 	padding: 5px 12px;
 	border-radius: 6px;
@@ -527,17 +547,17 @@
 .wpbs-widget-calendar .fc-button:focus,
 .wpbs-calendar-shortcode .fc-button:hover,
 .wpbs-calendar-shortcode .fc-button:focus {
-	background: #6B0000;
-	border-color: #6B0000;
+	background: var(--wpbs-primary-dark);
+	border-color: var(--wpbs-primary-dark);
 }
 
 .wpbs-widget-calendar .fc-day-today,
 .wpbs-calendar-shortcode .fc-day-today {
-	background: rgba(139, 0, 0, 0.05) !important;
+	background: color-mix(in srgb, var(--wpbs-primary) 5%, transparent) !important;
 }
 .wpbs-calendar-shortcode .fc-day-today .fc-daygrid-day-number {
 	font-weight: 700;
-	color: #8B0000 !important;
+	color: var(--wpbs-primary) !important;
 }
 
 .wpbs-widget-calendar .fc-event,
@@ -571,10 +591,10 @@
 .wpbs-booking-form .wpbs-submit-button {
 	display: block;
 	width: 100%;
-	background: #8B0000;
-	color: #ffffff;
+	background: var(--wpbs-button-bg);
+	color: var(--wpbs-button-color);
 	border: none;
-	border-radius: 4px;
+	border-radius: var(--wpbs-button-radius);
 	padding: 16px 32px;
 	font-size: 1rem;
 	line-height: 1.4;
@@ -584,8 +604,8 @@
 }
 .wpbs-booking-form-wrapper .wpbs-submit-button:hover,
 .wpbs-booking-form .wpbs-submit-button:hover {
-	background: #6B0000;
-	color: #ffffff;
+	background: var(--wpbs-button-bg-hover);
+	color: var(--wpbs-button-color);
 }
 .wpbs-booking-form-wrapper .wpbs-submit-button:disabled {
 	background: #cccccc;
@@ -610,16 +630,16 @@
 
 /* "Book another stay" on the confirmation panel */
 .wpbs-booking-confirmation .wpbs-book-another {
-	background: #8B0000;
-	color: #ffffff;
+	background: var(--wpbs-button-bg);
+	color: var(--wpbs-button-color);
 	border: none;
-	border-radius: 4px;
+	border-radius: var(--wpbs-button-radius);
 	padding: 10px 22px;
 	text-decoration: none;
 }
 .wpbs-booking-confirmation .wpbs-book-another:hover {
-	background: #6f0000;
-	color: #ffffff;
+	background: var(--wpbs-button-bg-hover);
+	color: var(--wpbs-button-color);
 }
 
 /* Form controls keep a consistent box even under theme input/select resets */

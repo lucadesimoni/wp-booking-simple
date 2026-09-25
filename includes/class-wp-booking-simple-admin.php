@@ -818,6 +818,7 @@ class WP_Booking_Simple_Admin {
 			$show_owner       = isset( $_POST['wpbsl_show_owner'] ) ? 1 : 0;
 			$owners           = isset( $_POST['wpbsl_owners'] ) ? sanitize_textarea_field( wp_unslash( $_POST['wpbsl_owners'] ) ) : '';
 			$show_visitors    = isset( $_POST['wpbsl_show_visitors'] ) ? 1 : 0;
+			$color_scheme     = ( isset( $_POST['wpbsl_color_scheme'] ) && 'theme' === $_POST['wpbsl_color_scheme'] ) ? 'theme' : 'plugin';
 
 			// SMTP / email delivery options.
 			$smtp_enabled    = isset( $_POST['wpbsl_smtp_enabled'] ) ? 1 : 0;
@@ -925,6 +926,7 @@ class WP_Booking_Simple_Admin {
 				update_option( 'wpbsl_show_owner', $show_owner );
 				update_option( 'wpbsl_owners', $owners );
 				update_option( 'wpbsl_show_visitors', $show_visitors );
+				update_option( 'wpbsl_color_scheme', $color_scheme );
 				update_option( 'wpbsl_smtp_enabled', $smtp_enabled );
 				update_option( 'wpbsl_smtp_host', $smtp_host );
 				update_option( 'wpbsl_smtp_port', $smtp_port );
@@ -1221,6 +1223,16 @@ class WP_Booking_Simple_Admin {
 							<?php esc_html_e( 'Show a "Visitors welcome?" yes/no field on the booking form.', 'wp-booking-simple' ); ?>
 						</label>
 						<p class="description"><?php esc_html_e( 'Available in emails as {visitors_welcome}.', 'wp-booking-simple' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="wpbsl_color_scheme"><?php esc_html_e( 'Colors', 'wp-booking-simple' ); ?></label></th>
+					<td>
+						<select id="wpbsl_color_scheme" name="wpbsl_color_scheme">
+							<option value="plugin" <?php selected( 'plugin', get_option( 'wpbsl_color_scheme', 'plugin' ) ); ?>><?php esc_html_e( 'Plugin colors (dark red)', 'wp-booking-simple' ); ?></option>
+							<option value="theme" <?php selected( 'theme', get_option( 'wpbsl_color_scheme', 'plugin' ) ); ?>><?php esc_html_e( 'Theme colors', 'wp-booking-simple' ); ?></option>
+						</select>
+						<p class="description"><?php esc_html_e( 'Theme colors use your theme\'s brand color, buttons and heading font: the Astra global palette and Customizer buttons, Elementor\'s global colors, or a block theme\'s palette. Colors set on a block or Elementor widget still take precedence.', 'wp-booking-simple' ); ?></p>
 					</td>
 				</tr>
 			</table>

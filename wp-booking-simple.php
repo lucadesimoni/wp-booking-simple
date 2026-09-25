@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: WP Booking Simple
- * Version: 1.22.1
+ * Version: 1.23.0
  * Plugin URI: https://famiglia-desimoni.ch/
  * Description: A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.
  * Author: Famiglia De Simoni
  * Author URI: https://famiglia-desimoni.ch/
- * Requires at least: 5.0
- * Tested up to: 6.9
+ * Requires at least: 6.5
+ * Tested up to: 7.1
  * Requires PHP: 7.2
  *
  * Text Domain: wp-booking-simple
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define plugin constants.
-define( 'WP_BOOKING_SIMPLE_VERSION', '1.22.1' );
+define( 'WP_BOOKING_SIMPLE_VERSION', '1.23.0' );
 define( 'WP_BOOKING_SIMPLE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WP_BOOKING_SIMPLE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -37,6 +37,7 @@ require_once WP_BOOKING_SIMPLE_PLUGIN_DIR . 'includes/class-wp-booking-simple-fr
 require_once WP_BOOKING_SIMPLE_PLUGIN_DIR . 'includes/class-wp-booking-simple-ajax.php';
 require_once WP_BOOKING_SIMPLE_PLUGIN_DIR . 'includes/class-wp-booking-simple-email.php';
 require_once WP_BOOKING_SIMPLE_PLUGIN_DIR . 'includes/class-wp-booking-simple-widget.php';
+require_once WP_BOOKING_SIMPLE_PLUGIN_DIR . 'includes/class-wp-booking-simple-theme.php';
 require_once WP_BOOKING_SIMPLE_PLUGIN_DIR . 'includes/class-wp-booking-simple-block.php';
 require_once WP_BOOKING_SIMPLE_PLUGIN_DIR . 'includes/class-wp-booking-simple-elementor.php';
 

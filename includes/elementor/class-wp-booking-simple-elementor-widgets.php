@@ -189,7 +189,89 @@ class WP_Booking_Simple_Elementor_Form_Widget extends \Elementor\Widget_Base {
 			)
 		);
 
+		$this->add_control(
+			'wpbsl_title_color',
+			array(
+				'label'     => __( 'Title color', 'wp-booking-simple' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'separator' => 'before',
+				'selectors' => array(
+					'{{WRAPPER}} .wpbs-form-title' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'wpbsl_title_typography',
+				'label'    => __( 'Title typography', 'wp-booking-simple' ),
+				'selector' => '{{WRAPPER}} .wpbs-form-title',
+			)
+		);
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'wpbsl_button_typography',
+				'label'    => __( 'Button typography', 'wp-booking-simple' ),
+				'selector' => '{{WRAPPER}} .wpbs-booking-form .wpbs-submit-button',
+			)
+		);
+
+		$this->add_control(
+			'wpbsl_form_background',
+			array(
+				'label'     => __( 'Form background', 'wp-booking-simple' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'separator' => 'before',
+				'selectors' => array(
+					'{{WRAPPER}} .wpbs-booking-form-wrapper' => 'background-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'wpbsl_form_padding',
+			array(
+				'label'      => __( 'Form padding', 'wp-booking-simple' ),
+				'type'       => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', 'em', 'rem', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .wpbs-booking-form-wrapper' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Box_Shadow::get_type(),
+			array(
+				'name'     => 'wpbsl_form_shadow',
+				'label'    => __( 'Form shadow', 'wp-booking-simple' ),
+				'selector' => '{{WRAPPER}} .wpbs-booking-form-wrapper',
+			)
+		);
+
 		$this->end_controls_section();
+	}
+
+	/**
+	 * Load the booking styles and scripts wherever the widget is used,
+	 * including Elementor popups, templates and the editor preview.
+	 *
+	 * @return array
+	 */
+	public function get_style_depends(): array {
+		return array( 'wp-booking-simple-frontend' );
+	}
+
+	/**
+	 * Scripts the widget needs.
+	 *
+	 * @return array
+	 */
+	public function get_script_depends(): array {
+		return array( 'wp-booking-simple-frontend' );
 	}
 
 	/**
@@ -332,7 +414,47 @@ class WP_Booking_Simple_Elementor_Calendar_Widget extends \Elementor\Widget_Base
 			)
 		);
 
+		$this->add_control(
+			'wpbsl_title_color',
+			array(
+				'label'     => __( 'Title color', 'wp-booking-simple' ),
+				'type'      => \Elementor\Controls_Manager::COLOR,
+				'separator' => 'before',
+				'selectors' => array(
+					'{{WRAPPER}} .wpbs-calendar-title' => 'color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			\Elementor\Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'wpbsl_title_typography',
+				'label'    => __( 'Title typography', 'wp-booking-simple' ),
+				'selector' => '{{WRAPPER}} .wpbs-calendar-title',
+			)
+		);
+
 		$this->end_controls_section();
+	}
+
+	/**
+	 * Load the booking styles and scripts wherever the widget is used,
+	 * including Elementor popups, templates and the editor preview.
+	 *
+	 * @return array
+	 */
+	public function get_style_depends(): array {
+		return array( 'wp-booking-simple-frontend' );
+	}
+
+	/**
+	 * Scripts the widget needs.
+	 *
+	 * @return array
+	 */
+	public function get_script_depends(): array {
+		return array( 'wp-booking-simple-frontend' );
 	}
 
 	/**

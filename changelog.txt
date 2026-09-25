@@ -1,5 +1,16 @@
 *** WP Booking Simple Changelog ***
 
+2026.09.25 - version 1.23.0
+ * Compatibility - Requires WordPress 6.5 or later (was 5.0); tested up to 7.1. The block editor controls use the WordPress 7.0 control styles, so 6.7-6.9 no longer log deprecation warnings.
+ * New - "Theme colors" scheme under Settings > Booking Form > Colors. The form, calendar and buttons then follow the active theme: the Astra global palette plus Astra's Customizer button colors, corner radius and heading font; otherwise Elementor's global colors and fonts, or a block theme's palette. The default stays the plugin's dark red, so existing sites look exactly as before. The stylesheet is now driven by --wpbs-* custom properties (filter: wpbsl_theme_scheme_vars).
+ * Fix - Block color pickers ignored the Astra palette. Astra (and block themes) hand out colors as CSS variables such as var(--ast-global-color-0), which the color validator rejected, so picking a palette color silently did nothing. Palette variables are now accepted and keep following later palette changes.
+ * Fix - A per-block accent color leaked into every form on the page: only the first selector of the focus rule (input) was scoped to the block, so the select/textarea focus color applied site-wide. Every selector is now scoped.
+ * New - Gutenberg / Spectra: both blocks use block API v3 (the iframed editor) and support wide/full alignment, an HTML anchor, margin and padding. The booking form shows a live preview in the editor, and the booking styles load inside the editor canvas.
+ * Fix - Content saved with the pre-rename block names (wp-booking-system/*) showed as an unsupported block in the editor; those names are now registered in the editor too (still hidden from the inserter).
+ * New - Elementor: title color and typography on both widgets; button typography, form background, padding and shadow on the form widget. Widgets declare their style/script dependencies, so they also work in Elementor popups and templates.
+ * Fix - Elementor editor: after changing a widget setting, the re-rendered calendar stayed empty and the date picker, price calculation and submit did nothing. The front-end script now initialises idempotently, hooks Elementor's element_ready, and uses delegated event handlers (window.wpbsInit() re-runs it).
+ * Tweak - German (de_DE, de_CH) translations for every new string.
+
 2026.08.11 - version 1.22.1
  * Fix - The German translation is complete again. 33 strings had no translation at all (the Elementor widget labels, the block descriptions, the new form-field settings, "Select a date", the IBAN hint and more), because the template was maintained by hand while nothing checked that the catalogs kept up. tools/i18n/build-catalogs.py now regenerates the .pot and both .po files from the source and fails when any string is left untranslated.
  * Fix - Saving the settings no longer freezes the email templates in whatever language the admin was viewing. The form pre-fills each field with the rendered default, so opening the Email Templates tab and pressing Save used to store the English text permanently - after which the emails stayed English on a German site. An unedited field is now stored blank and keeps following the site language.

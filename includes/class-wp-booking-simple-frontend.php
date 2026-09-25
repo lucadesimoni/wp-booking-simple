@@ -58,19 +58,12 @@ class WP_Booking_Simple_Frontend {
 	public function enqueue_scripts() {
 		// Third-party libraries bundled with the plugin (no external CDN, so the
 		// date picker and calendar work even behind a strict CSP or offline).
-		wp_register_style( 'flatpickr', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.css', array(), '4.6.13' );
 		wp_register_script( 'flatpickr', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.js', array(), '4.6.13', true );
 		wp_register_script( 'fullcalendar', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/fullcalendar/index.global.min.js', array(), '6.1.10', true );
 		wp_register_script( 'wpbs-qrcode', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/qrcode/qrcode.js', array(), WP_BOOKING_SIMPLE_VERSION, true );
 
-		// Plugin assets.
-		wp_register_style(
-			'wp-booking-simple-frontend',
-			WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/css/frontend.css',
-			array( 'flatpickr' ),
-			WP_BOOKING_SIMPLE_VERSION
-		);
-
+		// Plugin assets. The stylesheets are registered on init by
+		// WP_Booking_Simple_Theme, so the block editor can load them too.
 		wp_register_script(
 			'wp-booking-simple-frontend',
 			WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/js/frontend.js',

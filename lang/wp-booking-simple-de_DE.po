@@ -261,6 +261,9 @@ msgstr "Schaltflächen-Beschriftung"
 msgid "Button text color"
 msgstr "Textfarbe der Schaltfläche"
 
+msgid "Button typography"
+msgstr "Typografie der Schaltfläche"
+
 msgid "Calculating price..."
 msgstr "Preis wird berechnet …"
 
@@ -320,6 +323,9 @@ msgstr "Schließen"
 
 msgid "Collected"
 msgstr "Eingenommen"
+
+msgid "Colors"
+msgstr "Farben"
 
 msgid "Confirm"
 msgstr "Bestätigen"
@@ -434,6 +440,15 @@ msgstr "Vorname"
 
 msgid "For Gmail: host smtp.gmail.com, port 587 (TLS), your full address as the username, and a Google \"App Password\" (not your normal password) as the password."
 msgstr "Für Gmail: Host smtp.gmail.com, Port 587 (TLS), Ihre vollständige Adresse als Benutzername und ein Google-„App-Passwort“ (nicht Ihr normales Passwort) als Passwort."
+
+msgid "Form background"
+msgstr "Hintergrund des Formulars"
+
+msgid "Form padding"
+msgstr "Innenabstand des Formulars"
+
+msgid "Form shadow"
+msgstr "Schatten des Formulars"
 
 msgid "From"
 msgstr "Von"
@@ -711,6 +726,9 @@ msgstr "Bitte wählen Sie beide Daten."
 msgid "Please select check-in and check-out dates"
 msgstr "Bitte wählen Sie An- und Abreisedatum"
 
+msgid "Plugin colors (dark red)"
+msgstr "Plugin-Farben (Dunkelrot)"
+
 msgid "Price"
 msgstr "Preis"
 
@@ -923,6 +941,12 @@ msgstr "Die Erinnerung konnte nicht gesendet werden. Prüfen Sie Ihre E-Mail-Ein
 msgid "The styled booking-details box is inserted here."
 msgstr "Hier wird die formatierte Buchungsdetails-Box eingefügt."
 
+msgid "Theme colors"
+msgstr "Theme-Farben"
+
+msgid "Theme colors use your theme's brand color, buttons and heading font: the Astra global palette and Customizer buttons, Elementor's global colors, or a block theme's palette. Colors set on a block or Elementor widget still take precedence."
+msgstr "Theme-Farben übernehmen die Markenfarbe, die Schaltflächen und die Überschriftenschrift Ihres Themes: die globale Astra-Palette und die Customizer-Schaltflächen, die globalen Farben von Elementor oder die Palette eines Block-Themes. Farben, die an einem Block oder Elementor-Widget gesetzt sind, haben weiterhin Vorrang."
+
 msgid "This booking has been cancelled"
 msgstr "Diese Buchung wurde storniert"
 
@@ -940,6 +964,12 @@ msgstr "Diese Daten überschneiden sich mit einer anderen Buchung."
 
 msgid "Title"
 msgstr "Titel"
+
+msgid "Title color"
+msgstr "Farbe des Titels"
+
+msgid "Title typography"
+msgstr "Typografie des Titels"
 
 msgid "Title:"
 msgstr "Titel:"
