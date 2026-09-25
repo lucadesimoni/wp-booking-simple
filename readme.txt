@@ -4,7 +4,7 @@ Tags: booking, calendar, reservation, booking-system
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 1.22.1
+Stable tag: 1.23.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -120,6 +120,15 @@ Yes. The All Bookings and Dashboard screens have an "Export CSV" button that dow
 Yes. A complete German translation ships with the plugin (German/Germany and German/Switzerland). Set Settings > General > Site Language to "Deutsch" or "Deutsch (Schweiz)" and the admin screens, the booking form and the emails appear in German. To adjust any wording, edit the .po file under /lang and recompile the .mo with tools/i18n/po2mo.php.
 
 == Changelog ==
+
+= 1.23.0 =
+* 2026-09-25
+* New "Theme colors" scheme: follow the Astra palette and buttons, Elementor's global colors or a block theme's palette (Settings > Booking Form > Colors). The default look is unchanged.
+* Fix: block color pickers now accept Astra / block-theme palette colors.
+* Fix: a block's accent color no longer leaks into other forms on the page.
+* Blocks: block API v3, wide/full alignment, anchor, margin and padding, live form preview in the editor. Legacy block names are editable again.
+* Elementor: title/button typography, title color, form background, padding and shadow; widgets now re-initialise correctly in the Elementor editor.
+* Full details in changelog.txt.
 
 = 1.20.1 =
 * 2026-07-10

@@ -6,27 +6,40 @@
 	'use strict';
 
 	$(document).ready(function() {
-		// Initialize date picker
-		initDatePicker();
+		init();
 
-		// Initialize the interactive availability calendar (if present)
-		initAvailabilityCalendar();
-
-		// Render the Swiss QR payment code (manage page, if present)
-		initQrPayment();
-
-		// Handle form submission
-		$('#wpbs-booking-form').on('submit', handleFormSubmit);
-		
-		// Handle date changes
-		$('#wpbs-check-in, #wpbs-check-out').on('change', handleDateChange);
-		
-		// Handle guest count changes
-		$('#wpbs-adults, #wpbs-kids').on('change', calculatePrice);
-		
-		// Handle booking cancellation
-		$('.wpbs-cancel-booking').on('click', handleCancelBooking);
+		// Delegated, so the handlers also cover a form or button that a page
+		// builder renders after load (Elementor editor, popups, tabs).
+		$(document).on('submit', '#wpbs-booking-form', handleFormSubmit);
+		$(document).on('change', '#wpbs-check-in, #wpbs-check-out', handleDateChange);
+		$(document).on('change', '#wpbs-adults, #wpbs-kids', calculatePrice);
+		$(document).on('click', '.wpbs-cancel-booking', handleCancelBooking);
 	});
+
+	/**
+	 * Initialise every booking component on the page. Idempotent: components
+	 * that are already set up are skipped, so it is safe to call again after
+	 * new markup appears.
+	 */
+	function init() {
+		initDatePicker();
+		initAvailabilityCalendar();
+		initQrPayment();
+	}
+
+	window.wpbsInit = init;
+
+	// Elementor renders widgets again whenever a setting changes in the editor.
+	function hookElementor() {
+		['wpbs-booking-form', 'wpbs-booking-calendar'].forEach(function(name) {
+			window.elementorFrontend.hooks.addAction('frontend/element_ready/' + name + '.default', init);
+		});
+	}
+	if (window.elementorFrontend && window.elementorFrontend.hooks) {
+		hookElementor();
+	} else {
+		$(window).on('elementor/frontend/init', hookElementor);
+	}
 
 	/**
 	 * Initialize Flatpickr date picker
@@ -42,7 +55,7 @@
 		const checkInInput = document.getElementById('wpbs-check-in');
 		const checkOutInput = document.getElementById('wpbs-check-out');
 
-		if (!checkInInput || !checkOutInput) {
+		if (!checkInInput || !checkOutInput || checkInInput._flatpickr) {
 			return;
 		}
 
@@ -162,7 +175,8 @@
 	/** Manage-page QR (rendered from the #wpbs-qr data-payload). */
 	function initQrPayment() {
 		const box = document.getElementById('wpbs-qr');
-		if (box && box.getAttribute('data-payload')) {
+		if (box && box.getAttribute('data-payload') && !box.dataset.wpbsReady) {
+			box.dataset.wpbsReady = '1';
 			renderSwissQr(box, decodeQrPayload(box.getAttribute('data-payload')));
 		}
 	}
@@ -227,9 +241,10 @@
 	 * Build one interactive availability calendar in the given element.
 	 */
 	function initOneCalendar(calendarEl) {
-		if (!calendarEl) {
+		if (!calendarEl || calendarEl.dataset.wpbsReady) {
 			return;
 		}
+		calendarEl.dataset.wpbsReady = '1';
 
 		const unavailableDates = getUnavailableDates();
 		const cfg = (wpbsFrontend && wpbsFrontend.config) || {};

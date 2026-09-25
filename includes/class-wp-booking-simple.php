@@ -106,6 +106,9 @@ class WP_Booking_Simple {
 			$this->admin = new WP_Booking_Simple_Admin();
 		}
 
+		// Shared styles and the theme colour scheme.
+		new WP_Booking_Simple_Theme();
+
 		// Initialize frontend.
 		$this->frontend = new WP_Booking_Simple_Frontend();
 
@@ -183,6 +186,8 @@ class WP_Booking_Simple {
 			'wpbsl_show_owner'               => 1,
 			'wpbsl_owners'                   => '',
 			'wpbsl_show_visitors'            => 1,
+			// Appearance: the plugin's own palette, or the theme's.
+			'wpbsl_color_scheme'             => 'plugin',
 			// Email delivery (SMTP).
 			'wpbsl_smtp_enabled'             => 0,
 			'wpbsl_smtp_host'                => '',

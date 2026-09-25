@@ -51,6 +51,7 @@ delete_option( 'wpbsl_show_last_name' );
 delete_option( 'wpbsl_show_phone' );
 delete_option( 'wpbsl_show_kids' );
 delete_option( 'wpbsl_show_notes' );
+delete_option( 'wpbsl_color_scheme' );
 delete_option( 'wpbsl_auto_confirm' );
 delete_option( 'wpbsl_smtp_enabled' );
 delete_option( 'wpbsl_smtp_host' );

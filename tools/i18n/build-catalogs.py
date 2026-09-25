@@ -81,6 +81,21 @@ NEW_TRANSLATIONS = {
         "Sie können Ihre Buchung über den folgenden Link verwalten oder "
         "stornieren:\n\n{manage_link}\n\nWir freuen uns darauf, Sie begrüßen zu "
         "dürfen!\n\nMit freundlichen Grüßen,\n{site_name}",
+    "Button typography": "Typografie der Schaltfläche",
+    "Colors": "Farben",
+    "Form background": "Hintergrund des Formulars",
+    "Form padding": "Innenabstand des Formulars",
+    "Form shadow": "Schatten des Formulars",
+    "Plugin colors (dark red)": "Plugin-Farben (Dunkelrot)",
+    "Theme colors": "Theme-Farben",
+    "Theme colors use your theme's brand color, buttons and heading font: the Astra global palette and Customizer buttons, Elementor's global colors, or a block theme's palette. Colors set on a block or Elementor widget still take precedence.":
+        "Theme-Farben übernehmen die Markenfarbe, die Schaltflächen und die "
+        "Überschriftenschrift Ihres Themes: die globale Astra-Palette und die "
+        "Customizer-Schaltflächen, die globalen Farben von Elementor oder die "
+        "Palette eines Block-Themes. Farben, die an einem Block oder "
+        "Elementor-Widget gesetzt sind, haben weiterhin Vorrang.",
+    "Title color": "Farbe des Titels",
+    "Title typography": "Typografie des Titels",
 }
 
 

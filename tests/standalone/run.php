@@ -535,6 +535,65 @@ check( ! WP_Booking_Simple_Helpers::is_valid_range( '2026-08-05', '2026-08-05' )
 check( WP_Booking_Simple_Helpers::is_valid_range( '2026-08-05', '2026-08-06' ), 'one-night range is valid' );
 
 /* --------------------------------------------------------------------------
+ * Theme & builder integration (Astra, Spectra / Gutenberg, Elementor).
+ * ------------------------------------------------------------------------ */
+echo "\nTheme: colour sanitiser\n";
+foreach ( array( '#8B0000', '#fff', 'rgb(1, 2, 3)', 'hsl(0 100% 27%)', 'var(--ast-global-color-0)', 'var(--wp--preset--color--primary)', 'var(--e-global-color-primary)' ) as $c ) {
+	check_equals( $c, WP_Booking_Simple_Theme::sanitize_color( $c ), "accepts {$c}" );
+}
+foreach ( array( 'red;}body{', 'var(--x);}a{', 'var(--a, red)', 'url(javascript:1)', '#12' ) as $c ) {
+	check_equals( '', WP_Booking_Simple_Theme::sanitize_color( $c ), "rejects {$c}" );
+}
+
+echo "\nTheme: colour scheme\n";
+$saved_options = $GLOBALS['_wpbsl_test']['options'];
+if ( ! function_exists( 'apply_filters' ) ) {
+	function apply_filters( $hook, $value ) { return $value; }
+}
+unset( $GLOBALS['_wpbsl_test']['options']['wpbsl_color_scheme'] );
+check_equals( '', WP_Booking_Simple_Theme::scheme_css(), 'plugin palette by default (no inline CSS)' );
+$GLOBALS['_wpbsl_test']['options']['wpbsl_color_scheme'] = 'theme';
+$scheme = WP_Booking_Simple_Theme::scheme_css();
+check( 0 === strpos( $scheme, 'body{' ), 'theme scheme is declared on body (where Elementor kit colours resolve)' );
+check( false !== strpos( $scheme, '--wpbs-primary:var(--ast-global-color-0, var(--e-global-color-primary, var(--wp--preset--color--primary, #8B0000)))' ), 'primary follows Astra, then Elementor, then block-theme presets' );
+check( false !== strpos( $scheme, '--wpbs-button-bg:var(--wpbs-primary)' ), 'buttons re-derive from the theme primary' );
+if ( ! function_exists( 'astra_get_option' ) ) {
+	function astra_get_option( $key, $default = '' ) {
+		$o = array(
+			'button-radius-fields' => array( 'desktop' => array( 'top' => 20, 'right' => 20, 'bottom' => 20, 'left' => 20 ), 'desktop-unit' => 'px' ),
+			'button-bg-color'      => 'var(--ast-global-color-1)',
+			'button-color'         => 'nope;}',
+			'headings-font-family' => "'Lora', serif",
+		);
+		return isset( $o[ $key ] ) ? $o[ $key ] : $default;
+	}
+}
+$scheme = WP_Booking_Simple_Theme::scheme_css();
+check( false !== strpos( $scheme, '--wpbs-button-radius:20px 20px 20px 20px' ), 'Astra button radius is used' );
+check( false !== strpos( $scheme, '--wpbs-button-bg:var(--ast-global-color-1)' ), 'Astra button colour is used' );
+check( false === strpos( $scheme, 'nope' ), 'invalid Astra colour is ignored' );
+check( false !== strpos( $scheme, "--wpbs-heading-font:'Lora', serif" ), 'Astra heading font is used' );
+$GLOBALS['_wpbsl_test']['options'] = $saved_options;
+
+echo "\nBlocks: editor integration\n";
+$form_block = $GLOBALS['_wpbsl_test']['blocks']['wp-booking-simple/form'];
+check_equals( 3, isset( $form_block['api_version'] ) ? $form_block['api_version'] : 0, 'blocks use block API v3 (iframed editor)' );
+check_equals( 'wp-booking-simple-frontend', isset( $form_block['style'] ) ? $form_block['style'] : '', 'front-end styles load in the editor canvas' );
+check( isset( $form_block['supports']['align'] ) && in_array( 'full', $form_block['supports']['align'], true ), 'wide/full alignment supported' );
+check( ! empty( $form_block['supports']['spacing']['padding'] ), 'spacing supported' );
+$legacy_block = $GLOBALS['_wpbsl_test']['blocks']['wp-booking-system/form'];
+check( false === $legacy_block['supports']['inserter'] && ! empty( $legacy_block['supports']['align'] ), 'legacy alias hidden from the inserter but keeps the supports' );
+$block_js = file_get_contents( $plugin_dir . '/assets/js/block.js' );
+check( false !== strpos( $block_js, "registerBlockType('wp-booking-system/form'" ), 'legacy block names are registered in the editor' );
+check( false !== strpos( $block_js, 'useBlockProps()' ), 'edit() uses useBlockProps' );
+
+echo "\nElementor: editor re-initialisation\n";
+$frontend_js = file_get_contents( $plugin_dir . '/assets/js/frontend.js' );
+check( false !== strpos( $frontend_js, "frontend/element_ready/' + name + '.default" ), 'widgets re-initialise after an Elementor re-render' );
+check( false !== strpos( $frontend_js, "$(document).on('submit', '#wpbs-booking-form'" ), 'form submit handler is delegated' );
+check( false !== strpos( $frontend_js, 'calendarEl.dataset.wpbsReady' ), 'calendar init is idempotent' );
+
+/* --------------------------------------------------------------------------
  * Summary.
  * ------------------------------------------------------------------------ */
 echo "\n----------------------------------------\n";

@@ -261,6 +261,9 @@ msgstr ""
 msgid "Button text color"
 msgstr ""
 
+msgid "Button typography"
+msgstr ""
+
 msgid "Calculating price..."
 msgstr ""
 
@@ -319,6 +322,9 @@ msgid "Close"
 msgstr ""
 
 msgid "Collected"
+msgstr ""
+
+msgid "Colors"
 msgstr ""
 
 msgid "Confirm"
@@ -433,6 +439,15 @@ msgid "First name"
 msgstr ""
 
 msgid "For Gmail: host smtp.gmail.com, port 587 (TLS), your full address as the username, and a Google \"App Password\" (not your normal password) as the password."
+msgstr ""
+
+msgid "Form background"
+msgstr ""
+
+msgid "Form padding"
+msgstr ""
+
+msgid "Form shadow"
 msgstr ""
 
 msgid "From"
@@ -711,6 +726,9 @@ msgstr ""
 msgid "Please select check-in and check-out dates"
 msgstr ""
 
+msgid "Plugin colors (dark red)"
+msgstr ""
+
 msgid "Price"
 msgstr ""
 
@@ -923,6 +941,12 @@ msgstr ""
 msgid "The styled booking-details box is inserted here."
 msgstr ""
 
+msgid "Theme colors"
+msgstr ""
+
+msgid "Theme colors use your theme's brand color, buttons and heading font: the Astra global palette and Customizer buttons, Elementor's global colors, or a block theme's palette. Colors set on a block or Elementor widget still take precedence."
+msgstr ""
+
 msgid "This booking has been cancelled"
 msgstr ""
 
@@ -939,6 +963,12 @@ msgid "Those dates overlap another booking."
 msgstr ""
 
 msgid "Title"
+msgstr ""
+
+msgid "Title color"
+msgstr ""
+
+msgid "Title typography"
 msgstr ""
 
 msgid "Title:"
