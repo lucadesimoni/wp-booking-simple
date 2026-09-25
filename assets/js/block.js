@@ -64,6 +64,9 @@
 					PanelBody,
 					{ title: panelTitle, initialOpen: true, key: 'content' },
 					el(TextControl, {
+						// WordPress 7.0 control styles — older versions ignore these props.
+						__nextHasNoMarginBottom: true,
+						__next40pxDefaultSize: true,
 						label: __('Title', 'wp-booking-simple'),
 						value: attributes.title,
 						onChange: function (value) {

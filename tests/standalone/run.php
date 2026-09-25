@@ -586,6 +586,8 @@ check( false === $legacy_block['supports']['inserter'] && ! empty( $legacy_block
 $block_js = file_get_contents( $plugin_dir . '/assets/js/block.js' );
 check( false !== strpos( $block_js, "registerBlockType('wp-booking-system/form'" ), 'legacy block names are registered in the editor' );
 check( false !== strpos( $block_js, 'useBlockProps()' ), 'edit() uses useBlockProps' );
+check( false !== strpos( $block_js, '__nextHasNoMarginBottom: true' ), 'controls use the WordPress 7.0 control styles' );
+check( (bool) preg_match( '/Requires at least:\s*6\.5/', file_get_contents( $plugin_dir . '/wp-booking-simple.php' ) ), 'plugin header requires WordPress 6.5' );
 
 echo "\nElementor: editor re-initialisation\n";
 $frontend_js = file_get_contents( $plugin_dir . '/assets/js/frontend.js' );

@@ -6,8 +6,8 @@
  * Description: A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.
  * Author: Famiglia De Simoni
  * Author URI: https://famiglia-desimoni.ch/
- * Requires at least: 5.0
- * Tested up to: 6.9
+ * Requires at least: 6.5
+ * Tested up to: 7.1
  * Requires PHP: 7.2
  *
  * Text Domain: wp-booking-simple

@@ -1,6 +1,7 @@
 *** WP Booking Simple Changelog ***
 
 2026.09.25 - version 1.23.0
+ * Compatibility - Requires WordPress 6.5 or later (was 5.0); tested up to 7.1. The block editor controls use the WordPress 7.0 control styles, so 6.7-6.9 no longer log deprecation warnings.
  * New - "Theme colors" scheme under Settings > Booking Form > Colors. The form, calendar and buttons then follow the active theme: the Astra global palette plus Astra's Customizer button colors, corner radius and heading font; otherwise Elementor's global colors and fonts, or a block theme's palette. The default stays the plugin's dark red, so existing sites look exactly as before. The stylesheet is now driven by --wpbs-* custom properties (filter: wpbsl_theme_scheme_vars).
  * Fix - Block color pickers ignored the Astra palette. Astra (and block themes) hand out colors as CSS variables such as var(--ast-global-color-0), which the color validator rejected, so picking a palette color silently did nothing. Palette variables are now accepted and keep following later palette changes.
  * Fix - A per-block accent color leaked into every form on the page: only the first selector of the focus rule (input) was scoped to the block, so the select/textarea focus color applied site-wide. Every selector is now scoped.

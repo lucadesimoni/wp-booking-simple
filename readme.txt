@@ -1,8 +1,8 @@
 === WP Booking Simple ===
 Contributors: famiglia-desimoni
 Tags: booking, calendar, reservation, booking-system
-Requires at least: 5.0
-Tested up to: 6.9
+Requires at least: 6.5
+Tested up to: 7.1
 Requires PHP: 7.2
 Stable tag: 1.23.0
 License: GPLv2 or later
@@ -123,6 +123,7 @@ Yes. A complete German translation ships with the plugin (German/Germany and Ger
 
 = 1.23.0 =
 * 2026-09-25
+* Requires WordPress 6.5 or later (tested up to 7.1).
 * New "Theme colors" scheme: follow the Astra palette and buttons, Elementor's global colors or a block theme's palette (Settings > Booking Form > Colors). The default look is unchanged.
 * Fix: block color pickers now accept Astra / block-theme palette colors.
 * Fix: a block's accent color no longer leaks into other forms on the page.
