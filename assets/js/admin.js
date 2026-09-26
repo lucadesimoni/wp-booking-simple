@@ -393,5 +393,32 @@
 		viewBookingDetails(bookingId);
 	}
 
+
+	/**
+	 * Settings > Email: "Send test email" button.
+	 */
+	$(document).on('click', '#wpbs-send-test-email', function() {
+		var btn = this;
+		var i18n = (window.wpbsAdmin && wpbsAdmin.i18n) || {};
+		var out = document.getElementById('wpbs-test-email-result');
+		var to = document.getElementById('wpbsl_test_email_to').value;
+		btn.disabled = true;
+		out.style.color = '#666';
+		out.textContent = i18n.sending || 'Sending…';
+		$.post(wpbsAdmin.ajaxUrl, {
+			action: 'wpbsl_send_test_email',
+			nonce: btn.getAttribute('data-nonce'),
+			email: to
+		}).done(function(res) {
+			out.style.color = res.success ? '#0a7d28' : '#b32d2e';
+			out.textContent = (res.data && res.data.message) ? res.data.message : '';
+		}).fail(function() {
+			out.style.color = '#b32d2e';
+			out.textContent = i18n.requestFailed || 'Request failed. Please try again.';
+		}).always(function() {
+			btn.disabled = false;
+		});
+	});
+
 })(jQuery);
 

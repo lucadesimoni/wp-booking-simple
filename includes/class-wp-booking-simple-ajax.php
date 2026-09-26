@@ -326,7 +326,7 @@ class WP_Booking_Simple_Ajax {
 				'id'            => $booking->id,
 				'title'         => $name . ' (' . $guests . ')',
 				'start'         => $booking->check_in,
-				'end'           => date( 'Y-m-d', strtotime( $booking->check_out . ' +1 day' ) ),
+				'end'           => gmdate( 'Y-m-d', strtotime( $booking->check_out . ' +1 day' ) ),
 				'color'         => $this->get_status_color( $booking->status ),
 				'extendedProps' => array(
 					'status'  => ucfirst( $booking->status ),
@@ -749,7 +749,7 @@ class WP_Booking_Simple_Ajax {
 				'id'    => $booking->id,
 				'title' => __( 'Booked', 'wp-booking-simple' ),
 				'start' => $booking->check_in,
-				'end'   => date( 'Y-m-d', strtotime( $booking->check_out . ' +1 day' ) ),
+				'end'   => gmdate( 'Y-m-d', strtotime( $booking->check_out . ' +1 day' ) ),
 				'display' => 'background',
 				'backgroundColor' => '#8B0000',
 				'borderColor' => '#8B0000',

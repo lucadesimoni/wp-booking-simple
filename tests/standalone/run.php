@@ -76,7 +76,7 @@ function plugins_url( $p = '', $f = '' ) { return 'http://example.test' . $p; }
 function untrailingslashit( $s ) { return rtrim( $s, '/' ); }
 function register_activation_hook( $f, $cb ) {}
 function register_deactivation_hook( $f, $cb ) {}
-function add_action( $h, $cb, $p = 10, $a = 1 ) { $GLOBALS['_wpbsl_test']['actions'][ $h ] = $cb; }
+function add_action( $h, $cb, $p = 10, $a = 1 ) { $GLOBALS['_wpbsl_test']['actions'][ $h ] = $cb; $GLOBALS['_wpbsl_test']['all_actions'][ $h ][ $p ][] = $cb; }
 function add_filter( $h, $cb, $p = 10, $a = 1 ) {}
 function add_shortcode( $t, $cb ) { $GLOBALS['_wpbsl_test']['shortcodes'][ $t ] = $cb; }
 function register_block_type( $name, $args = array() ) { $GLOBALS['_wpbsl_test']['blocks'][ $name ] = $args; return true; }
@@ -209,8 +209,13 @@ foreach ( array( 'wp_ajax_wpbsl_submit_booking', 'wp_ajax_nopriv_wpbsl_submit_bo
 }
 
 // Blocks register on the WordPress `init` action; fire it to register them.
-if ( isset( $actions['init'] ) ) {
-	call_user_func( $actions['init'] );
+// Run every init callback in priority order (styles, translations, blocks).
+$init_callbacks = isset( $GLOBALS['_wpbsl_test']['all_actions']['init'] ) ? $GLOBALS['_wpbsl_test']['all_actions']['init'] : array();
+ksort( $init_callbacks );
+foreach ( $init_callbacks as $callbacks ) {
+	foreach ( $callbacks as $callback ) {
+		call_user_func( $callback );
+	}
 }
 $blocks = $GLOBALS['_wpbsl_test']['blocks'];
 check( isset( $blocks['wp-booking-simple/calendar'] ), 'calendar block registered' );
@@ -594,6 +599,50 @@ $frontend_js = file_get_contents( $plugin_dir . '/assets/js/frontend.js' );
 check( false !== strpos( $frontend_js, "frontend/element_ready/' + name + '.default" ), 'widgets re-initialise after an Elementor re-render' );
 check( false !== strpos( $frontend_js, "$(document).on('submit', '#wpbs-booking-form'" ), 'form submit handler is delegated' );
 check( false !== strpos( $frontend_js, 'calendarEl.dataset.wpbsReady' ), 'calendar init is idempotent' );
+
+/* --------------------------------------------------------------------------
+ * WordPress.org directory readiness.
+ * ------------------------------------------------------------------------ */
+echo "\nSecurity: SMTP password encryption\n";
+if ( ! function_exists( 'wp_salt' ) ) {
+	function wp_salt( $scheme = 'auth' ) { return $GLOBALS['_wpbsl_salt'] ?? 'test-salt-A'; }
+}
+$enc = WP_Booking_Simple_Helpers::encrypt_secret( 'p@ss "w0rd" ü' );
+check( 0 === strpos( $enc, WP_Booking_Simple_Helpers::SECRET_PREFIX ), 'secret is stored with the encryption prefix' );
+check( false === strpos( $enc, 'p@ss' ), 'plain text does not appear in the stored value' );
+check_equals( 'p@ss "w0rd" ü', WP_Booking_Simple_Helpers::decrypt_secret( $enc ), 'round-trips, including quotes and UTF-8' );
+check( $enc !== WP_Booking_Simple_Helpers::encrypt_secret( 'p@ss "w0rd" ü' ), 'a fresh IV each time (no identical ciphertexts)' );
+check_equals( 'legacy-plain', WP_Booking_Simple_Helpers::decrypt_secret( 'legacy-plain' ), 'a password saved by an earlier version still works' );
+check_equals( '', WP_Booking_Simple_Helpers::encrypt_secret( '' ), 'empty stays empty' );
+$tampered = substr( $enc, 0, -4 ) . ( 'AAAA' === substr( $enc, -4 ) ? 'BBBB' : 'AAAA' );
+check_equals( '', WP_Booking_Simple_Helpers::decrypt_secret( $tampered ), 'tampered ciphertext is rejected (GCM tag)' );
+$GLOBALS['_wpbsl_salt'] = 'rotated-salt';
+check_equals( '', WP_Booking_Simple_Helpers::decrypt_secret( $enc ), 'rotated salts make the old value unreadable (re-enter the password)' );
+unset( $GLOBALS['_wpbsl_salt'] );
+
+echo "\nDirectory: code and headers\n";
+$php_src = array();
+foreach ( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $plugin_dir . '/includes' ) ) as $f ) {
+	if ( '.php' === substr( $f->getPathname(), -4 ) ) {
+		$php_src[ $f->getPathname() ] = file_get_contents( $f->getPathname() );
+	}
+}
+$php_src['main'] = file_get_contents( $plugin_dir . '/wp-booking-simple.php' );
+$all_php = implode( "\n", $php_src );
+check( ! preg_match( '/<script(?![^>]*application\/ld\+json)/i', $all_php ), 'no inline <script> tags' );
+check( ! preg_match( '/(?<![\w>:$])date\(/', $all_php ), 'no date() (gmdate()/wp_date() instead)' );
+// absint()/intval() need no unslashing (WPCS treats them as unslash-safe).
+check( ! preg_match( '/(sanitize_\w+|esc_url_raw)\(\s*\$_(POST|GET|REQUEST)\[/', $all_php ), 'request data is unslashed before sanitising' );
+check( ! preg_match( '/famiglia-desimoni|Raiffeisen|Alberto|De Simoni\b(?! ?\*)/i', preg_replace( '/^\s*\*\s*(Author|@author).*$/m', '', $all_php ) ), 'no family/site-specific strings outside the author credit' );
+check( false === strpos( $all_php, "get_option( 'wpbsl_smtp_password'" ) || false !== strpos( $all_php, 'decrypt_secret( get_option( \'wpbsl_smtp_password\'' ), 'SMTP password is only read through decrypt_secret()' );
+$main_hdr = $php_src['main'];
+foreach ( array( 'Plugin Name', 'Version', 'Requires at least', 'Requires PHP', 'Author', 'License', 'License URI', 'Text Domain', 'Domain Path' ) as $h ) {
+	check( (bool) preg_match( '/^\s*\*\s*' . preg_quote( $h, '/' ) . ':\s*\S/m', $main_hdr ), "plugin header: {$h}" );
+}
+$readme_src = file_get_contents( $plugin_dir . '/readme.txt' );
+foreach ( array( 'Description', 'Installation', 'Frequently Asked Questions', 'External services', 'Changelog' ) as $sec ) {
+	check( false !== strpos( $readme_src, "== {$sec} ==" ), "readme section: {$sec}" );
+}
 
 /* --------------------------------------------------------------------------
  * Summary.

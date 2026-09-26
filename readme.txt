@@ -1,10 +1,10 @@
 === WP Booking Simple ===
-Contributors: famiglia-desimoni
+Contributors: lucadesimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.23.0
+Stable tag: 1.24.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,7 +119,33 @@ Yes. The All Bookings and Dashboard screens have an "Export CSV" button that dow
 
 Yes. A complete German translation ships with the plugin (German/Germany and German/Switzerland). Set Settings > General > Site Language to "Deutsch" or "Deutsch (Schweiz)" and the admin screens, the booking form and the emails appear in German. To adjust any wording, edit the .po file under /lang and recompile the .mo with tools/i18n/po2mo.php.
 
+== External services ==
+
+The plugin does not connect to any external service and sends no data off
+your site:
+
+* The date picker, availability calendar and QR-code generator are bundled
+  and served from your own site (no CDN).
+* The Swiss QR bill for TWINT / bank payments is generated in the guest's
+  browser from the IBAN and address you enter.
+* The optional "Pay with TWINT" button only links to the payment URL you
+  configure; nothing is sent until the guest clicks it.
+* Emails go through WordPress's mail function, or through the SMTP server you
+  configure under Settings > Email. The SMTP password is stored encrypted.
+
 == Changelog ==
+
+= 1.24.0 =
+* 2026-09-26
+* Prepared for the WordPress.org plugin directory; no change for guests.
+* Author is now Outthinkx Club.
+* The SMTP password is now stored encrypted (AES-256-GCM, keyed from the
+  site's wp-config.php salts). An existing password keeps working and is
+  encrypted on the next settings save.
+* The "Send test email" script moved from an inline <script> into admin.js.
+* Settings placeholders are generic; plugin header gains License and a
+  project Plugin URI; translations load on init.
+* Readme: External services section.
 
 = 1.23.0 =
 * 2026-09-25

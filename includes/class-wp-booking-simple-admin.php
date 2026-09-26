@@ -220,6 +220,7 @@ class WP_Booking_Simple_Admin {
 					'noHistory'      => __( 'No changes recorded yet.', 'wp-booking-simple' ),
 					'confirmInsertDe' => __( 'Replace the confirmation, cancellation and reminder email text with the German starter?', 'wp-booking-simple' ),
 					'insertedDe'     => __( 'Inserted — remember to click Save Settings.', 'wp-booking-simple' ),
+					'requestFailed'  => __( 'Request failed. Please try again.', 'wp-booking-simple' ),
 				),
 			)
 		);
@@ -828,9 +829,12 @@ class WP_Booking_Simple_Admin {
 			$smtp_encryption = in_array( $smtp_encryption, array( 'none', 'ssl', 'tls' ), true ) ? $smtp_encryption : 'tls';
 			$smtp_auth       = isset( $_POST['wpbsl_smtp_auth'] ) ? 1 : 0;
 			$smtp_username   = isset( $_POST['wpbsl_smtp_username'] ) ? sanitize_text_field( wp_unslash( $_POST['wpbsl_smtp_username'] ) ) : '';
-			// Password: keep the stored value when the field is left blank.
-			$smtp_password_input = isset( $_POST['wpbsl_smtp_password'] ) ? trim( (string) wp_unslash( $_POST['wpbsl_smtp_password'] ) ) : '';
-			$smtp_password       = '' === $smtp_password_input ? (string) get_option( 'wpbsl_smtp_password', '' ) : $smtp_password_input;
+			// Password: keep the stored value when the field is left blank. Not
+			// text-sanitised (that would strip valid characters); it is only
+			// ever handed to PHPMailer, and stored encrypted.
+			$smtp_password_input = isset( $_POST['wpbsl_smtp_password'] ) ? trim( (string) wp_unslash( $_POST['wpbsl_smtp_password'] ) ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$smtp_password_plain = '' === $smtp_password_input ? WP_Booking_Simple_Helpers::decrypt_secret( get_option( 'wpbsl_smtp_password', '' ) ) : $smtp_password_input;
+			$smtp_password       = WP_Booking_Simple_Helpers::encrypt_secret( $smtp_password_plain );
 
 			// TWINT / Swiss QR-bill payment options.
 			$qr_enabled = isset( $_POST['wpbsl_qr_enabled'] ) ? 1 : 0;
@@ -870,7 +874,7 @@ class WP_Booking_Simple_Admin {
 					$template_values[ $field_key ] = '';
 					continue;
 				}
-				$raw   = wp_unslash( $_POST[ $field_key ] );
+				$raw   = wp_unslash( $_POST[ $field_key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitised on the next line (wp_kses_post / sanitize_text_field).
 				$value = ( 'body' === $field_type ) ? wp_kses_post( $raw ) : sanitize_text_field( $raw );
 
 				if ( isset( $template_defaults[ $field_key ] ) && trim( $value ) === trim( $template_defaults[ $field_key ] ) ) {
@@ -884,7 +888,7 @@ class WP_Booking_Simple_Admin {
 			$block_values = array();
 			foreach ( array( 'confirmation', 'cancellation', 'reminder', 'admin' ) as $slug ) {
 				$block_key                   = 'wpbsl_email_' . $slug . '_blocks';
-				$block_raw                   = isset( $_POST[ $block_key ] ) ? wp_unslash( $_POST[ $block_key ] ) : '';
+				$block_raw                   = isset( $_POST[ $block_key ] ) ? wp_unslash( $_POST[ $block_key ] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- validated by sanitize_blocks_json().
 				$block_values[ $block_key ]  = $this->sanitize_blocks_json( $block_raw );
 			}
 
@@ -1085,7 +1089,7 @@ class WP_Booking_Simple_Admin {
 				<tr>
 					<th scope="row"><label for="wpbsl_qr_bank_name"><?php esc_html_e( 'Bank name (optional)', 'wp-booking-simple' ); ?></label></th>
 					<td>
-						<input type="text" id="wpbsl_qr_bank_name" name="wpbsl_qr_bank_name" value="<?php echo esc_attr( get_option( 'wpbsl_qr_bank_name', '' ) ); ?>" class="regular-text" placeholder="Raiffeisenbank Pilatus" />
+						<input type="text" id="wpbsl_qr_bank_name" name="wpbsl_qr_bank_name" value="<?php echo esc_attr( get_option( 'wpbsl_qr_bank_name', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. Example Bank', 'wp-booking-simple' ); ?>" />
 						<p class="description"><?php esc_html_e( 'Shown in the payment details on the confirmation email and at checkout.', 'wp-booking-simple' ); ?></p>
 					</td>
 				</tr>
@@ -1099,7 +1103,7 @@ class WP_Booking_Simple_Admin {
 				<tr>
 					<th scope="row"><label for="wpbsl_qr_twint_label"><?php esc_html_e( 'TWINT link text (optional)', 'wp-booking-simple' ); ?></label></th>
 					<td>
-						<input type="text" id="wpbsl_qr_twint_label" name="wpbsl_qr_twint_label" value="<?php echo esc_attr( get_option( 'wpbsl_qr_twint_label', '' ) ); ?>" class="regular-text" placeholder="Twint-Paylink Chalet De Simoni" />
+						<input type="text" id="wpbsl_qr_twint_label" name="wpbsl_qr_twint_label" value="<?php echo esc_attr( get_option( 'wpbsl_qr_twint_label', '' ) ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'e.g. Pay with TWINT', 'wp-booking-simple' ); ?>" />
 						<p class="description"><?php esc_html_e( 'The clickable text for the {payment_twint} email link. Defaults to "Pay with TWINT".', 'wp-booking-simple' ); ?></p>
 					</td>
 				</tr>
@@ -1210,7 +1214,7 @@ class WP_Booking_Simple_Admin {
 						</label>
 						<p style="margin-top:8px;">
 							<label for="wpbsl_owners"><?php esc_html_e( 'Owner names (one per line):', 'wp-booking-simple' ); ?></label><br />
-							<textarea id="wpbsl_owners" name="wpbsl_owners" rows="4" class="large-text code" placeholder="Alberto&#10;Luca"><?php echo esc_textarea( get_option( 'wpbsl_owners', '' ) ); ?></textarea>
+							<textarea id="wpbsl_owners" name="wpbsl_owners" rows="4" class="large-text code" placeholder="Anna&#10;Marco"><?php echo esc_textarea( get_option( 'wpbsl_owners', '' ) ); ?></textarea>
 						</p>
 						<p class="description"><?php esc_html_e( 'The dropdown only appears when at least one name is listed. Available in emails as {owner}.', 'wp-booking-simple' ); ?></p>
 					</td>
@@ -1470,34 +1474,6 @@ Herzliche Grüsse
 			<?php submit_button( __( 'Save Settings', 'wp-booking-simple' ), 'primary', 'wpbsl_save_settings' ); ?>
 		</form>
 
-		<script>
-		( function () {
-			var btn = document.getElementById( 'wpbs-send-test-email' );
-			if ( ! btn ) { return; }
-			btn.addEventListener( 'click', function () {
-				var out = document.getElementById( 'wpbs-test-email-result' );
-				var to = document.getElementById( 'wpbsl_test_email_to' ).value;
-				btn.disabled = true;
-				out.style.color = '#666';
-				out.textContent = <?php echo wp_json_encode( __( 'Sending…', 'wp-booking-simple' ) ); ?>;
-				var body = new URLSearchParams();
-				body.append( 'action', 'wpbsl_send_test_email' );
-				body.append( 'nonce', btn.getAttribute( 'data-nonce' ) );
-				body.append( 'email', to );
-				fetch( ajaxurl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString() } )
-					.then( function ( r ) { return r.json(); } )
-					.then( function ( res ) {
-						out.style.color = res.success ? '#0a7d28' : '#b32d2e';
-						out.textContent = ( res.data && res.data.message ) ? res.data.message : '';
-					} )
-					.catch( function () {
-						out.style.color = '#b32d2e';
-						out.textContent = <?php echo wp_json_encode( __( 'Request failed. Please try again.', 'wp-booking-simple' ) ); ?>;
-					} )
-					.finally( function () { btn.disabled = false; } );
-			} );
-		} )();
-		</script>
 	</div>
 	<?php
 	}

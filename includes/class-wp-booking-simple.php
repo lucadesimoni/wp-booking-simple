@@ -128,7 +128,7 @@ class WP_Booking_Simple {
 		new WP_Booking_Simple_Elementor();
 
 		// Load plugin textdomain.
-		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
+		add_action( 'init', array( $this, 'load_plugin_textdomain' ), 0 );
 	}
 
 	/**

@@ -1070,6 +1070,12 @@ msgstr "[%s] Test-E-Mail von WP Booking Simple"
 msgid "adults"
 msgstr "Erwachsene"
 
+msgid "e.g. Example Bank"
+msgstr "z. B. Musterbank"
+
+msgid "e.g. Pay with TWINT"
+msgstr "z. B. Mit TWINT bezahlen"
+
 msgid "kids"
 msgstr "Kinder"
 
