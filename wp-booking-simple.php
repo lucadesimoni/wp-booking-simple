@@ -4,8 +4,8 @@
  * Version: 1.24.0
  * Plugin URI: https://github.com/lucadesimoni/wp-booking-simple
  * Description: A simple and modern booking system for WordPress with calendar management, email notifications, and price calculations.
- * Author: Famiglia De Simoni
- * Author URI: https://famiglia-desimoni.ch/
+ * Author: Outthinkx Club
+ * Author URI: https://github.com/lucadesimoni
  * Requires at least: 6.5
  * Tested up to: 7.1
  * Requires PHP: 7.2
@@ -16,7 +16,7 @@
  * Domain Path: /lang/
  *
  * @package WordPress
- * @author Famiglia De Simoni
+ * @author Outthinkx Club
  * @since 1.0.0
  */
 

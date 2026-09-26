@@ -1,5 +1,5 @@
 === WP Booking Simple ===
-Contributors: famiglia-desimoni
+Contributors: lucadesimoni
 Tags: booking, calendar, reservation, booking-system
 Requires at least: 6.5
 Tested up to: 7.1
@@ -138,6 +138,7 @@ your site:
 = 1.24.0 =
 * 2026-09-26
 * Prepared for the WordPress.org plugin directory; no change for guests.
+* Author is now Outthinkx Club.
 * The SMTP password is now stored encrypted (AES-256-GCM, keyed from the
   site's wp-config.php salts). An existing password keeps working and is
   encrypted on the next settings save.

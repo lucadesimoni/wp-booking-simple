@@ -1,6 +1,7 @@
 *** WP Booking Simple Changelog ***
 
 2026.09.26 - version 1.24.0
+ * Tweak - Author is now Outthinkx Club (https://github.com/lucadesimoni); readme contributor lucadesimoni.
  * Security - The SMTP password is stored encrypted (AES-256-GCM, key derived from the wp-config.php salts) instead of in plain text. A password saved by an earlier version keeps working and is encrypted the next time the settings are saved. Hosts without OpenSSL keep the previous behaviour. Changing the salts means entering the password again.
  * Tweak - WordPress.org directory preparation: the "Send test email" button's inline <script> moved into assets/js/admin.js; date() replaced by gmdate() (identical under WordPress); translations load on init instead of plugins_loaded (WordPress 6.7 warns about earlier loading).
  * Tweak - Generic settings placeholders (no bank, chalet or family names); plugin header gains License / License URI and points Plugin URI at the project repository.
