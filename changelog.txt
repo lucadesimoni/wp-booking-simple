@@ -1,5 +1,11 @@
 *** WP Booking Simple Changelog ***
 
+2026.09.26 - version 1.24.0
+ * Security - The SMTP password is stored encrypted (AES-256-GCM, key derived from the wp-config.php salts) instead of in plain text. A password saved by an earlier version keeps working and is encrypted the next time the settings are saved. Hosts without OpenSSL keep the previous behaviour. Changing the salts means entering the password again.
+ * Tweak - WordPress.org directory preparation: the "Send test email" button's inline <script> moved into assets/js/admin.js; date() replaced by gmdate() (identical under WordPress); translations load on init instead of plugins_loaded (WordPress 6.7 warns about earlier loading).
+ * Tweak - Generic settings placeholders (no bank, chalet or family names); plugin header gains License / License URI and points Plugin URI at the project repository.
+ * Tweak - Readme: External services section (the plugin contacts no external service).
+
 2026.09.25 - version 1.23.0
  * Compatibility - Requires WordPress 6.5 or later (was 5.0); tested up to 7.1. The block editor controls use the WordPress 7.0 control styles, so 6.7-6.9 no longer log deprecation warnings.
  * New - "Theme colors" scheme under Settings > Booking Form > Colors. The form, calendar and buttons then follow the active theme: the Astra global palette plus Astra's Customizer button colors, corner radius and heading font; otherwise Elementor's global colors and fonts, or a block theme's palette. The default stays the plugin's dark red, so existing sites look exactly as before. The stylesheet is now driven by --wpbs-* custom properties (filter: wpbsl_theme_scheme_vars).

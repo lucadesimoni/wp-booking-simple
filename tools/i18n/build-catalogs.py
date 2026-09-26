@@ -96,6 +96,8 @@ NEW_TRANSLATIONS = {
         "Elementor-Widget gesetzt sind, haben weiterhin Vorrang.",
     "Title color": "Farbe des Titels",
     "Title typography": "Typografie des Titels",
+    "e.g. Example Bank": "z. B. Musterbank",
+    "e.g. Pay with TWINT": "z. B. Mit TWINT bezahlen",
 }
 
 

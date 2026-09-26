@@ -532,4 +532,65 @@ class WP_Booking_Simple_Helpers {
 
 		return isset( $fields[ $field ] ) ? $fields[ $field ] : true;
 	}
+
+	/**
+	 * Prefix marking a value encrypted by encrypt_secret().
+	 */
+	const SECRET_PREFIX = 'wpbsl-enc:v1:';
+
+	/**
+	 * Key for encrypt_secret(), derived from the site's secret salts
+	 * (AUTH_KEY / AUTH_SALT in wp-config.php), so it never sits in the
+	 * database next to the data it protects.
+	 *
+	 * @return string 32-byte binary key.
+	 */
+	private static function secret_key() {
+		return hash( 'sha256', wp_salt( 'auth' ) . '|wp-booking-simple', true );
+	}
+
+	/**
+	 * Encrypt a secret (the SMTP password) for storage in the options table.
+	 *
+	 * Uses AES-256-GCM when OpenSSL is available; otherwise the value is
+	 * stored as before, so SMTP keeps working on hosts without OpenSSL.
+	 * Changing the wp-config.php salts makes stored secrets unreadable; the
+	 * password then has to be entered again.
+	 *
+	 * @param string $plain Plain-text secret.
+	 * @return string
+	 */
+	public static function encrypt_secret( $plain ) {
+		$plain = (string) $plain;
+		if ( '' === $plain || ! function_exists( 'openssl_encrypt' ) || ! in_array( 'aes-256-gcm', openssl_get_cipher_methods(), true ) ) {
+			return $plain;
+		}
+		$iv     = random_bytes( 12 );
+		$tag    = '';
+		$cipher = openssl_encrypt( $plain, 'aes-256-gcm', self::secret_key(), OPENSSL_RAW_DATA, $iv, $tag );
+		if ( false === $cipher ) {
+			return $plain;
+		}
+		return self::SECRET_PREFIX . base64_encode( $iv . $tag . $cipher ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- binary ciphertext stored as text.
+	}
+
+	/**
+	 * Decrypt a value stored by encrypt_secret(). Values saved by earlier
+	 * versions (plain text, no prefix) are returned unchanged.
+	 *
+	 * @param string $stored Stored value.
+	 * @return string Plain text, or '' when it cannot be decrypted.
+	 */
+	public static function decrypt_secret( $stored ) {
+		$stored = (string) $stored;
+		if ( 0 !== strpos( $stored, self::SECRET_PREFIX ) ) {
+			return $stored;
+		}
+		$raw = base64_decode( substr( $stored, strlen( self::SECRET_PREFIX ) ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- see encrypt_secret().
+		if ( false === $raw || strlen( $raw ) < 29 || ! function_exists( 'openssl_decrypt' ) ) {
+			return '';
+		}
+		$plain = openssl_decrypt( substr( $raw, 28 ), 'aes-256-gcm', self::secret_key(), OPENSSL_RAW_DATA, substr( $raw, 0, 12 ), substr( $raw, 12, 16 ) );
+		return false === $plain ? '' : $plain;
+	}
 }

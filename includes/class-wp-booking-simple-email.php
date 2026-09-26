@@ -85,7 +85,7 @@ class WP_Booking_Simple_Email {
 
 		if ( $phpmailer->SMTPAuth ) {
 			$phpmailer->Username = (string) get_option( 'wpbsl_smtp_username', '' );
-			$phpmailer->Password = (string) get_option( 'wpbsl_smtp_password', '' );
+			$phpmailer->Password = WP_Booking_Simple_Helpers::decrypt_secret( get_option( 'wpbsl_smtp_password', '' ) );
 		}
 	}
 

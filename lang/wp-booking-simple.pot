@@ -1070,6 +1070,12 @@ msgstr ""
 msgid "adults"
 msgstr ""
 
+msgid "e.g. Example Bank"
+msgstr ""
+
+msgid "e.g. Pay with TWINT"
+msgstr ""
+
 msgid "kids"
 msgstr ""
 
