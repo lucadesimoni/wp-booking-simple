@@ -40,7 +40,7 @@ jobs:
         run: |
           version="${{ steps.resolve.outputs.version }}"
           header_version=$(grep -E "^\s*\*\s*Version:" wp-booking-simple.php | head -1 | sed -E 's/.*Version:\s*//')
-          constant_version=$(grep -E "WP_BOOKING_SIMPLE_VERSION" wp-booking-simple.php | head -1 | sed -E "s/.*'([0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
+          constant_version=$(grep -E "define\( *'WP_BOOKING_SIMPLE_VERSION'" wp-booking-simple.php | head -1 | sed -E "s/.*'([0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
           readme_stable=$(grep -E "^Stable tag:" readme.txt | head -1 | sed -E 's/Stable tag:\s*//')
           echo "version=$version header=$header_version constant=$constant_version readme=$readme_stable"
           if [ "$version" != "$header_version" ] || [ "$version" != "$constant_version" ] || [ "$version" != "$readme_stable" ]; then
