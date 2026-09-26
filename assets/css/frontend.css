@@ -349,27 +349,27 @@
 }
 
 /* Flatpickr Customization */
-.flatpickr-calendar {
+.wpbs-flatpickr.flatpickr-calendar {
 	font-family: inherit;
 	border-radius: 8px;
 	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.flatpickr-day.selected,
-.flatpickr-day.startRange,
-.flatpickr-day.endRange {
+.wpbs-flatpickr .flatpickr-day.selected,
+.wpbs-flatpickr .flatpickr-day.startRange,
+.wpbs-flatpickr .flatpickr-day.endRange {
 	background: var(--wpbs-primary);
 	border-color: var(--wpbs-primary);
 }
 
-.flatpickr-day.selected:hover,
-.flatpickr-day.startRange:hover,
-.flatpickr-day.endRange:hover {
+.wpbs-flatpickr .flatpickr-day.selected:hover,
+.wpbs-flatpickr .flatpickr-day.startRange:hover,
+.wpbs-flatpickr .flatpickr-day.endRange:hover {
 	background: var(--wpbs-primary-dark);
 	border-color: var(--wpbs-primary-dark);
 }
 
-.flatpickr-day.inRange {
+.wpbs-flatpickr .flatpickr-day.inRange {
 	background: color-mix(in srgb, var(--wpbs-primary) 10%, transparent);
 	border-color: color-mix(in srgb, var(--wpbs-primary) 10%, transparent);
 }

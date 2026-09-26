@@ -122,7 +122,7 @@ class WP_Booking_Simple_Block {
 			'category'        => 'wp-booking-simple',
 			'icon'            => 'calendar-alt',
 			'keywords'        => array( 'booking', 'calendar', 'availability', 'chalet' ),
-			'render_callback' => array( $this, 'render_calendar_block' ),
+			'render_callback' => $this->guarded( 'render_calendar_block' ),
 			'attributes'      => array(
 				'anchor'      => array( 'type' => 'string' ),
 				'title'       => array(
@@ -141,7 +141,7 @@ class WP_Booking_Simple_Block {
 			'category'        => 'wp-booking-simple',
 			'icon'            => 'calendar',
 			'keywords'        => array( 'booking', 'reservation', 'form', 'chalet' ),
-			'render_callback' => array( $this, 'render_form_block' ),
+			'render_callback' => $this->guarded( 'render_form_block' ),
 			'attributes'      => array(
 				'anchor'        => array( 'type' => 'string' ),
 				'title'         => array(
@@ -168,6 +168,19 @@ class WP_Booking_Simple_Block {
 
 		register_block_type( 'wp-booking-system/calendar', $calendar_args );
 		register_block_type( 'wp-booking-system/form', $form_args );
+	}
+
+	/**
+	 * A render callback that can never break the page (see
+	 * WP_Booking_Simple_Helpers::safe_render()).
+	 *
+	 * @param string $method Render method on this class.
+	 * @return Closure
+	 */
+	private function guarded( $method ) {
+		return function ( $attributes = array() ) use ( $method ) {
+			return WP_Booking_Simple_Helpers::safe_render( 'block ' . $method, array( $this, $method ), array( (array) $attributes ) );
+		};
 	}
 
 	/**

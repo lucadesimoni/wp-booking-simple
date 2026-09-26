@@ -284,7 +284,7 @@ class WP_Booking_Simple_Elementor_Form_Widget extends \Elementor\Widget_Base {
 		$title    = isset( $settings['wpbsl_title'] ) ? $settings['wpbsl_title'] : '';
 
 		// Output is pre-built, escaped markup from the frontend renderer.
-		echo wp_booking_simple()->frontend->render_booking_form( array( 'title' => $title ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo WP_Booking_Simple_Helpers::safe_render( 'Elementor booking form', array( wp_booking_simple()->frontend, 'render_booking_form' ), array( array( 'title' => $title ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }
 
@@ -467,6 +467,6 @@ class WP_Booking_Simple_Elementor_Calendar_Widget extends \Elementor\Widget_Base
 		$title    = isset( $settings['wpbsl_title'] ) ? $settings['wpbsl_title'] : '';
 
 		// Output is pre-built, escaped markup from the frontend renderer.
-		echo wp_booking_simple()->frontend->render_booking_calendar( array( 'title' => $title ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo WP_Booking_Simple_Helpers::safe_render( 'Elementor booking calendar', array( wp_booking_simple()->frontend, 'render_booking_calendar' ), array( array( 'title' => $title ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

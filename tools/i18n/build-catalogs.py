@@ -98,6 +98,16 @@ NEW_TRANSLATIONS = {
     "Title typography": "Typografie des Titels",
     "e.g. Example Bank": "z. B. Musterbank",
     "e.g. Pay with TWINT": "z. B. Mit TWINT bezahlen",
+    "WP Booking Simple could not display this element. Details are in the PHP error log (with WP_DEBUG enabled).":
+        "WP Booking Simple konnte dieses Element nicht anzeigen. Details stehen im PHP-Fehlerprotokoll (mit aktiviertem WP_DEBUG).",
+    "WP Booking Simple could not start and has been paused for this request; the rest of the site is unaffected. With WP_DEBUG enabled, the PHP error log shows why.":
+        "WP Booking Simple konnte nicht starten und wurde für diesen Aufruf angehalten; der Rest der Website ist nicht betroffen. Mit aktiviertem WP_DEBUG zeigt das PHP-Fehlerprotokoll den Grund.",
+    "WP Booking Simple is active twice (two copies of the plugin are installed). Only the first copy is running; deactivate and delete the other one.":
+        "WP Booking Simple ist doppelt aktiv (zwei Kopien des Plugins sind installiert). Nur die erste Kopie läuft; bitte die andere deaktivieren und löschen.",
+    "WP Booking Simple needs PHP 7.2 or later (this site runs %s) and has not been loaded.":
+        "WP Booking Simple benötigt PHP 7.2 oder neuer (diese Website nutzt %s) und wurde nicht geladen.",
+    "WP Booking Simple needs WordPress 6.5 or later (this site runs %s) and has not been loaded.":
+        "WP Booking Simple benötigt WordPress 6.5 oder neuer (diese Website nutzt %s) und wurde nicht geladen.",
 }
 
 

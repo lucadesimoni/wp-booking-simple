@@ -644,6 +644,40 @@ foreach ( array( 'Description', 'Installation', 'Frequently Asked Questions', 'E
 	check( false !== strpos( $readme_src, "== {$sec} ==" ), "readme section: {$sec}" );
 }
 
+echo "\nRobustness: errors never break the page\n";
+if ( ! function_exists( 'current_user_can' ) ) {
+	function current_user_can( $cap ) { return ! empty( $GLOBALS['_wpbsl_can_edit'] ); }
+}
+if ( ! function_exists( 'do_action' ) ) {
+	function do_action( $hook, ...$args ) { if ( 'wpbsl_render_error' === $hook ) { $GLOBALS['_wpbsl_reported'][] = $args[0]; } }
+}
+$lvl  = ob_get_level();
+$out  = WP_Booking_Simple_Helpers::safe_render( 'test', function () { echo '<form class="half'; throw new RuntimeException( 'boom' ); } );
+check_equals( '', $out, 'a crashing renderer returns nothing to visitors' );
+check( ob_get_level() === $lvl, 'partial output is discarded and buffers are balanced' );
+$GLOBALS['_wpbsl_can_edit'] = true;
+check( false !== strpos( WP_Booking_Simple_Helpers::safe_render( 'test', function () { throw new Error( 'x' ); } ), 'wpbs-render-error' ), 'editors see a short note' );
+$GLOBALS['_wpbsl_can_edit'] = false;
+check_equals( '', WP_Booking_Simple_Helpers::safe_render( 'test', function () { return wpbsl_missing_function(); } ), 'undefined function is contained' );
+check_equals( 'ok', WP_Booking_Simple_Helpers::safe_render( 'test', function ( $a ) { return $a; }, array( 'ok' ) ), 'working renderers are untouched' );
+$sc_cb = $GLOBALS['_wpbsl_test']['shortcodes']['wp_booking_form_simple'];
+check( $sc_cb instanceof Closure, 'shortcodes are registered through the guard' );
+$blk = $GLOBALS['_wpbsl_test']['blocks']['wp-booking-simple/form']['render_callback'];
+check( $blk instanceof Closure, 'block renders go through the guard' );
+$widget_src = file_get_contents( $plugin_dir . '/includes/class-wp-booking-simple-widget.php' ) . file_get_contents( $plugin_dir . '/includes/elementor/class-wp-booking-simple-elementor-widgets.php' );
+check( 3 === substr_count( $widget_src, 'WP_Booking_Simple_Helpers::safe_render(' ), 'widget and both Elementor widgets render through the guard' );
+$main_src = file_get_contents( $plugin_dir . '/wp-booking-simple.php' );
+check( false !== strpos( $main_src, "if ( ! function_exists( 'wp_booking_simple' ) )" ), 'the global function is declared conditionally' );
+// Loading the plugin a second time (two copies installed) must return, not fatal.
+ob_start();
+$second = include $plugin_dir . '/wp-booking-simple.php';
+ob_end_clean();
+check( true, 'including the plugin twice does not fatal' );
+$handles_src = file_get_contents( $plugin_dir . '/includes/class-wp-booking-simple-frontend.php' ) . file_get_contents( $plugin_dir . '/includes/class-wp-booking-simple-admin.php' ) . file_get_contents( $plugin_dir . '/includes/class-wp-booking-simple-theme.php' );
+check( ! preg_match( "/wp_(register|enqueue)_(script|style)\(\s*'(flatpickr|fullcalendar)'/", $handles_src ), 'bundled libraries use prefixed handles (no clash with other plugins)' );
+$css_src = file_get_contents( $plugin_dir . '/assets/css/frontend.css' );
+check( ! preg_match( '/(^|[,}]\s*)\.flatpickr-/m', $css_src ), 'date-picker styles only apply to our own pickers' );
+
 /* --------------------------------------------------------------------------
  * Summary.
  * ------------------------------------------------------------------------ */

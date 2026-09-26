@@ -4,7 +4,7 @@ Tags: booking, calendar, reservation, booking-system
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 7.2
-Stable tag: 1.24.0
+Stable tag: 1.25.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -134,6 +134,20 @@ your site:
   configure under Settings > Email. The SMTP password is stored encrypted.
 
 == Changelog ==
+
+= 1.25.0 =
+* 2026-09-26
+* Robustness: a failure inside the booking form, calendar, manage page, block,
+  widget or Elementor widget can no longer take a page down; visitors see the
+  rest of the page, editors see a short note, and the error is logged.
+* The plugin shows an admin notice instead of a fatal error when two copies are
+  active or WordPress/PHP are too old.
+* The bundled date picker and calendar libraries now load under their own
+  names, so another plugin shipping a different FullCalendar or flatpickr can
+  no longer break the booking calendar.
+* The date-picker styles only apply to the plugin's own date pickers.
+* Front-end script: missing settings or a failing component no longer stop the
+  rest.
 
 = 1.24.0 =
 * 2026-09-26

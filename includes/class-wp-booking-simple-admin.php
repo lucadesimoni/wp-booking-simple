@@ -197,7 +197,7 @@ class WP_Booking_Simple_Admin {
 		wp_enqueue_script(
 			'wp-booking-simple-admin',
 			WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/js/admin.js',
-			array( 'jquery', 'fullcalendar' ),
+			array( 'jquery', 'wpbs-fullcalendar' ),
 			WP_BOOKING_SIMPLE_VERSION,
 			true
 		);
@@ -272,7 +272,7 @@ class WP_Booking_Simple_Admin {
 
 		// FullCalendar (bundled v6 global build; injects its own styles, no CDN).
 		wp_enqueue_script(
-			'fullcalendar',
+			'wpbs-fullcalendar',
 			WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/fullcalendar/index.global.min.js',
 			array(),
 			'6.1.10',

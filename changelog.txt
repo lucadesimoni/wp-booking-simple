@@ -1,5 +1,12 @@
 *** WP Booking Simple Changelog ***
 
+2026.09.26 - version 1.25.0
+ * Robustness - Every front-end render (shortcodes, blocks, the classic widget, both Elementor widgets) runs through WP_Booking_Simple_Helpers::safe_render(): a failure discards its partial output and returns nothing (a short note for editors), reported via wp_trigger_error() under WP_DEBUG and the wpbsl_render_error action. Verified by injecting failures into every renderer in a sandbox: each page still loaded completely.
+ * Robustness - Safe loading: with two copies active or on WordPress < 6.5 / PHP < 7.2, the plugin shows an admin notice instead of fataling; start-up errors are caught the same way; wp_booking_simple() is declared conditionally.
+ * Fix - The bundled libraries were registered as "flatpickr" and "fullcalendar". WordPress keeps whichever plugin registers a handle first, so another plugin shipping a different version silently replaced ours and broke the booking calendar. They are now "wpbs-flatpickr" / "wpbs-fullcalendar".
+ * Fix - The date-picker styles recoloured every flatpickr on the site; they now only apply to the plugin's own pickers.
+ * Tweak - frontend.js falls back to empty settings when the localized data is missing, and isolates each component's setup.
+
 2026.09.26 - version 1.24.0
  * Tweak - Author is now Outthinkx Club (https://github.com/lucadesimoni); readme contributor lucadesimoni.
  * Security - The SMTP password is stored encrypted (AES-256-GCM, key derived from the wp-config.php salts) instead of in plain text. A password saved by an earlier version keeps working and is encrypted the next time the settings are saved. Hosts without OpenSSL keep the previous behaviour. Changing the salts means entering the password again.

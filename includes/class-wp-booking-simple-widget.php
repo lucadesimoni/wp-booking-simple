@@ -47,7 +47,7 @@ class WP_Booking_Simple_Widget extends WP_Widget {
 		// Reuse the shared, interactive calendar renderer (static enqueued JS,
 		// range selection, tooltips) so the widget behaves exactly like the
 		// shortcode and block. The title is emitted above, so render without one.
-		echo wp_booking_simple()->frontend->render_booking_calendar( array( 'title' => '' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo WP_Booking_Simple_Helpers::safe_render( 'calendar widget', array( wp_booking_simple()->frontend, 'render_booking_calendar' ), array( array( 'title' => '' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 		echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
