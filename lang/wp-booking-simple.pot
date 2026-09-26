@@ -1037,7 +1037,22 @@ msgstr ""
 msgid "WP Booking Simple"
 msgstr ""
 
+msgid "WP Booking Simple could not display this element. Details are in the PHP error log (with WP_DEBUG enabled)."
+msgstr ""
+
+msgid "WP Booking Simple could not start and has been paused for this request; the rest of the site is unaffected. With WP_DEBUG enabled, the PHP error log shows why."
+msgstr ""
+
+msgid "WP Booking Simple is active twice (two copies of the plugin are installed). Only the first copy is running; deactivate and delete the other one."
+msgstr ""
+
 msgid "WP Booking Simple is using your server's default mailer, which can fail to deliver booking emails. For reliable delivery (e.g. through Gmail), enable SMTP in"
+msgstr ""
+
+msgid "WP Booking Simple needs PHP 7.2 or later (this site runs %s) and has not been loaded."
+msgstr ""
+
+msgid "WP Booking Simple needs WordPress 6.5 or later (this site runs %s) and has not been loaded."
 msgstr ""
 
 msgid "Width (px, optional)"

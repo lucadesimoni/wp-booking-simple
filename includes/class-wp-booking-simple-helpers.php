@@ -593,4 +593,52 @@ class WP_Booking_Simple_Helpers {
 		$plain = openssl_decrypt( substr( $raw, 28 ), 'aes-256-gcm', self::secret_key(), OPENSSL_RAW_DATA, substr( $raw, 0, 12 ), substr( $raw, 12, 16 ) );
 		return false === $plain ? '' : $plain;
 	}
+
+	/**
+	 * Run a front-end renderer so that a bug in it can never take the page
+	 * down: any error or exception is caught, partial output is discarded,
+	 * the problem is reported, and an empty string is returned (a short note
+	 * for users who can edit, so they know something needs attention).
+	 *
+	 * @param string   $context  What was being rendered (for the report).
+	 * @param callable $callback Renderer returning HTML.
+	 * @param array    $args     Arguments for the renderer.
+	 * @return string
+	 */
+	public static function safe_render( $context, $callback, $args = array() ) {
+		$level = ob_get_level();
+		ob_start();
+		try {
+			$html = (string) call_user_func_array( $callback, $args );
+			// Anything the renderer echoed instead of returning stays with it.
+			return (string) ob_get_clean() . $html;
+		} catch ( \Throwable $e ) {
+			while ( ob_get_level() > $level ) {
+				ob_end_clean();
+			}
+			self::report_error( $context, $e );
+			if ( function_exists( 'current_user_can' ) && current_user_can( 'edit_posts' ) ) {
+				return '<p class="wpbs-render-error">' . esc_html__( 'WP Booking Simple could not display this element. Details are in the PHP error log (with WP_DEBUG enabled).', 'wp-booking-simple' ) . '</p>';
+			}
+			return '';
+		}
+	}
+
+	/**
+	 * Report a caught error: to the PHP error log when WP_DEBUG is on, and to
+	 * the `wpbsl_render_error` action for monitoring plugins.
+	 *
+	 * @param string     $context Where it happened.
+	 * @param \Throwable $e       The error.
+	 * @return void
+	 */
+	public static function report_error( $context, $e ) {
+		$message = sprintf( 'WP Booking Simple: %s failed: %s in %s:%d', $context, $e->getMessage(), $e->getFile(), $e->getLine() );
+		if ( function_exists( 'wp_trigger_error' ) && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			wp_trigger_error( '', $message, E_USER_WARNING );
+		}
+		if ( function_exists( 'do_action' ) ) {
+			do_action( 'wpbsl_render_error', $context, $e );
+		}
+	}
 }

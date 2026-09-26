@@ -5,6 +5,26 @@
 (function($) {
 	'use strict';
 
+	// Localized by wp_localize_script(). Fall back to an empty object so a
+	// page that loads this file without it (cache/optimiser plugins that
+	// strip inline data) degrades instead of throwing a ReferenceError.
+	var wpbsFrontend = window.wpbsFrontend || { i18n: {}, config: {} };
+	wpbsFrontend.i18n = wpbsFrontend.i18n || {};
+
+	/**
+	 * Run one setup step without letting an error in it stop the others
+	 * (or any other script on the page).
+	 */
+	function safely(step) {
+		try {
+			step();
+		} catch (err) {
+			if (window.console && console.error) {
+				console.error('WP Booking Simple:', err);
+			}
+		}
+	}
+
 	$(document).ready(function() {
 		init();
 
@@ -22,9 +42,9 @@
 	 * new markup appears.
 	 */
 	function init() {
-		initDatePicker();
-		initAvailabilityCalendar();
-		initQrPayment();
+		safely(initDatePicker);
+		safely(initAvailabilityCalendar);
+		safely(initQrPayment);
 	}
 
 	window.wpbsInit = init;
@@ -78,7 +98,14 @@
 		const earliestCheckIn = addDays(new Date(), minAdvanceDays);
 		const latestCheckIn = maxAdvanceDays > 0 ? addDays(new Date(), maxAdvanceDays) : undefined;
 
+		// Tag our pickers so the plugin's styles never restyle another
+		// plugin's flatpickr calendars (they are appended to <body>).
+		const markCalendar = function(selectedDates, dateStr, instance) {
+			instance.calendarContainer.classList.add('wpbs-flatpickr');
+		};
+
 		const checkInPicker = flatpickr(checkInInput, {
+			onReady: markCalendar,
 			minDate: earliestCheckIn,
 			maxDate: latestCheckIn,
 			dateFormat: 'Y-m-d',
@@ -99,6 +126,7 @@
 		});
 
 		const checkOutPicker = flatpickr(checkOutInput, {
+			onReady: markCalendar,
 			minDate: addDays(earliestCheckIn, minNights),
 			maxDate: latestCheckIn ? addDays(latestCheckIn, 1) : undefined,
 			dateFormat: 'Y-m-d',

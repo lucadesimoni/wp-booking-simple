@@ -38,11 +38,11 @@ class WP_Booking_Simple_Theme {
 	 * @return void
 	 */
 	public function register_styles() {
-		wp_register_style( 'flatpickr', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.css', array(), '4.6.13' );
+		wp_register_style( 'wpbs-flatpickr', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.css', array(), '4.6.13' );
 		wp_register_style(
 			'wp-booking-simple-frontend',
 			WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/css/frontend.css',
-			array( 'flatpickr' ),
+			array( 'wpbs-flatpickr' ),
 			WP_BOOKING_SIMPLE_VERSION
 		);
 

@@ -22,7 +22,13 @@ class WP_Booking_Simple_Frontend {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		foreach ( self::get_shortcodes() as $shortcode => $method ) {
-			add_shortcode( $shortcode, array( $this, $method ) );
+			// Guarded: an error while rendering never breaks the page.
+			add_shortcode(
+				$shortcode,
+				function ( $atts = array() ) use ( $shortcode, $method ) {
+					return WP_Booking_Simple_Helpers::safe_render( '[' . $shortcode . ']', array( $this, $method ), array( $atts ) );
+				}
+			);
 		}
 	}
 
@@ -56,10 +62,14 @@ class WP_Booking_Simple_Frontend {
 	 * the site lean and fast.
 	 */
 	public function enqueue_scripts() {
+		// Third-party libraries bundled with the plugin. The handles are
+		// prefixed: other plugins commonly register "fullcalendar" or
+		// "flatpickr" with a different major version, and WordPress keeps
+		// whichever registers first, which would break one of the two.
 		// Third-party libraries bundled with the plugin (no external CDN, so the
 		// date picker and calendar work even behind a strict CSP or offline).
-		wp_register_script( 'flatpickr', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.js', array(), '4.6.13', true );
-		wp_register_script( 'fullcalendar', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/fullcalendar/index.global.min.js', array(), '6.1.10', true );
+		wp_register_script( 'wpbs-flatpickr', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.js', array(), '4.6.13', true );
+		wp_register_script( 'wpbs-fullcalendar', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/fullcalendar/index.global.min.js', array(), '6.1.10', true );
 		wp_register_script( 'wpbs-qrcode', WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/vendor/qrcode/qrcode.js', array(), WP_BOOKING_SIMPLE_VERSION, true );
 
 		// Plugin assets. The stylesheets are registered on init by
@@ -67,7 +77,7 @@ class WP_Booking_Simple_Frontend {
 		wp_register_script(
 			'wp-booking-simple-frontend',
 			WP_BOOKING_SIMPLE_PLUGIN_URL . 'assets/js/frontend.js',
-			array( 'jquery', 'flatpickr', 'fullcalendar' ),
+			array( 'jquery', 'wpbs-flatpickr', 'wpbs-fullcalendar' ),
 			WP_BOOKING_SIMPLE_VERSION,
 			true
 		);
